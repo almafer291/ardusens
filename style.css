@@ -1,0 +1,14 @@
+body {
+    font-family: Arial, sans-serif;
+}
+button {
+    background-color: #00bcd4;  /* Color tipo Arduino */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+button:hover {
+    background-color: #0097a7;
+}
