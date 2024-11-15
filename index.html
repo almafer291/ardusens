@@ -65,7 +65,7 @@
     // Función para consultar datos del sensor DHT11
     async function getDHTData() {
       try {
-        const response = await fetch(`${ESP32_IP}/dht`);
+        const response = await fetch(`192.168.192.136/dht`);
         if (response.ok) {
           const data = await response.json();
           document.getElementById("sensorData").innerText = 
