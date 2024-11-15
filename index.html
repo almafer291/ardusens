@@ -44,7 +44,7 @@
   </div>
 
   <script>
-    const ESP32_IP = "http://<TU_IP_PUBLICA>"; // Reemplaza con la IP pública o dominio del ESP32
+    const ESP32_IP = "http://192.168.192.136"; // Reemplaza con la IP pública o dominio del ESP32
 
     // Función para encender/apagar un relé
     async function toggleRelay(relayNumber, state) {
@@ -65,7 +65,7 @@
     // Función para consultar datos del sensor DHT11
     async function getDHTData() {
       try {
-        const response = await fetch(`192.168.192.136/dht`);
+        const response = await fetch(`${ESP32_IP}/dht`);
         if (response.ok) {
           const data = await response.json();
           document.getElementById("sensorData").innerText = 
