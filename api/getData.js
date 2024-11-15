@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
   try {
-    const response = await fetch('https://e41d-2a02-9130-88a7-7ca8-2090-d949-3d01-8d47.ngrok-free.app/sensores');
+    const response = await fetch('https://695c-2a02-9130-88a7-26e0-a849-cb58-6fa1-bb36.ngrok-free.app/sensores');
     if (!response.ok) {
       throw new Error(`Error de respuesta: ${response.status}`);
     }
