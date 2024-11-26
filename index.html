@@ -1,41 +1,23 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datos AHT20</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        h1 {
-            color: #333;
-        }
-        p {
-            font-size: 1.5em;
-        }
-    </style>
+    <title>ArduSens</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Datos del Sensor AHT20</h1>
-    <p>Temperatura: <span id="temp">Cargando...</span> °C</p>
-    <p>Humedad: <span id="humidity">Cargando...</span> %</p>
-    <script>
-        function obtenerDatos() {
-            fetch('http://[192.168.147.136]/')
-            .then(response => response.text())
-            .then(data => {
-                const tempMatch = data.match(/Temperatura: (\d+\.\d+)/);
-                const humidityMatch = data.match(/Humedad: (\d+\.\d+)/);
-                if (tempMatch && humidityMatch) {
-                    document.getElementById('temp').textContent = tempMatch[1];
-                    document.getElementById('humidity').textContent = humidityMatch[1];
-                }
-            });
-        }
-
-        setInterval(obtenerDatos, 5000); // Actualiza los datos cada 5 segundos
-    </script>
+    <header>
+        <h1>Bienvenido a ArduSens</h1>
+    </header>
+    <main>
+        <h2>Datos del Sensor:</h2>
+        <p>Temperatura: <span id="temp"></span> °C</p>
+        <p>Humedad: <span id="humidity"></span> %</p>
+    </main>
+    <footer>
+        <p>&copy; 2024 ArduSens</p>
+    </footer>
+    <script src="script.js"></script>
 </body>
 </html>
