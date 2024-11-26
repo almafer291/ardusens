@@ -1,14 +1,27 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
 }
-button {
-    background-color: #00bcd4;  /* Color tipo Arduino */
+
+header {
+    background-color: #333;
     color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
 }
-button:hover {
-    background-color: #0097a7;
+
+main {
+    padding: 20px;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
