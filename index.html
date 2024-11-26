@@ -1,82 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ardusens Control</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #eaf8ff;
-      color: #004d73;
-      text-align: center;
-    }
-    .button {
-      background-color: #008cba;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 5px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .button:hover {
-      background-color: #005f7f;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos AHT20</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            font-size: 1.5em;
+        }
+    </style>
 </head>
 <body>
-  <h1>Control de Relés y Sensores</h1>
-  
-  <div>
-    <h2>Relés</h2>
-    <button class="button" onclick="toggleRelay(0, 'on')">Encender Relé 1</button>
-    <button class="button" onclick="toggleRelay(0, 'off')">Apagar Relé 1</button>
-    <button class="button" onclick="toggleRelay(1, 'on')">Encender Relé 2</button>
-    <button class="button" onclick="toggleRelay(1, 'off')">Apagar Relé 2</button>
-    <!-- Agrega más botones según tus relés -->
-  </div>
-
-  <div>
-    <h2>Estado de Sensores</h2>
-    <button class="button" onclick="getDHTData()">Consultar Temperatura y Humedad</button>
-    <p id="sensorData">Datos del sensor aparecerán aquí.</p>
-  </div>
-
-  <script>
-    const ESP32_IP = "https://539c-2a02-9130-88b6-2540-d843-fd9d-f67b-6144.ngrok-free.app"; // Reemplaza con la IP pública o dominio del ESP32
-
-    // Función para encender/apagar un relé
-    async function toggleRelay(relayNumber, state) {
-      try {
-        const response = await fetch(`${ESP32_IP}/rele?numero=${relayNumber}&estado=${state}`, {
-          method: "POST",
-        });
-        if (response.ok) {
-          alert(`Relé ${relayNumber + 1} ${state === 'on' ? 'encendido' : 'apagado'}`);
-        } else {
-          alert("Error al controlar el relé");
+    <h1>Datos del Sensor AHT20</h1>
+    <p>Temperatura: <span id="temp">Cargando...</span> °C</p>
+    <p>Humedad: <span id="humidity">Cargando...</span> %</p>
+    <script>
+        function obtenerDatos() {
+            fetch('http://[192.168.147.136]/')
+            .then(response => response.text())
+            .then(data => {
+                const tempMatch = data.match(/Temperatura: (\d+\.\d+)/);
+                const humidityMatch = data.match(/Humedad: (\d+\.\d+)/);
+                if (tempMatch && humidityMatch) {
+                    document.getElementById('temp').textContent = tempMatch[1];
+                    document.getElementById('humidity').textContent = humidityMatch[1];
+                }
+            });
         }
-      } catch (error) {
-        alert("No se pudo conectar al ESP32");
-      }
-    }
 
-    // Función para consultar datos del sensor DHT11
-    async function getDHTData() {
-      try {
-        const response = await fetch(`${ESP32_IP}/dht`);
-        if (response.ok) {
-          const data = await response.json();
-          document.getElementById("sensorData").innerText = 
-            `Temperatura: ${data.temperature}°C, Humedad: ${data.humidity}%`;
-        } else {
-          alert("Error al obtener datos del sensor");
-        }
-      } catch (error) {
-        alert("No se pudo conectar al ESP32");
-      }
-    }
-  </script>
+        setInterval(obtenerDatos, 5000); // Actualiza los datos cada 5 segundos
+    </script>
 </body>
 </html>
