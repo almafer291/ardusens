@@ -1,23 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArduSens</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Datos en Tiempo Real</title>
 </head>
 <body>
-    <header>
-        <h1>Bienvenido a ArduSens</h1>
-    </header>
-    <main>
-        <h2>Datos del Sensor:</h2>
-        <p>Temperatura: <span id="temp"></span> °C</p>
-        <p>Humedad: <span id="humidity"></span> %</p>
-    </main>
-    <footer>
-        <p>&copy; 2024 ArduSens</p>
-    </footer>
-    <script src="script.js"></script>
+    <h1>Datos del Sensor BMP280</h1>
+    <div id="datos">
+        <p>Temperatura: <span id="temperatura"></span></p>
+        <p>Presión: <span id="presion"></span></p>
+        <p>Altitud: <span id="altitud"></span></p>
+    </div>
+
+    <script>
+        function obtenerDatos() {
+            fetch('http://abcd-1234.ngrok.io/datos')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('temperatura').textContent = data.temperatura + ' °C';
+                document.getElementById('presion').textContent = data.presion + ' hPa';
+                document.getElementById('altitud').textContent = data.altitud + ' m';
+            })
+            .catch(error => console.error('Error al obtener los datos:', error));
+        }
+
+        // Actualiza los datos cada 5 segundos
+        setInterval(obtenerDatos, 5000);
+    </script>
 </body>
 </html>
