@@ -1,5 +1,5 @@
 // Consumir datos de la API de ESP32 expuesta por ngrok
-const apiUrl = 'https://504c-2a02-9130-88b6-148e-2de0-2fe6-22c9-40de.ngrok-free.app ';  // Cambia esto por la URL de ngrok
+const apiUrl = 'https://71e7-176-83-202-174.ngrok-free.app ';  // Cambia esto por la URL de ngrok
 
 async function getData() {
     const response = await fetch(apiUrl);
