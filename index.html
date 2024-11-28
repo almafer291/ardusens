@@ -1,32 +1,44 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datos en Tiempo Real</title>
+  <title>Ardusens</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    #data {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Datos del Sensor BMP280</h1>
-    <div id="datos">
-        <p>Temperatura: <span id="temperatura"></span></p>
-        <p>Presión: <span id="presion"></span></p>
-        <p>Altitud: <span id="altitud"></span></p>
-    </div>
+  <h1>Ardusens</h1>
+  <div id="data">
+    <p>Temperatura: <span id="temp">-</span> °C</p>
+    <p>Presión: <span id="pressure">-</span> hPa</p>
+    <p>Altitud: <span id="altitude">-</span> m</p>
+  </div>
 
-    <script>
-        function obtenerDatos() {
-            fetch('http://abcd-1234.ngrok.io/datos')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('temperatura').textContent = data.temperatura + ' °C';
-                document.getElementById('presion').textContent = data.presion + ' hPa';
-                document.getElementById('altitud').textContent = data.altitud + ' m';
-            })
-            .catch(error => console.error('Error al obtener los datos:', error));
-        }
+  <script>
+    async function fetchData() {
+      const url = "https://abcd-1234.ngrok.io/"; // Cambia esta URL por la de ngrok
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        document.getElementById('temp').textContent = data.temperature.toFixed(2);
+        document.getElementById('pressure').textContent = data.pressure.toFixed(2);
+        document.getElementById('altitude').textContent = data.altitude.toFixed(2);
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+      }
+    }
 
-        // Actualiza los datos cada 5 segundos
-        setInterval(obtenerDatos, 5000);
-    </script>
+    // Actualiza los datos cada 5 segundos
+    setInterval(fetchData, 5000);
+    fetchData();
+  </script>
 </body>
 </html>
