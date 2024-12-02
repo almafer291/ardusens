@@ -1,44 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Ardusens</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ardusens - Datos en Tiempo Real</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f4f4f4;
+      background-color: #f4f4f9;
       color: #333;
+      text-align: center;
+      padding: 20px;
     }
-    #data {
-      margin-top: 20px;
+    h1 {
+      color: #0078d7;
+    }
+    .data {
+      font-size: 1.5em;
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
-  <h1>Ardusens</h1>
-  <div id="data">
-    <p>Temperatura: <span id="temp">-</span> °C</p>
-    <p>Presión: <span id="pressure">-</span> hPa</p>
-    <p>Altitud: <span id="altitude">-</span> m</p>
+  <h1>Datos del Sensor - Ardusens</h1>
+  <div class="data">
+    <p>Temperatura: <span id="temp">--</span> °C</p>
+    <p>Humedad: <span id="hum">--</span> %</p>
   </div>
-
   <script>
-    async function fetchData() {
-      const url = "https://abcd-1234.ngrok.io/"; // Cambia esta URL por la de ngrok
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-        document.getElementById('temp').textContent = data.temperature.toFixed(2);
-        document.getElementById('pressure').textContent = data.pressure.toFixed(2);
-        document.getElementById('altitude').textContent = data.altitude.toFixed(2);
-      } catch (error) {
-        console.error("Error al obtener datos:", error);
-      }
-    }
+    const ws = new WebSocket("ws://<TU_NGROK_URL>/ws"); // Sustituye con tu URL de ngrok
 
-    // Actualiza los datos cada 5 segundos
-    setInterval(fetchData, 5000);
-    fetchData();
+    ws.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      document.getElementById("temp").textContent = data.temp;
+      document.getElementById("hum").textContent = data.hum;
+    };
+
+    ws.onopen = function () {
+      console.log("WebSocket conectado");
+    };
+
+    ws.onclose = function () {
+      console.log("WebSocket desconectado");
+    };
   </script>
 </body>
 </html>
