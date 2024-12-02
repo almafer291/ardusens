@@ -28,7 +28,7 @@
     <p>Humedad: <span id="hum">--</span> %</p>
   </div>
   <script>
-    const ws = new WebSocket("ws://<TU_NGROK_URL>/ws"); // Sustituye con tu URL de ngrok
+    const ws = new WebSocket("ws://<https://ca15-2a02-9130-88a8-8b43-7005-7da5-c0c0-3d48.ngrok-free.app>/ws"); // Sustituye con tu URL de ngrok
 
     ws.onmessage = function (event) {
       const data = JSON.parse(event.data);
