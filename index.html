@@ -3,46 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ardusens - Datos en Tiempo Real</title>
+  <title>ArduSens</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
+      background-color: #f0f8ff;
       color: #333;
-      text-align: center;
-      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
     h1 {
       color: #0078d7;
     }
-    .data {
-      font-size: 1.5em;
-      margin: 20px 0;
+    .sensor-data {
+      margin: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .sensor-data p {
+      margin: 5px 0;
+      font-size: 1.2em;
     }
   </style>
 </head>
 <body>
-  <h1>Datos del Sensor - Ardusens</h1>
-  <div class="data">
-    <p>Temperatura: <span id="temp">--</span> °C</p>
-    <p>Humedad: <span id="hum">--</span> %</p>
+  <h1>ArduSens Dashboard</h1>
+  <div id="data" class="sensor-data">
+    <p>Loading data...</p>
   </div>
   <script>
-    const ws = new WebSocket("ws://<https://ca15-2a02-9130-88a8-8b43-7005-7da5-c0c0-3d48.ngrok-free.app>/ws"); // Sustituye con tu URL de ngrok
-
-    ws.onmessage = function (event) {
-      const data = JSON.parse(event.data);
-      document.getElementById("temp").textContent = data.temp;
-      document.getElementById("hum").textContent = data.hum;
-    };
-
-    ws.onopen = function () {
-      console.log("WebSocket conectado");
-    };
-
-    ws.onclose = function () {
-      console.log("WebSocket desconectado");
-    };
+    async function fetchData() {
+      try {
+        const response = await fetch("http://<ESP32-IP>/api/sensors");
+        const data = await response.json();
+        document.getElementById("data").innerHTML = `
+          <p><strong>Temperature (AHT20):</strong> ${data.temperatureAHT} °C</p>
+          <p><strong>Humidity (AHT20):</strong> ${data.humidityAHT} %</p>
+          <p><strong>Temperature (BMP280):</strong> ${data.temperatureBMP} °C</p>
+          <p><strong>Pressure (BMP280):</strong> ${data.pressureBMP} hPa</p>
+        `;
+      } catch (error) {
+        document.getElementById("data").innerHTML = `<p>Error fetching data</p>`;
+        console.error(error);
+      }
+    }
+    setInterval(fetchData, 2000); // Actualizar cada 2 segundos
+    fetchData();
   </script>
 </body>
 </html>
