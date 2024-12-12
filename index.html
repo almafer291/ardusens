@@ -1,60 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ArduSens</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    h1 {
-      color: #0078d7;
-    }
-    .sensor-data {
-      margin: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      text-align: center;
-    }
-    .sensor-data p {
-      margin: 5px 0;
-      font-size: 1.2em;
-    }
-  </style>
+  <title>Ardusens - Sensores</title>
+  <script src="firebase.js" type="module"></script>
 </head>
 <body>
-  <h1>ArduSens Dashboard</h1>
-  <div id="data" class="sensor-data">
-    <p>Loading data...</p>
-  </div>
-  <script>
-    async function fetchData() {
-      try {
-        const response = await fetch("http://<ESP32-IP>/api/sensors");
-        const data = await response.json();
-        document.getElementById("data").innerHTML = `
-          <p><strong>Temperature (AHT20):</strong> ${data.temperatureAHT} °C</p>
-          <p><strong>Humidity (AHT20):</strong> ${data.humidityAHT} %</p>
-          <p><strong>Temperature (BMP280):</strong> ${data.temperatureBMP} °C</p>
-          <p><strong>Pressure (BMP280):</strong> ${data.pressureBMP} hPa</p>
-        `;
-      } catch (error) {
-        document.getElementById("data").innerHTML = `<p>Error fetching data</p>`;
-        console.error(error);
-      }
-    }
-    setInterval(fetchData, 2000); // Actualizar cada 2 segundos
-    fetchData();
+  <h1>Datos en tiempo real</h1>
+  <p id="temperature_aht">Temperatura (AHT20): Cargando...</p>
+  <p id="humidity_aht">Humedad (AHT20): Cargando...</p>
+  <p id="temperature_bmp">Temperatura (BMP280): Cargando...</p>
+  <p id="pressure_bmp">Presión (BMP280): Cargando...</p>
+
+  <script type="module">
+    import { db, ref, onValue } from "./firebase.js";
+
+    const dataRef = ref(db, "sensorData");
+
+    onValue(dataRef, (snapshot) => {
+      const data = snapshot.val();
+      document.getElementById("temperature_aht").textContent = `Temperatura (AHT20): ${data.temperature_aht} °C`;
+      document.getElementById("humidity_aht").textContent = `Humedad (AHT20): ${data.humidity_aht} %`;
+      document.getElementById("temperature_bmp").textContent = `Temperatura (BMP280): ${data.temperature_bmp} °C`;
+      document.getElementById("pressure_bmp").textContent = `Presión (BMP280): ${data.pressure_bmp} hPa`;
+    });
   </script>
 </body>
 </html>
