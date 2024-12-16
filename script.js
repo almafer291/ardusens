@@ -23,23 +23,25 @@ const displayData = () => {
   const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
   onValue(sensorDataRef, (snapshot) => {
     const data = snapshot.val();
-
     console.log("Datos recibidos de Firebase:", data);  // Verificamos si los datos llegan a la consola
 
     if (data) {
-      // Accedemos a los valores dentro de sensorData
-      const humidity = data.humidity_aht ? data.humidity_aht.toFixed(2) : "No disponible";
-      const temperatureAHT = data.temperature_aht ? data.temperature_aht.toFixed(2) : "No disponible";
-      const pressure = data.pressure_bmp ? data.pressure_bmp.toFixed(2) : "No disponible";
-      const temperatureBMP = data.temperature_bmp ? data.temperature_bmp.toFixed(2) : "No disponible";
+      // Recorremos cada entrada dentro de los datos recibidos
+      Object.values(data).forEach(sensor => {
+        // Accedemos a los valores dentro de cada objeto de sensor
+        const humidity = sensor.humidity_aht ? sensor.humidity_aht.toFixed(2) : "No disponible";
+        const temperatureAHT = sensor.temperature_aht ? sensor.temperature_aht.toFixed(2) : "No disponible";
+        const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
+        const temperatureBMP = sensor.temperature_bmp ? sensor.temperature_bmp.toFixed(2) : "No disponible";
 
-      console.log(`Humedad: ${humidity}, Temperatura AHT20: ${temperatureAHT}, Presión: ${pressure}, Temperatura BMP280: ${temperatureBMP}`);
+        console.log(`Humedad: ${humidity}, Temperatura AHT20: ${temperatureAHT}, Presión: ${pressure}, Temperatura BMP280: ${temperatureBMP}`);
 
-      // Actualiza el contenido de la página
-      document.getElementById("humidity").innerText = `Humedad (AHT20): ${humidity}%`;
-      document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${temperatureAHT}°C`;
-      document.getElementById("pressure").innerText = `Presión (BMP280): ${pressure} hPa`;
-      document.getElementById("tempBMP").innerText = `Temperatura (BMP280): ${temperatureBMP}°C`;
+        // Actualiza el contenido de la página (solo con el primer set de datos)
+        document.getElementById("humidity").innerText = `Humedad (AHT20): ${humidity}%`;
+        document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${temperatureAHT}°C`;
+        document.getElementById("pressure").innerText = `Presión (BMP280): ${pressure} hPa`;
+        document.getElementById("tempBMP").innerText = `Temperatura (BMP280): ${temperatureBMP}°C`;
+      });
     } else {
       console.log("No se encontraron datos en Firebase.");
     }
