@@ -1,30 +1,39 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ardusens - Sensores</title>
-  <script src="firebase.js" type="module"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArduSens Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+        }
+        .sensor-data {
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 300px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body>
-  <h1>Datos en tiempo real</h1>
-  <p id="temperature_aht">Temperatura (AHT20): Cargando...</p>
-  <p id="humidity_aht">Humedad (AHT20): Cargando...</p>
-  <p id="temperature_bmp">Temperatura (BMP280): Cargando...</p>
-  <p id="pressure_bmp">Presión (BMP280): Cargando...</p>
+    <h1>ArduSens Dashboard</h1>
+    <div class="sensor-data">
+        <h2>AHT20</h2>
+        <p>Temperature: <span id="temperature_aht">--</span></p>
+        <p>Humidity: <span id="humidity_aht">--</span></p>
+    </div>
+    <div class="sensor-data">
+        <h2>BMP280</h2>
+        <p>Temperature: <span id="temperature_bmp">--</span></p>
+        <p>Pressure: <span id="pressure_bmp">--</span></p>
+    </div>
 
-  <script type="module">
-    import { db, ref, onValue } from "./firebase.js";
-
-    const dataRef = ref(db, "sensorData");
-
-    onValue(dataRef, (snapshot) => {
-      const data = snapshot.val();
-      document.getElementById("temperature_aht").textContent = `Temperatura (AHT20): ${data.temperature_aht} °C`;
-      document.getElementById("humidity_aht").textContent = `Humedad (AHT20): ${data.humidity_aht} %`;
-      document.getElementById("temperature_bmp").textContent = `Temperatura (BMP280): ${data.temperature_bmp} °C`;
-      document.getElementById("pressure_bmp").textContent = `Presión (BMP280): ${data.pressure_bmp} hPa`;
-    });
-  </script>
+    <script type="module" src="./main.js"></script>
 </body>
 </html>
