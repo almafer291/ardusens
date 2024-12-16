@@ -1,52 +1,77 @@
-// Inicializar Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+// Inicializar los gráficos
+const ctxTemp = document.getElementById('temperatureChart').getContext('2d');
+const ctxHumidity = document.getElementById('humidityChart').getContext('2d');
 
-// Configuración de Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
-  authDomain: "ardusens.firebaseapp.com",
-  databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "ardusens",
-  storageBucket: "ardusens.appspot.com",
-  messagingSenderId: "932230234372",
-  appId: "1:932230234372:web:f68c12d2913155e30a9051",
-  measurementId: "G-JBXRDGDTY7"
-};
-
-// Inicializar Firebase
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-
-// Función para mostrar datos en consola y en la página
-const displayData = () => {
-  const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
-  onValue(sensorDataRef, (snapshot) => {
-    const data = snapshot.val();
-    console.log("Datos recibidos de Firebase:", data);  // Verificamos si los datos llegan a la consola
-
-    if (data) {
-      // Recorremos cada entrada dentro de los datos recibidos
-      Object.values(data).forEach(sensor => {
-        // Accedemos a los valores dentro de cada objeto de sensor
-        const humidity = sensor.humidity_aht ? sensor.humidity_aht.toFixed(2) : "No disponible";
-        const temperatureAHT = sensor.temperature_aht ? sensor.temperature_aht.toFixed(2) : "No disponible";
-        const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
-        const temperatureBMP = sensor.temperature_bmp ? sensor.temperature_bmp.toFixed(2) : "No disponible";
-
-        console.log(`Humedad: ${humidity}, Temperatura AHT20: ${temperatureAHT}, Presión: ${pressure}, Temperatura BMP280: ${temperatureBMP}`);
-
-        // Actualiza el contenido de la página (solo con el primer set de datos)
-        document.getElementById("humidity").innerText = `Humedad (AHT20): ${humidity}%`;
-        document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${temperatureAHT}°C`;
-        document.getElementById("pressure").innerText = `Presión (BMP280): ${pressure} hPa`;
-        document.getElementById("tempBMP").innerText = `Temperatura (BMP280): ${temperatureBMP}°C`;
-      });
-    } else {
-      console.log("No se encontraron datos en Firebase.");
+// Crear los gráficos
+const temperatureChart = new Chart(ctxTemp, {
+  type: 'line',
+  data: {
+    labels: [], // Aquí se agregarán las etiquetas (por ejemplo, fechas o horas)
+    datasets: [{
+      label: 'Temperatura AHT20',
+      data: [], // Aquí se agregarán los datos de temperatura
+      borderColor: '#e74c3c',
+      borderWidth: 1,
+      fill: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      x: { type: 'linear', position: 'bottom' },
+      y: { beginAtZero: true }
     }
-  });
-};
+  }
+});
 
-// Llama la función para mostrar los datos
-displayData();
+const humidityChart = new Chart(ctxHumidity, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+      label: 'Humedad AHT20',
+      data: [],
+      borderColor: '#3498db',
+      borderWidth: 1,
+      fill: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      x: { type: 'linear', position: 'bottom' },
+      y: { beginAtZero: true }
+    }
+  }
+});
+
+// Función para actualizar los gráficos con los datos de Firebase
+function updateCharts(data) {
+  // Actualizar los datos de temperatura
+  temperatureChart.data.labels.push(Date.now()); // Usamos la hora actual como etiqueta
+  temperatureChart.data.datasets[0].data.push(data.temperature_aht);
+  temperatureChart.update();
+
+  // Actualizar los datos de humedad
+  humidityChart.data.labels.push(Date.now());
+  humidityChart.data.datasets[0].data.push(data.humidity_aht);
+  humidityChart.update();
+}
+
+// Conexión a Firebase y actualización de los datos
+const database = firebase.database();
+const sensorRef = database.ref('sensorData');
+
+sensorRef.on('value', (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    const latestData = data[Object.keys(data)[Object.keys(data).length - 1]];
+    document.getElementById('humidity').textContent = latestData.humidity_aht.toFixed(2);
+    document.getElementById('temp_aht').textContent = latestData.temperature_aht.toFixed(2);
+    document.getElementById('pressure').textContent = latestData.pressure_bmp.toFixed(2);
+    document.getElementById('temp_bmp').textContent = latestData.temperature_bmp.toFixed(2);
+
+    // Actualizar los gráficos
+    updateCharts(latestData);
+  }
+});
