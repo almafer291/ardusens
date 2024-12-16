@@ -1,36 +1,38 @@
-// Importa Firebase desde la CDN
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
-
-// Configuración de Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
-  authDomain: "ardusens.firebaseapp.com",
-  databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "ardusens",
-  storageBucket: "ardusens.appspot.com",
-  messagingSenderId: "932230234372",
-  appId: "1:932230234372:web:f68c12d2913155e30a9051",
-  measurementId: "G-JBXRDGDTY7"
-};
-
-// Inicializar Firebase
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-
-// Leer datos de Firebase en tiempo real
 const displayData = () => {
   const sensorDataRef = ref(database, "/"); // Lee toda la raíz de la base de datos
   onValue(sensorDataRef, (snapshot) => {
     const data = snapshot.val();
     if (data) {
-      document.getElementById("humidity").innerText = `Humedad (AHT20): ${data.humidity_aht.toFixed(2)}%`;
-      document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${data.temperature_aht.toFixed(2)}°C`;
-      document.getElementById("pressure").innerText = `Presión (BMP280): ${data.pressure_bmp.toFixed(2)} hPa`;
-      document.getElementById("tempBMP").innerText = `Temperatura (BMP280): ${data.temperature_bmp.toFixed(2)}°C`;
+      // Verifica que los valores existan antes de intentar usarlos
+      const humidity = data.humidity_aht;
+      const temperatureAHT = data.temperature_aht;
+      const pressure = data.pressure_bmp;
+      const temperatureBMP = data.temperature_bmp;
+
+      // Solo realiza .toFixed() si los datos no son undefined
+      if (humidity !== undefined) {
+        document.getElementById("humidity").innerText = `Humedad (AHT20): ${humidity.toFixed(2)}%`;
+      } else {
+        document.getElementById("humidity").innerText = "Humedad no disponible";
+      }
+
+      if (temperatureAHT !== undefined) {
+        document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${temperatureAHT.toFixed(2)}°C`;
+      } else {
+        document.getElementById("tempAHT").innerText = "Temperatura no disponible";
+      }
+
+      if (pressure !== undefined) {
+        document.getElementById("pressure").innerText = `Presión (BMP280): ${pressure.toFixed(2)} hPa`;
+      } else {
+        document.getElementById("pressure").innerText = "Presión no disponible";
+      }
+
+      if (temperatureBMP !== undefined) {
+        document.getElementById("tempBMP").innerText = `Temperatura (BMP280): ${temperatureBMP.toFixed(2)}°C`;
+      } else {
+        document.getElementById("tempBMP").innerText = "Temperatura no disponible";
+      }
     }
   });
 };
-
-// Llama la función para mostrar los datos
-displayData();
