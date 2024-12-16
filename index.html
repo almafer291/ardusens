@@ -1,35 +1,24 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ArduSens - Monitoreo en Tiempo Real</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Firebase App</title>
 </head>
 <body>
-  <header>
-    <h1>ArduSens - Monitoreo en Tiempo Real</h1>
-  </header>
-  
-  <div class="container">
-    <div class="card">
-      <h2>Datos del Sensor</h2>
-      <p>Humedad: <span id="humidity">Cargando...</span>%</p>
-      <p>Temperatura AHT20: <span id="temp_aht">Cargando...</span>°C</p>
-      <p>Presión: <span id="pressure">Cargando...</span> hPa</p>
-      <p>Temperatura BMP280: <span id="temp_bmp">Cargando...</span>°C</p>
-    </div>
+  <!-- Elementos del DOM necesarios -->
+  <canvas id="temperatureChart"></canvas>
+  <canvas id="humidityChart"></canvas>
+  <div id="humidity"></div>
+  <div id="temp_aht"></div>
+  <div id="pressure"></div>
+  <div id="temp_bmp"></div>
 
-    <div class="card">
-      <h2>Gráficos en Tiempo Real</h2>
-      <canvas id="temperatureChart"></canvas>
-      <canvas id="humidityChart"></canvas>
-    </div>
+  <!-- Cargar Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
 
-    <button id="refreshButton">Refrescar Datos</button>
-  </div>
-
+  <!-- Tu script -->
   <script src="script.js"></script>
 </body>
 </html>
