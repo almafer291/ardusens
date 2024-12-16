@@ -1,60 +1,31 @@
-/* Estilo general */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f6f9;
-  margin: 0;
-  padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
 }
 
-header {
-  background-color: #2c3e50;
-  color: #fff;
-  padding: 15px 0;
-  text-align: center;
-  font-size: 24px;
+.data-display {
+    margin: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 50px auto;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 0 15px;
+h2 {
+    text-align: center;
+    color: #333;
 }
 
-.card {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+p {
+    font-size: 18px;
+    color: #555;
 }
 
-.card h2 {
-  margin: 0;
-  font-size: 18px;
-  color: #333;
-}
-
-.card p {
-  font-size: 16px;
-  color: #555;
-}
-
-/* Gráfico */
-canvas {
-  max-width: 100%;
-  margin-top: 20px;
-}
-
-/* Botones */
-button {
-  background-color: #3498db;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #2980b9;
+#humidity, #tempAHT, #pressure, #tempBMP {
+    margin: 10px 0;
 }
