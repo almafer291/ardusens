@@ -1,17 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ardusens</title>
+  <title>ArduSens - Monitoreo en Tiempo Real</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <h1>Datos en tiempo real desde Firebase</h1>
-  <p id="humidity">Humedad (AHT20): Cargando...</p>
-  <p id="tempAHT">Temperatura (AHT20): Cargando...</p>
-  <p id="pressure">Presión (BMP280): Cargando...</p>
-  <p id="tempBMP">Temperatura (BMP280): Cargando...</p>
+  <header>
+    <h1>ArduSens - Monitoreo en Tiempo Real</h1>
+  </header>
+  
+  <div class="container">
+    <div class="card">
+      <h2>Datos del Sensor</h2>
+      <p>Humedad: <span id="humidity">Cargando...</span>%</p>
+      <p>Temperatura AHT20: <span id="temp_aht">Cargando...</span>°C</p>
+      <p>Presión: <span id="pressure">Cargando...</span> hPa</p>
+      <p>Temperatura BMP280: <span id="temp_bmp">Cargando...</span>°C</p>
+    </div>
 
-  <script type="module" src="./script.js"></script>
+    <div class="card">
+      <h2>Gráficos en Tiempo Real</h2>
+      <canvas id="temperatureChart"></canvas>
+      <canvas id="humidityChart"></canvas>
+    </div>
+
+    <button id="refreshButton">Refrescar Datos</button>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
