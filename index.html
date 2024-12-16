@@ -1,49 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Control</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduses</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <header>
-    <h1>Arduses Control Panel</h1>
-    <img src="logo.png" alt="Logo" class="logo">
-  </header>
-
-  <div class="container">
-    <nav>
-      <a href="#" id="temperatureTab" class="active">Temperatura</a>
-      <a href="#" id="humidityTab">Humedad</a>
-      <a href="#" id="graphsTab">Gráficas</a>
-    </nav>
-
-    <div class="main-content">
-      <div class="data-container">
-        <div class="data-box">
-          <h2>Temperatura AHT20</h2>
-          <p class="value" id="temp_aht">Cargando...</p>
-        </div>
-        <div class="data-box">
-          <h2>Humedad AHT20</h2>
-          <p class="value" id="humidity">Cargando...</p>
-        </div>
-      </div>
-
-      <canvas id="temperatureChart" width="400" height="200"></canvas>
-      <canvas id="humidityChart" width="400" height="200"></canvas>
+    <div class="data-display">
+        <h2>Datos de los Sensores</h2>
+        <p id="humidity">Humedad: No disponible</p>
+        <p id="tempAHT">Temperatura AHT20: No disponible</p>
+        <p id="pressure">Presión: No disponible</p>
+        <p id="tempBMP">Temperatura BMP280: No disponible</p>
     </div>
-  </div>
 
-  <footer>
-    <p>&copy; 2024 Arduses. Todos los derechos reservados.</p>
-  </footer>
-
-  <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
