@@ -1,39 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArduSens Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f9;
-        }
-        .sensor-data {
-            margin: 20px auto;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            width: 300px;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArduSens Data</title>
 </head>
 <body>
-    <h1>ArduSens Dashboard</h1>
-    <div class="sensor-data">
-        <h2>AHT20</h2>
-        <p>Temperature: <span id="temperature_aht">--</span></p>
-        <p>Humidity: <span id="humidity_aht">--</span></p>
-    </div>
-    <div class="sensor-data">
-        <h2>BMP280</h2>
-        <p>Temperature: <span id="temperature_bmp">--</span></p>
-        <p>Pressure: <span id="pressure_bmp">--</span></p>
-    </div>
-
-    <script type="module" src="./main.js"></script>
+  <h1>Datos de ArduSens</h1>
+  <div>
+    <p><strong>Temperatura (AHT20):</strong> <span id="tempAHT">-</span> °C</p>
+    <p><strong>Humedad (AHT20):</strong> <span id="humAHT">-</span> %</p>
+    <p><strong>Temperatura (BMP280):</strong> <span id="tempBMP">-</span> °C</p>
+    <p><strong>Presión (BMP280):</strong> <span id="pressureBMP">-</span> hPa</p>
+  </div>
+  <script src="script.js" type="module"></script>
 </body>
 </html>
