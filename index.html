@@ -1,24 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Firebase App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduses</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Elementos del DOM necesarios -->
-  <canvas id="temperatureChart"></canvas>
-  <canvas id="humidityChart"></canvas>
-  <div id="humidity"></div>
-  <div id="temp_aht"></div>
-  <div id="pressure"></div>
-  <div id="temp_bmp"></div>
+    <div class="data-display">
+        <h2>Datos de los Sensores</h2>
+        <p id="humidity">Humedad: No disponible</p>
+        <p id="tempAHT">Temperatura AHT20: No disponible</p>
+        <p id="pressure">Presión: No disponible</p>
+        <p id="tempBMP">Temperatura BMP280: No disponible</p>
+    </div>
 
-  <!-- Cargar Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
-
-  <!-- Tu script -->
-  <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
