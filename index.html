@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ArduSens Data</title>
+  <title>Ardusens</title>
 </head>
 <body>
-  <h1>Datos de ArduSens</h1>
-  <div>
-    <p><strong>Temperatura (AHT20):</strong> <span id="tempAHT">-</span> °C</p>
-    <p><strong>Humedad (AHT20):</strong> <span id="humAHT">-</span> %</p>
-    <p><strong>Temperatura (BMP280):</strong> <span id="tempBMP">-</span> °C</p>
-    <p><strong>Presión (BMP280):</strong> <span id="pressureBMP">-</span> hPa</p>
-  </div>
-  <script src="script.js" type="module"></script>
+  <h1>Datos en tiempo real desde Firebase</h1>
+  <p id="humidity">Humedad (AHT20): Cargando...</p>
+  <p id="tempAHT">Temperatura (AHT20): Cargando...</p>
+  <p id="pressure">Presión (BMP280): Cargando...</p>
+  <p id="tempBMP">Temperatura (BMP280): Cargando...</p>
+
+  <script type="module" src="./script.js"></script>
 </body>
 </html>
