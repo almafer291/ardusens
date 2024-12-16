@@ -4,7 +4,7 @@ import { getDatabase, ref, onValue } from "firebase/database";
 const firebaseConfig = {
   apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
   authDomain: "ardusens.firebaseapp.com",
-  databaseURL: "https://ardusens-default-rtdb.firebaseio.com",
+  databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app/",
   projectId: "ardusens",
   storageBucket: "ardusens.firebasestorage.app",
   messagingSenderId: "932230234372",
