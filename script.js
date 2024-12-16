@@ -20,14 +20,14 @@ const database = getDatabase(app);
 
 // Función para mostrar datos en consola y en la página
 const displayData = () => {
-  const sensorDataRef = ref(database, "/"); // Lee toda la raíz de la base de datos
+  const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
   onValue(sensorDataRef, (snapshot) => {
     const data = snapshot.val();
 
     console.log("Datos recibidos de Firebase:", data);  // Verificamos si los datos llegan a la consola
 
     if (data) {
-      // Valida que los datos existan antes de mostrar
+      // Accedemos a los valores dentro de sensorData
       const humidity = data.humidity_aht ? data.humidity_aht.toFixed(2) : "No disponible";
       const temperatureAHT = data.temperature_aht ? data.temperature_aht.toFixed(2) : "No disponible";
       const pressure = data.pressure_bmp ? data.pressure_bmp.toFixed(2) : "No disponible";
