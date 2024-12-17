@@ -1,6 +1,6 @@
 // Inicializar Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -18,22 +18,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Función para mostrar datos de los sensores
+// Función para mostrar datos de sensores
 const displayData = () => {
   const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
   onValue(sensorDataRef, (snapshot) => {
     const data = snapshot.val();
-    console.log("Datos recibidos de Firebase:", data);  // Verificamos si los datos llegan a la consola
+    console.log("Datos recibidos de Firebase:", data);
 
     if (data) {
-      // Recorremos cada entrada dentro de los datos recibidos
       Object.values(data).forEach(sensor => {
         const humidity = sensor.humidity_aht ? sensor.humidity_aht.toFixed(2) : "No disponible";
         const temperatureAHT = sensor.temperature_aht ? sensor.temperature_aht.toFixed(2) : "No disponible";
         const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
         const temperatureBMP = sensor.temperature_bmp ? sensor.temperature_bmp.toFixed(2) : "No disponible";
 
-        // Actualiza el contenido de la página
         document.getElementById("humidity").innerText = `Humedad (AHT20): ${humidity}%`;
         document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${temperatureAHT}°C`;
         document.getElementById("pressure").innerText = `Presión (BMP280): ${pressure} hPa`;
@@ -45,9 +43,38 @@ const displayData = () => {
   });
 };
 
-// Función para mostrar el control de los relés
+// Función para cambiar de sección al presionar los botones
+const showSection = (section) => {
+    document.getElementById("reles-control").style.display = "none";
+    // Aquí puedes ocultar otras secciones como "sensores", etc.
+
+    if (section === "reles") {
+        document.getElementById("reles-control").style.display = "block";
+    }
+};
+
+// Asignar evento a los botones
+document.getElementById("btn-reles").addEventListener("click", () => showSection("reles"));
+document.getElementById("btn-sensores").addEventListener("click", () => {
+    showSection("sensores");
+    displayData();
+});
+
+// Función para encender/apagar los relés
+const toggleRelay = (relayNumber) => {
+    const statusCircle = document.getElementById(`rele-status-${relayNumber}`);
+    if (statusCircle.style.backgroundColor === "red") {
+        statusCircle.style.backgroundColor = "green"; // Encendido
+    } else {
+        statusCircle.style.backgroundColor = "red"; // Apagado
+    }
+};
+
+// Función para agregar los controles de relés
 const displayRelays = () => {
   const relaysContainer = document.getElementById("reles-status");
+  relaysContainer.innerHTML = ""; // Limpiar contenido anterior
+
   for (let i = 1; i <= 8; i++) {
     const relayDiv = document.createElement("div");
     relayDiv.classList.add("rele-control");
@@ -86,33 +113,11 @@ const displayRelays = () => {
   }
 };
 
-// Función para alternar el estado del relé
-const toggleRelay = (relayNumber) => {
-  const relayStatusRef = ref(database, `/relays/rele${relayNumber}`);
-  onValue(relayStatusRef, (snapshot) => {
-    const currentState = snapshot.val() || false;
-    update(relayStatusRef, { state: !currentState });
-
-    // Actualizar el estado visual del relé
-    const statusCircle = document.getElementById(`rele-status-${relayNumber}`);
-    if (!currentState) {
-      statusCircle.style.backgroundColor = "green";
-    } else {
-      statusCircle.style.backgroundColor = "red";
-    }
-  });
+// Función para iniciar temporizador
+const startTimer = (relayNumber, time) => {
+    console.log(`Iniciando temporizador para el relé ${relayNumber} con ${time} horas`);
+    // Aquí agregarías la lógica del temporizador
 };
 
-// Función para iniciar el temporizador
-const startTimer = (relayNumber, timerValue) => {
-  const [hours, minutes] = timerValue.split(":").map(Number);
-  const totalMilliseconds = (hours * 60 + minutes) * 60 * 1000;
-
-  setTimeout(() => {
-    toggleRelay(relayNumber); // Cambia el estado del relé después de que el temporizador termine
-  }, totalMilliseconds);
-};
-
-// Mostrar datos y relés al cargar la página
-displayData();
+// Inicializar la sección de relés
 displayRelays();
