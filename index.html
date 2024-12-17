@@ -7,31 +7,32 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="data-display">
-            <h2>Datos de los Sensores</h2>
-            <p id="humidity">Humedad: No disponible</p>
-            <p id="tempAHT">Temperatura AHT20: No disponible</p>
-            <p id="pressure">Presión: No disponible</p>
-            <p id="tempBMP">Temperatura BMP280: No disponible</p>
-        </div>
-
-        <div class="side-buttons">
-            <button id="btn-sensores" class="side-btn">Sensores</button>
-            <button id="btn-reles" class="side-btn">Relés</button>
-            <button id="btn-graficas" class="side-btn">Gráficas</button>
-            <button id="btn-tablas" class="side-btn">Tablas</button>
-        </div>
+    <!-- Barra lateral con botones -->
+    <div class="side-buttons">
+        <button id="btn-sensores" class="side-btn">Sensores</button>
+        <button id="btn-reles" class="side-btn">Relés</button>
+        <button id="btn-graficas" class="side-btn">Gráficas</button>
+        <button id="btn-tablas" class="side-btn">Tablas</button>
     </div>
 
+    <!-- Contenedor para mostrar los datos de los sensores -->
+    <div class="data-display">
+        <h2>Datos de los Sensores</h2>
+        <p id="humidity">Humedad: No disponible</p>
+        <p id="tempAHT">Temperatura AHT20: No disponible</p>
+        <p id="pressure">Presión: No disponible</p>
+        <p id="tempBMP">Temperatura BMP280: No disponible</p>
+    </div>
+
+    <!-- Contenedor de control de Relés -->
     <div id="reles-control" class="reles-container" style="display: none;">
         <h2>Control de Relés</h2>
         <div id="reles-status">
-            <!-- Aquí se irán generando los controles para cada relé -->
+            <!-- Los controles de los relés se generarán aquí -->
         </div>
         <h3>Temporizadores</h3>
         <div id="timers">
-            <!-- Aquí se irán generando los temporizadores -->
+            <!-- Los temporizadores se generarán aquí -->
         </div>
     </div>
 
