@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arduses</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
+    <title>Arduses - Control y Sensores</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Menú a la izquierda -->
     <div class="menu">
-        <button id="btn-sensores">Sensores</button>
-        <button id="btn-reles">Relés</button>
-        <button id="btn-graficas">Gráficas</button>
-        <button id="btn-tablas">Tablas</button>
+        <button onclick="showSection('sensores')">Sensores</button>
+        <button onclick="showSection('reles')">Relés</button>
+        <button onclick="showSection('graficas')">Gráficas</button>
+        <button onclick="showSection('tablas')">Tablas</button>
     </div>
 
-    <!-- Contenido dinámico -->
     <div class="content">
-        <!-- Sensores -->
-        <div id="sensores-display" class="content-display">
+        <!-- Sección de Sensores -->
+        <div id="sensores" class="section">
             <h2>Datos de los Sensores</h2>
             <p id="humidity">Humedad: No disponible</p>
             <p id="tempAHT">Temperatura AHT20: No disponible</p>
@@ -27,33 +24,29 @@
             <p id="tempBMP">Temperatura BMP280: No disponible</p>
         </div>
 
-        <!-- Relés -->
-        <div id="reles-control" class="content-display" style="display: none;">
+        <!-- Sección de Relés -->
+        <div id="reles" class="section hidden">
             <h2>Control de Relés</h2>
-            <div class="rele" id="rele-1">
-                <span>Relé 1</span>
-                <button onclick="toggleRele(1)">ON/OFF</button>
-                <div class="status-circle" id="status-1"></div>
+            <div class="rele-container" id="releContainer">
+                <!-- Relés dinámicos generados -->
             </div>
-            <div class="rele" id="rele-2">
-                <span>Relé 2</span>
-                <button onclick="toggleRele(2)">ON/OFF</button>
-                <div class="status-circle" id="status-2"></div>
-            </div>
-            <!-- Añadir más relés aquí siguiendo el formato anterior -->
         </div>
 
-        <!-- Gráficas -->
-        <div id="graficas-display" class="content-display" style="display: none;">
+        <!-- Sección de Gráficas -->
+        <div id="graficas" class="section hidden">
             <h2>Gráficas en Tiempo Real</h2>
-            <canvas id="grafica-humedad" width="400" height="200"></canvas>
-            <canvas id="grafica-tempAHT" width="400" height="200"></canvas>
-            <canvas id="grafica-presion" width="400" height="200"></canvas>
-            <canvas id="grafica-tempBMP" width="400" height="200"></canvas>
+            <canvas id="humidityChart"></canvas>
+            <canvas id="temperatureChart"></canvas>
+            <canvas id="pressureChart"></canvas>
+        </div>
+
+        <!-- Sección de Tablas -->
+        <div id="tablas" class="section hidden">
+            <h2>Tablas de Datos</h2>
+            <p>Próximamente...</p>
         </div>
     </div>
 
-    <!-- Script -->
     <script type="module" src="script.js"></script>
 </body>
 </html>
