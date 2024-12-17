@@ -18,7 +18,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Función para mostrar datos de sensores
+// Función para mostrar datos de los sensores
 const displayData = () => {
   const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
   onValue(sensorDataRef, (snapshot) => {
@@ -45,20 +45,22 @@ const displayData = () => {
 
 // Función para cambiar de sección al presionar los botones
 const showSection = (section) => {
+    // Ocultar todas las secciones
+    document.getElementById("sensores-display").style.display = "none";
     document.getElementById("reles-control").style.display = "none";
-    // Aquí puedes ocultar otras secciones como "sensores", etc.
 
-    if (section === "reles") {
+    // Mostrar la sección correspondiente
+    if (section === "sensores") {
+        document.getElementById("sensores-display").style.display = "block";
+        displayData(); // Llamar a la función que muestra los datos de los sensores
+    } else if (section === "reles") {
         document.getElementById("reles-control").style.display = "block";
     }
 };
 
 // Asignar evento a los botones
+document.getElementById("btn-sensores").addEventListener("click", () => showSection("sensores"));
 document.getElementById("btn-reles").addEventListener("click", () => showSection("reles"));
-document.getElementById("btn-sensores").addEventListener("click", () => {
-    showSection("sensores");
-    displayData();
-});
 
 // Función para encender/apagar los relés
 const toggleRelay = (relayNumber) => {
@@ -91,32 +93,7 @@ const displayRelays = () => {
 
     relayDiv.appendChild(relayButton);
     relaysContainer.appendChild(relayDiv);
-
-    // Crear temporizador para cada relé
-    const timerContainer = document.createElement("div");
-    timerContainer.classList.add("timer-container");
-
-    const timerInput = document.createElement("input");
-    timerInput.type = "number";
-    timerInput.classList.add("timer-input");
-    timerInput.placeholder = "HH:MM";
-    timerInput.id = `timer-input-${i}`;
-    timerContainer.appendChild(timerInput);
-
-    const timerButton = document.createElement("button");
-    timerButton.classList.add("timer-btn");
-    timerButton.innerText = "Iniciar Temporizador";
-    timerButton.addEventListener("click", () => startTimer(i, timerInput.value));
-
-    timerContainer.appendChild(timerButton);
-    document.getElementById("timers").appendChild(timerContainer);
   }
-};
-
-// Función para iniciar temporizador
-const startTimer = (relayNumber, time) => {
-    console.log(`Iniciando temporizador para el relé ${relayNumber} con ${time} horas`);
-    // Aquí agregarías la lógica del temporizador
 };
 
 // Inicializar la sección de relés
