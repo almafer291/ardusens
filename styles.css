@@ -3,10 +3,10 @@ body {
     margin: 0;
     padding: 0;
     background-color: #1e272e;
-    color: #ffffff;
+    color: #fff;
 }
 
-h1, h2 {
+h2 {
     text-align: center;
     color: #00b894; /* Aguamarina oscuro */
 }
@@ -15,73 +15,42 @@ h1, h2 {
     max-width: 900px;
     margin: 20px auto;
     padding: 20px;
-    background-color: #2d3436; /* Gris oscuro */
+    background-color: #2d3436;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.relay-controls {
+.data-display, .charts, .relay-controls, .logs {
     margin: 20px 0;
+    padding: 15px;
+    background-color: #353b48;
+    border-radius: 8px;
 }
 
 .relay {
-    background-color: #353b48;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 8px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-}
-
-.relay h3 {
-    margin: 0;
-    color: #00cec9;
+    margin: 10px 0;
+    background-color: #485460;
+    padding: 10px;
+    border-radius: 8px;
 }
 
 button {
     background-color: #00b894;
     color: #fff;
-    border: none;
     padding: 8px 12px;
-    margin: 5px;
+    border: none;
     cursor: pointer;
     border-radius: 5px;
-    font-weight: bold;
 }
 
 button:hover {
     background-color: #00a383;
 }
 
-.timers {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    color: #dfe6e9;
-    margin: 5px 0;
-}
-
-input[type="number"] {
-    width: 60px;
-    margin-left: 10px;
-    padding: 5px;
-    border: none;
-    border-radius: 5px;
-}
-
-.logs {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #485460;
-    border-radius: 8px;
-}
-
 #logOutput {
     max-height: 200px;
     overflow-y: auto;
     font-size: 14px;
-    color: #dfe6e9;
 }
