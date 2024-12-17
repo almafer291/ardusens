@@ -58,4 +58,19 @@ function updateCharts(data) {
     tempChart.data.datasets[0].data.push(data.temperature_aht);
 
     humidityChart.data.labels.push(time);
-    humidityChart.data.datasets[0].data.push(data.hum
+    humidityChart.data.datasets[0].data.push(data.humidity_aht);
+
+    // Actualizar las gráficas
+    if (tempChart.data.labels.length > 10) {
+        tempChart.data.labels.shift();
+        tempChart.data.datasets[0].data.shift();
+    }
+
+    if (humidityChart.data.labels.length > 10) {
+        humidityChart.data.labels.shift();
+        humidityChart.data.datasets[0].data.shift();
+    }
+
+    tempChart.update();
+    humidityChart.update();
+} // Aquí se cierra correctamente la función updateCharts
