@@ -1,100 +1,81 @@
-// Inicializar Firebase
+// Importar Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
-// Configuración de Firebase
+// Configuración Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
-  authDomain: "ardusens.firebaseapp.com",
-  databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "ardusens",
-  storageBucket: "ardusens.appspot.com",
-  messagingSenderId: "932230234372",
-  appId: "1:932230234372:web:f68c12d2913155e30a9051",
-  measurementId: "G-JBXRDGDTY7"
+    apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
+    authDomain: "ardusens.firebaseapp.com",
+    databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "ardusens",
+    storageBucket: "ardusens.appspot.com",
+    messagingSenderId: "932230234372",
+    appId: "1:932230234372:web:f68c12d2913155e30a9051",
+    measurementId: "G-JBXRDGDTY7"
 };
 
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Función para mostrar datos de los sensores
-const displayData = () => {
-  const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
-  onValue(sensorDataRef, (snapshot) => {
+// Menú y vistas
+document.getElementById("btn-sensores").addEventListener("click", () => showSection("sensores-display"));
+document.getElementById("btn-reles").addEventListener("click", () => showSection("reles-control"));
+document.getElementById("btn-graficas").addEventListener("click", () => showSection("graficas-display"));
+
+function showSection(id) {
+    document.querySelectorAll(".content-display").forEach(section => section.style.display = "none");
+    document.getElementById(id).style.display = "block";
+}
+
+// Datos de sensores
+const sensorDataRef = ref(database, "/sensorData");
+onValue(sensorDataRef, (snapshot) => {
     const data = snapshot.val();
-    console.log("Datos recibidos de Firebase:", data);
-
     if (data) {
-      Object.values(data).forEach(sensor => {
-        const humidity = sensor.humidity_aht ? sensor.humidity_aht.toFixed(2) : "No disponible";
-        const temperatureAHT = sensor.temperature_aht ? sensor.temperature_aht.toFixed(2) : "No disponible";
-        const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
-        const temperatureBMP = sensor.temperature_bmp ? sensor.temperature_bmp.toFixed(2) : "No disponible";
+        const sensor = Object.values(data)[0];
+        document.getElementById("humidity").innerText = `Humedad: ${sensor.humidity_aht || "No disponible"}%`;
+        document.getElementById("tempAHT").innerText = `Temperatura AHT20: ${sensor.temperature_aht || "No disponible"}°C`;
+        document.getElementById("pressure").innerText = `Presión: ${sensor.pressure_bmp || "No disponible"} hPa`;
+        document.getElementById("tempBMP").innerText = `Temperatura BMP280: ${sensor.temperature_bmp || "No disponible"}°C`;
 
-        document.getElementById("humidity").innerText = `Humedad (AHT20): ${humidity}%`;
-        document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${temperatureAHT}°C`;
-        document.getElementById("pressure").innerText = `Presión (BMP280): ${pressure} hPa`;
-        document.getElementById("tempBMP").innerText = `Temperatura (BMP280): ${temperatureBMP}°C`;
-      });
-    } else {
-      console.log("No se encontraron datos en Firebase.");
+        updateGraficas(sensor);
     }
-  });
-};
+});
 
-// Función para cambiar de sección al presionar los botones
-const showSection = (section) => {
-    // Ocultar todas las secciones
-    document.getElementById("sensores-display").style.display = "none";
-    document.getElementById("reles-control").style.display = "none";
+// Gráficas
+let graficaHumedad = initGrafica("grafica-humedad", "Humedad");
+let graficaTempAHT = initGrafica("grafica-tempAHT", "Temperatura AHT20");
+let graficaPresion = initGrafica("grafica-presion", "Presión");
+let graficaTempBMP = initGrafica("grafica-tempBMP", "Temperatura BMP280");
 
-    // Mostrar la sección correspondiente
-    if (section === "sensores") {
-        document.getElementById("sensores-display").style.display = "block";
-        displayData(); // Llamar a la función que muestra los datos de los sensores
-    } else if (section === "reles") {
-        document.getElementById("reles-control").style.display = "block";
+function initGrafica(id, label) {
+    return new Chart(document.getElementById(id), {
+        type: "line",
+        data: { labels: [], datasets: [{ label, data: [], borderColor: "#00baba", backgroundColor: "rgba(0,186,186,0.2)" }] }
+    });
+}
+
+function updateGraficas(sensor) {
+    const tiempo = new Date().toLocaleTimeString();
+    updateGrafica(graficaHumedad, tiempo, sensor.humidity_aht);
+    updateGrafica(graficaTempAHT, tiempo, sensor.temperature_aht);
+    updateGrafica(graficaPresion, tiempo, sensor.pressure_bmp);
+    updateGrafica(graficaTempBMP, tiempo, sensor.temperature_bmp);
+}
+
+function updateGrafica(chart, label, value) {
+    if (chart.data.labels.length > 10) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
     }
-};
+    chart.data.labels.push(label);
+    chart.data.datasets[0].data.push(value || 0);
+    chart.update();
+}
 
-// Asignar evento a los botones
-document.getElementById("btn-sensores").addEventListener("click", () => showSection("sensores"));
-document.getElementById("btn-reles").addEventListener("click", () => showSection("reles"));
-
-// Función para encender/apagar los relés
-const toggleRelay = (relayNumber) => {
-    const statusCircle = document.getElementById(`rele-status-${relayNumber}`);
-    if (statusCircle.style.backgroundColor === "red") {
-        statusCircle.style.backgroundColor = "green"; // Encendido
-    } else {
-        statusCircle.style.backgroundColor = "red"; // Apagado
-    }
-};
-
-// Función para agregar los controles de relés
-const displayRelays = () => {
-  const relaysContainer = document.getElementById("reles-status");
-  relaysContainer.innerHTML = ""; // Limpiar contenido anterior
-
-  for (let i = 1; i <= 8; i++) {
-    const relayDiv = document.createElement("div");
-    relayDiv.classList.add("rele-control");
-
-    const statusCircle = document.createElement("div");
-    statusCircle.classList.add("rele-status");
-    statusCircle.id = `rele-status-${i}`;
-    relayDiv.appendChild(statusCircle);
-
-    const relayButton = document.createElement("button");
-    relayButton.classList.add("rele-btn");
-    relayButton.innerText = `Rele ${i} ON/OFF`;
-    relayButton.addEventListener("click", () => toggleRelay(i));
-
-    relayDiv.appendChild(relayButton);
-    relaysContainer.appendChild(relayDiv);
-  }
-};
-
-// Inicializar la sección de relés
-displayRelays();
+// Control de relés
+function toggleRele(id) {
+    const statusCircle = document.getElementById(`status-${id}`);
+    statusCircle.style.backgroundColor = statusCircle.style.backgroundColor === "green" ? "red" : "green";
+}
