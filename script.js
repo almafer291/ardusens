@@ -1,6 +1,6 @@
 // Inicializar Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -28,7 +28,6 @@ const displayData = () => {
     if (data) {
       // Recorremos cada entrada dentro de los datos recibidos
       Object.values(data).forEach(sensor => {
-        // Accedemos a los valores dentro de cada objeto de sensor
         const humidity = sensor.humidity_aht ? sensor.humidity_aht.toFixed(2) : "No disponible";
         const temperatureAHT = sensor.temperature_aht ? sensor.temperature_aht.toFixed(2) : "No disponible";
         const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
@@ -46,29 +45,74 @@ const displayData = () => {
   });
 };
 
-// Funcionalidad de los botones
-document.getElementById("btn-sensores").addEventListener("click", function() {
-  // Mostrar los datos de los sensores al pulsar el botón
-  displayData();
-  
-  // Resaltar el botón activo
-  document.querySelectorAll(".side-btn").forEach(button => {
-    button.classList.remove("active");
+// Función para mostrar el control de los relés
+const displayRelays = () => {
+  const relaysContainer = document.getElementById("reles-status");
+  for (let i = 1; i <= 8; i++) {
+    const relayDiv = document.createElement("div");
+    relayDiv.classList.add("rele-control");
+
+    const statusCircle = document.createElement("div");
+    statusCircle.classList.add("rele-status");
+    statusCircle.id = `rele-status-${i}`;
+    relayDiv.appendChild(statusCircle);
+
+    const relayButton = document.createElement("button");
+    relayButton.classList.add("rele-btn");
+    relayButton.innerText = `Rele ${i} ON/OFF`;
+    relayButton.addEventListener("click", () => toggleRelay(i));
+
+    relayDiv.appendChild(relayButton);
+    relaysContainer.appendChild(relayDiv);
+
+    // Crear temporizador para cada relé
+    const timerContainer = document.createElement("div");
+    timerContainer.classList.add("timer-container");
+
+    const timerInput = document.createElement("input");
+    timerInput.type = "number";
+    timerInput.classList.add("timer-input");
+    timerInput.placeholder = "HH:MM";
+    timerInput.id = `timer-input-${i}`;
+    timerContainer.appendChild(timerInput);
+
+    const timerButton = document.createElement("button");
+    timerButton.classList.add("timer-btn");
+    timerButton.innerText = "Iniciar Temporizador";
+    timerButton.addEventListener("click", () => startTimer(i, timerInput.value));
+
+    timerContainer.appendChild(timerButton);
+    document.getElementById("timers").appendChild(timerContainer);
+  }
+};
+
+// Función para alternar el estado del relé
+const toggleRelay = (relayNumber) => {
+  const relayStatusRef = ref(database, `/relays/rele${relayNumber}`);
+  onValue(relayStatusRef, (snapshot) => {
+    const currentState = snapshot.val() || false;
+    update(relayStatusRef, { state: !currentState });
+
+    // Actualizar el estado visual del relé
+    const statusCircle = document.getElementById(`rele-status-${relayNumber}`);
+    if (!currentState) {
+      statusCircle.style.backgroundColor = "green";
+    } else {
+      statusCircle.style.backgroundColor = "red";
+    }
   });
-  this.classList.add("active");
-});
+};
 
-document.getElementById("btn-reles").addEventListener("click", function() {
-  alert("Funcionalidad de Relés en desarrollo.");
-  // Aquí agregarás la funcionalidad para los relés
-});
+// Función para iniciar el temporizador
+const startTimer = (relayNumber, timerValue) => {
+  const [hours, minutes] = timerValue.split(":").map(Number);
+  const totalMilliseconds = (hours * 60 + minutes) * 60 * 1000;
 
-document.getElementById("btn-graficas").addEventListener("click", function() {
-  alert("Funcionalidad de Gráficas en desarrollo.");
-  // Aquí agregarás la funcionalidad para las gráficas
-});
+  setTimeout(() => {
+    toggleRelay(relayNumber); // Cambia el estado del relé después de que el temporizador termine
+  }, totalMilliseconds);
+};
 
-document.getElementById("btn-tablas").addEventListener("click", function() {
-  alert("Funcionalidad de Tablas en desarrollo.");
-  // Aquí agregarás la funcionalidad para las tablas
-});
+// Mostrar datos y relés al cargar la página
+displayData();
+displayRelays();
