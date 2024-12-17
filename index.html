@@ -3,18 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ardusens</title>
+    <title>Ardusens - Easy Life 1.1</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Librería Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <!-- Contenedor Principal -->
     <div class="data-display">
-        <h2>Easy life 1.1</h2>
-        <p id="humidity">Humedad: No disponible</p>
-        <p id="tempAHT">Temperatura AHT20: No disponible</p>
-        <p id="pressure">Presión: No disponible</p>
-        <p id="tempBMP">Temperatura BMP280: No disponible</p>
+        <h2>Easy Life 1.1</h2>
+        <p id="humidity">Humedad (AHT20): No disponible</p>
+        <p id="tempAHT">Temperatura (AHT20): No disponible</p>
+        <p id="pressure">Presión (BMP280): No disponible</p>
+        <p id="tempBMP">Temperatura (BMP280): No disponible</p>
     </div>
 
+    <!-- Contenedor de Gráficas -->
+    <div class="chart-container">
+        <canvas id="tempChart"></canvas>
+        <canvas id="humidityChart"></canvas>
+    </div>
+
+    <!-- Script Principal -->
     <script type="module" src="script.js"></script>
 </body>
 </html>
