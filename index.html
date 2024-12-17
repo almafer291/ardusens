@@ -4,15 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arduses</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="data-display">
-        <h2>Datos de los Sensores</h2>
-        <p id="humidity">Humedad: No disponible</p>
-        <p id="tempAHT">Temperatura AHT20: No disponible</p>
-        <p id="pressure">Presión: No disponible</p>
-        <p id="tempBMP">Temperatura BMP280: No disponible</p>
+    <div class="container">
+        <div class="data-display">
+            <h2>Datos de los Sensores</h2>
+            <p id="humidity">Humedad: No disponible</p>
+            <p id="tempAHT">Temperatura AHT20: No disponible</p>
+            <p id="pressure">Presión: No disponible</p>
+            <p id="tempBMP">Temperatura BMP280: No disponible</p>
+        </div>
+
+        <div class="side-buttons">
+            <button id="btn-sensores" class="side-btn">Sensores</button>
+            <button id="btn-reles" class="side-btn">Relés</button>
+            <button id="btn-graficas" class="side-btn">Gráficas</button>
+            <button id="btn-tablas" class="side-btn">Tablas</button>
+        </div>
     </div>
 
     <script type="module" src="script.js"></script>
