@@ -1,6 +1,6 @@
-// Importar Firebase
+// Inicializar Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -10,70 +10,91 @@ const firebaseConfig = {
   projectId: "ardusens",
   storageBucket: "ardusens.appspot.com",
   messagingSenderId: "932230234372",
-  appId: "1:932230234372:web:f68c12d2913155e30a9051"
+  appId: "1:932230234372:web:f68c12d2913155e30a9051",
+  measurementId: "G-JBXRDGDTY7"
 };
 
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Mostrar datos de los sensores
+// Función para mostrar datos de los sensores
 const displayData = () => {
-  const sensorDataRef = ref(database, "/sensorData");
+  const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
   onValue(sensorDataRef, (snapshot) => {
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      document.getElementById("humidity").innerText = `Humedad: ${data.humidity_aht.toFixed(2)}%`;
-      document.getElementById("tempAHT").innerText = `Temperatura AHT20: ${data.temperature_aht.toFixed(2)}°C`;
-      document.getElementById("pressure").innerText = `Presión: ${data.pressure_bmp.toFixed(2)} hPa`;
-      document.getElementById("tempBMP").innerText = `Temperatura BMP280: ${data.temperature_bmp.toFixed(2)}°C`;
+    const data = snapshot.val();
+    console.log("Datos recibidos de Firebase:", data);
+
+    if (data) {
+      Object.values(data).forEach(sensor => {
+        const humidity = sensor.humidity_aht ? sensor.humidity_aht.toFixed(2) : "No disponible";
+        const temperatureAHT = sensor.temperature_aht ? sensor.temperature_aht.toFixed(2) : "No disponible";
+        const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
+        const temperatureBMP = sensor.temperature_bmp ? sensor.temperature_bmp.toFixed(2) : "No disponible";
+
+        document.getElementById("humidity").innerText = `Humedad (AHT20): ${humidity}%`;
+        document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${temperatureAHT}°C`;
+        document.getElementById("pressure").innerText = `Presión (BMP280): ${pressure} hPa`;
+        document.getElementById("tempBMP").innerText = `Temperatura (BMP280): ${temperatureBMP}°C`;
+      });
     } else {
-      console.log("No se encontraron datos.");
+      console.log("No se encontraron datos en Firebase.");
     }
   });
 };
 
-// Generar botones de control de relés
-const generateReleControls = () => {
-  const container = document.getElementById("releContainer");
+// Función para cambiar de sección al presionar los botones
+const showSection = (section) => {
+    // Ocultar todas las secciones
+    document.getElementById("sensores-display").style.display = "none";
+    document.getElementById("reles-control").style.display = "none";
+
+    // Mostrar la sección correspondiente
+    if (section === "sensores") {
+        document.getElementById("sensores-display").style.display = "block";
+        displayData(); // Llamar a la función que muestra los datos de los sensores
+    } else if (section === "reles") {
+        document.getElementById("reles-control").style.display = "block";
+    }
+};
+
+// Asignar evento a los botones
+document.getElementById("btn-sensores").addEventListener("click", () => showSection("sensores"));
+document.getElementById("btn-reles").addEventListener("click", () => showSection("reles"));
+
+// Función para encender/apagar los relés
+const toggleRelay = (relayNumber) => {
+    const statusCircle = document.getElementById(`rele-status-${relayNumber}`);
+    if (statusCircle.style.backgroundColor === "red") {
+        statusCircle.style.backgroundColor = "green"; // Encendido
+    } else {
+        statusCircle.style.backgroundColor = "red"; // Apagado
+    }
+};
+
+// Función para agregar los controles de relés
+const displayRelays = () => {
+  const relaysContainer = document.getElementById("reles-status");
+  relaysContainer.innerHTML = ""; // Limpiar contenido anterior
+
   for (let i = 1; i <= 8; i++) {
-    const releDiv = document.createElement("div");
-    releDiv.className = "rele-item";
-    releDiv.innerHTML = `
-      <p>Relé ${i}</p>
-      <button onclick="toggleRele(${i}, true)">ON</button>
-      <button onclick="toggleRele(${i}, false)">OFF</button>
-      <div id="rele-status-${i}" style="margin-top:10px;">🟥</div>
-    `;
-    container.appendChild(releDiv);
+    const relayDiv = document.createElement("div");
+    relayDiv.classList.add("rele-control");
+
+    const statusCircle = document.createElement("div");
+    statusCircle.classList.add("rele-status");
+    statusCircle.id = `rele-status-${i}`;
+    relayDiv.appendChild(statusCircle);
+
+    const relayButton = document.createElement("button");
+    relayButton.classList.add("rele-btn");
+    relayButton.innerText = `Rele ${i} ON/OFF`;
+    relayButton.addEventListener("click", () => toggleRelay(i));
+
+    relayDiv.appendChild(relayButton);
+    relaysContainer.appendChild(relayDiv);
   }
 };
 
-// Función para cambiar el estado de un relé
-window.toggleRele = (releId, state) => {
-  const releRef = ref(database, `/reles/rele${releId}`);
-  update(releRef, { state });
-  document.getElementById(`rele-status-${releId}`).innerText = state ? "🟩" : "🟥";
-};
-
-// Cambiar sección visible
-window.showSection = (section) => {
-  document.querySelectorAll(".section").forEach((sec) => sec.classList.add("hidden"));
-  document.getElementById(section).classList.remove("hidden");
-};
-
-// Inicializar Gráficas
-const initializeCharts = () => {
-  const ctx1 = document.getElementById('humidityChart').getContext('2d');
-  new Chart(ctx1, {
-    type: 'line',
-    data: { labels: [], datasets: [{ label: 'Humedad', data: [], borderColor: '#0a9396' }] }
-  });
-};
-
-// Inicializar todo
-document.addEventListener("DOMContentLoaded", () => {
-  displayData();
-  generateReleControls();
-  initializeCharts();
-});
+// Inicializar la sección de relés
+displayRelays();
