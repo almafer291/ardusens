@@ -1,10 +1,19 @@
+/* General */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
     margin: 0;
     padding: 0;
+    display: flex;
 }
 
+/* Contenedor principal */
+.container {
+    display: flex;
+    width: 100%;
+}
+
+/* Contenedor de datos */
 .data-display {
     margin: 20px;
     padding: 20px;
@@ -14,18 +23,55 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 500px;
     margin: 50px auto;
+    flex: 1; /* Toma el espacio disponible */
 }
 
+/* Título */
 h2 {
     text-align: center;
     color: #333;
 }
 
+/* Estilo para los párrafos */
 p {
     font-size: 18px;
     color: #555;
 }
 
+/* Estilo para los datos */
 #humidity, #tempAHT, #pressure, #tempBMP {
     margin: 10px 0;
+}
+
+/* Botones en el lado derecho */
+.side-buttons {
+    position: fixed;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Estilo para los botones */
+.side-btn {
+    background-color: #00B5B8; /* Azul aguamarina oscuro */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 180px;
+}
+
+.side-btn:hover {
+    background-color: #008C8C; /* Azul más oscuro al pasar el ratón */
+}
+
+/* Estilo para el contenedor de los botones */
+.side-buttons button.active {
+    background-color: #007777; /* Resalta el botón activo */
 }
