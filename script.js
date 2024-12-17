@@ -1,91 +1,60 @@
-// Importar Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+// Estado de los relés (1 a 8)
+const relayState = Array(8).fill(false);
 
-// Configuración de Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
-  authDomain: "ardusens.firebaseapp.com",
-  databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "ardusens",
-  storageBucket: "ardusens.appspot.com",
-  messagingSenderId: "932230234372",
-  appId: "1:932230234372:web:f68c12d2913155e30a9051",
-  measurementId: "G-JBXRDGDTY7"
-};
+// Función para encender/apagar un relé
+function toggleRelay(relayNumber) {
+    relayState[relayNumber - 1] = !relayState[relayNumber - 1];
+    logAction(`Relé ${relayNumber} ${(relayState[relayNumber - 1] ? "ENCENDIDO" : "APAGADO")}`);
+    // Aquí puedes agregar el código para enviar el estado al servidor o Firebase
+}
 
-// Inicializar Firebase
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+// Función para establecer temporizador de un relé
+function setTimer(relayNumber) {
+    const onTime = parseInt(document.getElementById(`onTime${relayNumber}`).value) || 0;
+    const offTime = parseInt(document.getElementById(`offTime${relayNumber}`).value) || 0;
 
-// Configuración de las gráficas usando Chart.js
-const ctxTemp = document.getElementById('tempChart').getContext('2d');
-const ctxHumidity = document.getElementById('humidityChart').getContext('2d');
+    logAction(`Temporizador configurado para Relé ${relayNumber} - Encender: ${onTime}s, Apagar: ${offTime}s`);
 
-// Gráfica de Temperatura
-const tempChart = new Chart(ctxTemp, {
-  type: 'line',
-  data: {
-    labels: [],
-    datasets: [{
-      label: 'Temperatura AHT20 (°C)',
-      data: [],
-      borderColor: '#1ca3ec',
-      backgroundColor: 'rgba(28, 163, 236, 0.2)',
-      borderWidth: 2,
-      fill: true,
-    }]
-  },
-  options: { responsive: true, scales: { y: { beginAtZero: false } } }
-});
-
-// Gráfica de Humedad
-const humidityChart = new Chart(ctxHumidity, {
-  type: 'line',
-  data: {
-    labels: [],
-    datasets: [{
-      label: 'Humedad AHT20 (%)',
-      data: [],
-      borderColor: '#34dbeb',
-      backgroundColor: 'rgba(52, 219, 235, 0.2)',
-      borderWidth: 2,
-      fill: true,
-    }]
-  },
-  options: { responsive: true, scales: { y: { beginAtZero: false } } }
-});
-
-// Función para actualizar los datos en la página y gráficas
-const updateData = () => {
-  const sensorRef = ref(database, "/sensorData");
-
-  onValue(sensorRef, (snapshot) => {
-    const data = snapshot.val();
-    console.log("Datos de Firebase:", data);
-
-    if (data) {
-      const latestEntry = Object.values(data).pop();
-
-      // Mostrar en la página
-      document.getElementById("humidity").innerText = `Humedad (AHT20): ${latestEntry.humidity_aht.toFixed(2)}%`;
-      document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${latestEntry.temperature_aht.toFixed(2)}°C`;
-      document.getElementById("pressure").innerText = `Presión (BMP280): ${latestEntry.pressure_bmp.toFixed(2)} hPa`;
-      document.getElementById("tempBMP").innerText = `Temperatura (BMP280): ${latestEntry.temperature_bmp.toFixed(2)}°C`;
-
-      // Actualizar gráficas
-      const time = new Date().toLocaleTimeString();
-      tempChart.data.labels.push(time);
-      tempChart.data.datasets[0].data.push(latestEntry.temperature_aht);
-
-      humidityChart.data.labels.push(time);
-      humidityChart.data.datasets[0].data.push(latestEntry.humidity_aht);
-
-      tempChart.update();
-      humidityChart.update();
+    if (onTime > 0) {
+        setTimeout(() => {
+            relayState[relayNumber - 1] = true;
+            logAction(`Relé ${relayNumber} ENCENDIDO automáticamente.`);
+        }, onTime * 1000);
     }
-  });
-};
 
-// Llamar la función
-updateData();
+    if (offTime > 0) {
+        setTimeout(() => {
+            relayState[relayNumber - 1] = false;
+            logAction(`Relé ${relayNumber} APAGADO automáticamente.`);
+        }, offTime * 1000);
+    }
+}
+
+// Función para registrar acciones en los logs
+function logAction(message) {
+    const logOutput = document.getElementById("logOutput");
+    const timestamp = new Date().toLocaleTimeString();
+    logOutput.innerHTML += `<p>[${timestamp}] ${message}</p>`;
+    logOutput.scrollTop = logOutput.scrollHeight;
+}
+
+// Generar dinámicamente los 8 controles de relés (opcional para mejorar)
+document.addEventListener("DOMContentLoaded", () => {
+    const relaysContainer = document.querySelector(".relays");
+
+    for (let i = 3; i <= 8; i++) {
+        const relayDiv = document.createElement("div");
+        relayDiv.className = "relay";
+        relayDiv.id = `relay${i}`;
+        relayDiv.innerHTML = `
+            <h3>Relé ${i}</h3>
+            <button onclick="toggleRelay(${i})">Encender/Apagar</button>
+            <div class="timers">
+                <label>Encender (s): <input type="number" id="onTime${i}" min="0"></label>
+                <label>Apagar (s): <input type="number" id="offTime${i}" min="0"></label>
+                <button onclick="setTimer(${i})">Temporizar</button>
+            </div>
+        `;
+        relaysContainer.appendChild(relayDiv);
+    }
+});
