@@ -3,41 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ardusens</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Librería Chart.js -->
+    <title>Arduses</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Lectura de Sensores -->
-        <div class="data-display">
-            <h2>Lecturas de Sensores</h2>
-            <p id="humidity">Humedad (AHT20): No disponible</p>
-            <p id="tempAHT">Temperatura (AHT20): No disponible</p>
-            <p id="pressure">Presión (BMP280): No disponible</p>
-            <p id="tempBMP">Temperatura (BMP280): No disponible</p>
-        </div>
-
-        <!-- Gráficas -->
-        <div class="charts">
-            <h2>Gráficas de Datos</h2>
-            <canvas id="tempChart"></canvas>
-            <canvas id="humidityChart"></canvas>
-        </div>
-
-        <!-- Control de Relés -->
-        <div class="relay-controls">
-            <h2>Control de Relés</h2>
-            <div class="relays">
-                <!-- Generado dinámicamente por JavaScript -->
-            </div>
-        </div>
-
-        <!-- Logs -->
-        <div class="logs">
-            <h2>Logs de Control</h2>
-            <div id="logOutput"></div>
-        </div>
+    <div class="data-display">
+        <h2>Datos de los Sensores</h2>
+        <p id="humidity">Humedad: No disponible</p>
+        <p id="tempAHT">Temperatura AHT20: No disponible</p>
+        <p id="pressure">Presión: No disponible</p>
+        <p id="tempBMP">Temperatura BMP280: No disponible</p>
     </div>
 
     <script type="module" src="script.js"></script>
