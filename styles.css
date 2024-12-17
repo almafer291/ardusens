@@ -1,31 +1,68 @@
+/* Reset de márgenes y paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1c1e26; /* Gris muy oscuro */
+    color: #ffffff;
     margin: 0;
     padding: 0;
 }
 
+/* Contenedor Principal */
 .data-display {
-    margin: 20px;
+    background: #2c2f36;
+    color: #d9e8f5;
+    border: 2px solid #1ca3ec;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(28, 163, 236, 0.4);
     padding: 20px;
-    background-color: #ffffff;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 470px;
-    margin: 50px auto;
+    margin: 40px auto;
+    max-width: 500px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
 }
 
 h2 {
-    text-align: center;
-    color: #333;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1ca3ec;
+    margin-bottom: 20px;
 }
 
 p {
-    font-size: 18px;
-    color: #555;
+    font-size: 20px;
+    margin: 10px 0;
+    color: #b0c7d4;
 }
 
 #humidity, #tempAHT, #pressure, #tempBMP {
-    margin: 10px 0;
+    font-size: 22px;
+    font-weight: bold;
+    color: #1ca3ec;
+    margin: 15px 0;
+}
+
+/* Gráficas */
+.chart-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px auto;
+    gap: 20px;
+    max-width: 900px;
+}
+
+canvas {
+    background-color: #2c2f36;
+    border: 1px solid #1ca3ec;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(28, 163, 236, 0.4);
+    width: 100%;
+    max-width: 400px;
+    height: 250px;
 }
