@@ -11,14 +11,14 @@ const firebaseConfig = {
   storageBucket: "ardusens.appspot.com",
   messagingSenderId: "932230234372",
   appId: "1:932230234372:web:f68c12d2913155e30a9051",
-  measurementId: "G-JBXRDGDTY7",
+  measurementId: "G-JBXRDGDTY7"
 };
 
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Función para mostrar datos en consola y en la página
+// Función para mostrar datos de los sensores
 const displayData = () => {
   const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
   onValue(sensorDataRef, (snapshot) => {
@@ -34,9 +34,7 @@ const displayData = () => {
         const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
         const temperatureBMP = sensor.temperature_bmp ? sensor.temperature_bmp.toFixed(2) : "No disponible";
 
-        console.log(`Humedad: ${humidity}, Temperatura AHT20: ${temperatureAHT}, Presión: ${pressure}, Temperatura BMP280: ${temperatureBMP}`);
-
-        // Actualiza el contenido de la página (solo con el primer set de datos)
+        // Actualiza el contenido de la página
         document.getElementById("humidity").innerText = `Humedad (AHT20): ${humidity}%`;
         document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${temperatureAHT}°C`;
         document.getElementById("pressure").innerText = `Presión (BMP280): ${pressure} hPa`;
@@ -48,5 +46,29 @@ const displayData = () => {
   });
 };
 
-// Llama la función para mostrar los datos
-displayData();
+// Funcionalidad de los botones
+document.getElementById("btn-sensores").addEventListener("click", function() {
+  // Mostrar los datos de los sensores al pulsar el botón
+  displayData();
+  
+  // Resaltar el botón activo
+  document.querySelectorAll(".side-btn").forEach(button => {
+    button.classList.remove("active");
+  });
+  this.classList.add("active");
+});
+
+document.getElementById("btn-reles").addEventListener("click", function() {
+  alert("Funcionalidad de Relés en desarrollo.");
+  // Aquí agregarás la funcionalidad para los relés
+});
+
+document.getElementById("btn-graficas").addEventListener("click", function() {
+  alert("Funcionalidad de Gráficas en desarrollo.");
+  // Aquí agregarás la funcionalidad para las gráficas
+});
+
+document.getElementById("btn-tablas").addEventListener("click", function() {
+  alert("Funcionalidad de Tablas en desarrollo.");
+  // Aquí agregarás la funcionalidad para las tablas
+});
