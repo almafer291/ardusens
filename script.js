@@ -1,76 +1,52 @@
-// Importar Firebase
+// Inicializar Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
-// Configuración Firebase
+// Configuración de Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
-    authDomain: "ardusens.firebaseapp.com",
-    databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "ardusens",
-    storageBucket: "ardusens.appspot.com",
-    messagingSenderId: "932230234372",
-    appId: "1:932230234372:web:f68c12d2913155e30a9051",
-    measurementId: "G-JBXRDGDTY7"
+  apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
+  authDomain: "ardusens.firebaseapp.com",
+  databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "ardusens",
+  storageBucket: "ardusens.appspot.com",
+  messagingSenderId: "932230234372",
+  appId: "1:932230234372:web:f68c12d2913155e30a9051",
+  measurementId: "G-JBXRDGDTY7"
 };
 
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Variables globales
-const relayState = Array(8).fill(false); // Estado inicial de los 8 relés
-
-// Función para obtener datos de Firebase
+// Función para mostrar datos en consola y en la página
 const displayData = () => {
-    const sensorDataRef = ref(database, "/sensorData");
-    onValue(sensorDataRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            const latestData = Object.values(data)[0]; // Última lectura
-            document.getElementById("humidity").innerText = `Humedad (AHT20): ${latestData.humidity_aht.toFixed(2)}%`;
-            document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${latestData.temperature_aht.toFixed(2)}°C`;
-            document.getElementById("pressure").innerText = `Presión (BMP280): ${latestData.pressure_bmp.toFixed(2)} hPa`;
-            document.getElementById("tempBMP").innerText = `Temperatura (BMP280): ${latestData.temperature_bmp.toFixed(2)}°C`;
+  const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
+  onValue(sensorDataRef, (snapshot) => {
+    const data = snapshot.val();
+    console.log("Datos recibidos de Firebase:", data);  // Verificamos si los datos llegan a la consola
 
-            updateCharts(latestData); // Actualizar gráficas
-        }
-    });
+    if (data) {
+      // Recorremos cada entrada dentro de los datos recibidos
+      Object.values(data).forEach(sensor => {
+        // Accedemos a los valores dentro de cada objeto de sensor
+        const humidity = sensor.humidity_aht ? sensor.humidity_aht.toFixed(2) : "No disponible";
+        const temperatureAHT = sensor.temperature_aht ? sensor.temperature_aht.toFixed(2) : "No disponible";
+        const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
+        const temperatureBMP = sensor.temperature_bmp ? sensor.temperature_bmp.toFixed(2) : "No disponible";
+
+        console.log(`Humedad: ${humidity}, Temperatura AHT20: ${temperatureAHT}, Presión: ${pressure}, Temperatura BMP280: ${temperatureBMP}`);
+
+        // Actualiza el contenido de la página (solo con el primer set de datos)
+        document.getElementById("humidity").innerText = `Humedad (AHT20): ${humidity}%`;
+        document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${temperatureAHT}°C`;
+        document.getElementById("pressure").innerText = `Presión (BMP280): ${pressure} hPa`;
+        document.getElementById("tempBMP").innerText = `Temperatura (BMP280): ${temperatureBMP}°C`;
+      });
+    } else {
+      console.log("No se encontraron datos en Firebase.");
+    }
+  });
 };
 
-// Configuración de gráficas
-const ctxTemp = document.getElementById("tempChart").getContext("2d");
-const ctxHumidity = document.getElementById("humidityChart").getContext("2d");
-
-const tempChart = new Chart(ctxTemp, {
-    type: "line",
-    data: { labels: [], datasets: [{ label: "Temperatura °C", data: [], borderColor: "#00b894" }] },
-});
-
-const humidityChart = new Chart(ctxHumidity, {
-    type: "line",
-    data: { labels: [], datasets: [{ label: "Humedad %", data: [], borderColor: "#0984e3" }] },
-});
-
-function updateCharts(data) {
-    const time = new Date().toLocaleTimeString();
-    tempChart.data.labels.push(time);
-    tempChart.data.datasets[0].data.push(data.temperature_aht);
-
-    humidityChart.data.labels.push(time);
-    humidityChart.data.datasets[0].data.push(data.humidity_aht);
-
-    // Actualizar las gráficas
-    if (tempChart.data.labels.length > 10) {
-        tempChart.data.labels.shift();
-        tempChart.data.datasets[0].data.shift();
-    }
-
-    if (humidityChart.data.labels.length > 10) {
-        humidityChart.data.labels.shift();
-        humidityChart.data.datasets[0].data.shift();
-    }
-
-    tempChart.update();
-    humidityChart.update();
-} // Aquí se cierra correctamente la función updateCharts
+// Llama la función para mostrar los datos
+displayData();
