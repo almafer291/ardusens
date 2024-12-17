@@ -11,7 +11,7 @@ const firebaseConfig = {
   storageBucket: "ardusens.appspot.com",
   messagingSenderId: "932230234372",
   appId: "1:932230234372:web:f68c12d2913155e30a9051",
-  measurementId: "G-JBXRDGDTY7"
+  measurementId: "G-JBXRDGDTY7",
 };
 
 // Inicializar Firebase
