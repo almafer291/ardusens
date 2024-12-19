@@ -1,4 +1,4 @@
-// Importar Firebase
+// Inicializar Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
@@ -10,87 +10,91 @@ const firebaseConfig = {
   projectId: "ardusens",
   storageBucket: "ardusens.appspot.com",
   messagingSenderId: "932230234372",
-  appId: "1:932230234372:web:f68c12d2913155e30a9051"
+  appId: "1:932230234372:web:f68c12d2913155e30a9051",
+  measurementId: "G-JBXRDGDTY7"
 };
 
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Inicializar Gráficas
-let humidityChart, temperatureChart, pressureChart;
+// Función para mostrar datos de los sensores
+const displayData = () => {
+  const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
+  onValue(sensorDataRef, (snapshot) => {
+    const data = snapshot.val();
+    console.log("Datos recibidos de Firebase:", data);
 
-function initializeCharts() {
-    const ctxHumidity = document.getElementById("humidityChart").getContext("2d");
-    const ctxTemperature = document.getElementById("temperatureChart").getContext("2d");
-    const ctxPressure = document.getElementById("pressureChart").getContext("2d");
+    if (data) {
+      Object.values(data).forEach(sensor => {
+        const humidity = sensor.humidity_aht ? sensor.humidity_aht.toFixed(2) : "No disponible";
+        const temperatureAHT = sensor.temperature_aht ? sensor.temperature_aht.toFixed(2) : "No disponible";
+        const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
+        const temperatureBMP = sensor.temperature_bmp ? sensor.temperature_bmp.toFixed(2) : "No disponible";
 
-    humidityChart = new Chart(ctxHumidity, {
-        type: "line",
-        data: { labels: [], datasets: [{ label: "Humedad", data: [], borderColor: "#00baba", backgroundColor: "rgba(0,186,186,0.2)" }] },
-    });
-
-    temperatureChart = new Chart(ctxTemperature, {
-        type: "line",
-        data: { labels: [], datasets: [{ label: "Temperatura", data: [], borderColor: "#00baba", backgroundColor: "rgba(0,186,186,0.2)" }] },
-    });
-
-    pressureChart = new Chart(ctxPressure, {
-        type: "line",
-        data: { labels: [], datasets: [{ label: "Presión", data: [], borderColor: "#00baba", backgroundColor: "rgba(0,186,186,0.2)" }] },
-    });
-}
-
-// Actualizar gráficas
-function updateCharts(data) {
-    const timestamp = new Date().toLocaleTimeString();
-
-    humidityChart.data.labels.push(timestamp);
-    humidityChart.data.datasets[0].data.push(data.humidity_aht || 0);
-
-    temperatureChart.data.labels.push(timestamp);
-    temperatureChart.data.datasets[0].data.push(data.temperature_aht || 0);
-
-    pressureChart.data.labels.push(timestamp);
-    pressureChart.data.datasets[0].data.push(data.pressure_bmp || 0);
-
-    [humidityChart, temperatureChart, pressureChart].forEach((chart) => {
-        if (chart.data.labels.length > 10) {
-            chart.data.labels.shift();
-            chart.data.datasets[0].data.shift();
-        }
-        chart.update();
-    });
-}
-
-// Mostrar datos de los sensores
-function displayData() {
-    const sensorDataRef = ref(database, "/sensorData");
-    onValue(sensorDataRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            document.getElementById("humidity").innerText = `Humedad: ${data.humidity_aht?.toFixed(2) || "No disponible"}%`;
-            document.getElementById("tempAHT").innerText = `Temperatura AHT20: ${data.temperature_aht?.toFixed(2) || "No disponible"}°C`;
-            document.getElementById("pressure").innerText = `Presión: ${data.pressure_bmp?.toFixed(2) || "No disponible"} hPa`;
-            document.getElementById("tempBMP").innerText = `Temperatura BMP280: ${data.temperature_bmp?.toFixed(2) || "No disponible"}°C`;
-            document.getElementById("dewPoint").innerText = `Punto de Rocío: ${data.dew_point?.toFixed(2) || "No disponible"}°C`;
-            document.getElementById("altitude").innerText = `Altitud: ${data.altitude?.toFixed(2) || "No disponible"} m`;
-            document.getElementById("seaLevelPressure").innerText = `Presión al Nivel del Mar: ${data.sea_level_pressure?.toFixed(2) || "No disponible"} hPa`;
-            document.getElementById("heatIndex").innerText = `Índice de Calor: ${data.heat_index?.toFixed(2) || "No disponible"}°C`;
-
-            updateCharts(data);
-        }
-    });
-}
-
-// Cambiar sección visible
-window.showSection = (section) => {
-    document.querySelectorAll(".section").forEach((sec) => sec.classList.add("hidden"));
-    document.getElementById(section).classList.remove("hidden");
+        document.getElementById("humidity").innerText = `Humedad (AHT20): ${humidity}%`;
+        document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${temperatureAHT}°C`;
+        document.getElementById("pressure").innerText = `Presión (BMP280): ${pressure} hPa`;
+        document.getElementById("tempBMP").innerText = `Temperatura (BMP280): ${temperatureBMP}°C`;
+      });
+    } else {
+      console.log("No se encontraron datos en Firebase.");
+    }
+  });
 };
 
-// Inicializar
-document.addEventListener("DOMContentLoaded", () => {
-    displayData();
-    initializeCharts();
-});
+// Función para cambiar de sección al presionar los botones
+const showSection = (section) => {
+    // Ocultar todas las secciones
+    document.getElementById("sensores-display").style.display = "none";
+    document.getElementById("reles-control").style.display = "none";
+
+    // Mostrar la sección correspondiente
+    if (section === "sensores") {
+        document.getElementById("sensores-display").style.display = "block";
+        displayData(); // Llamar a la función que muestra los datos de los sensores
+    } else if (section === "reles") {
+        document.getElementById("reles-control").style.display = "block";
+    }
+};
+
+// Asignar evento a los botones
+document.getElementById("btn-sensores").addEventListener("click", () => showSection("sensores"));
+document.getElementById("btn-reles").addEventListener("click", () => showSection("reles"));
+
+// Función para encender/apagar los relés
+const toggleRelay = (relayNumber) => {
+    const statusCircle = document.getElementById(`rele-status-${relayNumber}`);
+    if (statusCircle.style.backgroundColor === "red") {
+        statusCircle.style.backgroundColor = "green"; // Encendido
+    } else {
+        statusCircle.style.backgroundColor = "red"; // Apagado
+    }
+};
+
+// Función para agregar los controles de relés
+const displayRelays = () => {
+  const relaysContainer = document.getElementById("reles-status");
+  relaysContainer.innerHTML = ""; // Limpiar contenido anterior
+
+  for (let i = 1; i <= 8; i++) {
+    const relayDiv = document.createElement("div");
+    relayDiv.classList.add("rele-control");
+
+    const statusCircle = document.createElement("div");
+    statusCircle.classList.add("rele-status");
+    statusCircle.id = `rele-status-${i}`;
+    relayDiv.appendChild(statusCircle);
+
+    const relayButton = document.createElement("button");
+    relayButton.classList.add("rele-btn");
+    relayButton.innerText = `Rele ${i} ON/OFF`;
+    relayButton.addEventListener("click", () => toggleRelay(i));
+
+    relayDiv.appendChild(relayButton);
+    relaysContainer.appendChild(relayDiv);
+  }
+};
+
+// Inicializar la sección de relés
+displayRelays();
