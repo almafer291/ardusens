@@ -3,37 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arduses - Datos en Tiempo Real</title>
+    <title>Arduses</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Librería Chart.js -->
 </head>
 <body>
-    <div class="menu">
-        <button onclick="showSection('sensores')">Sensores</button>
-        <button onclick="showSection('graficas')">Gráficas</button>
+    <!-- Barra lateral con botones -->
+    <div class="side-menu">
+        <button id="btn-sensores" class="side-btn">Sensores</button>
+        <button id="btn-reles" class="side-btn">Relés</button>
+        <button id="btn-graficas" class="side-btn">Gráficas</button>
+        <button id="btn-tablas" class="side-btn">Tablas</button>
     </div>
 
-    <div class="content">
-        <!-- Sensores -->
-        <div id="sensores" class="section">
-            <h2>Datos de los Sensores</h2>
-            <p id="humidity">Humedad: No disponible</p>
-            <p id="tempAHT">Temperatura AHT20: No disponible</p>
-            <p id="pressure">Presión: No disponible</p>
-            <p id="tempBMP">Temperatura BMP280: No disponible</p>
-            <p id="dewPoint">Punto de Rocío: No disponible</p>
-            <p id="altitude">Altitud: No disponible</p>
-            <p id="seaLevelPressure">Presión al Nivel del Mar: No disponible</p>
-            <p id="heatIndex">Índice de Calor: No disponible</p>
-        </div>
+    <!-- Contenedor para mostrar los datos de los sensores -->
+    <div id="sensores-display" class="content-display" style="display: none;">
+        <h2>Datos de los Sensores</h2>
+        <p id="humidity">Humedad: No disponible</p>
+        <p id="tempAHT">Temperatura AHT20: No disponible</p>
+        <p id="pressure">Presión: No disponible</p>
+        <p id="tempBMP">Temperatura BMP280: No disponible</p>
+    </div>
 
-        <!-- Gráficas -->
-        <div id="graficas" class="section hidden">
-            <h2>Gráficas en Tiempo Real</h2>
-            <canvas id="humidityChart"></canvas>
-            <canvas id="temperatureChart"></canvas>
-            <canvas id="pressureChart"></canvas>
-        </div>
+    <!-- Contenedor de control de Relés -->
+    <div id="reles-control" class="content-display" style="display: none;">
+        <h2>Control de Relés</h2>
+        <div id="reles-status"></div>
     </div>
 
     <script type="module" src="script.js"></script>
