@@ -1,23 +1,27 @@
+// Importar los módulos de Firebase que necesitas
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+
 // Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
   authDomain: "ardusens.firebaseapp.com",
   databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "ardusens",
-  storageBucket: "ardusens.firebasestorage.app",
+  storageBucket: "ardusens.appspot.com",
   messagingSenderId: "932230234372",
   appId: "1:932230234372:web:f68c12d2913155e30a9051",
   measurementId: "G-JBXRDGDTY7"
 };
 
 // Inicializar Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const database = firebase.getDatabase(app); // Obtener la base de datos de Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 // Función para mostrar datos de los sensores
 const displayData = () => {
-  const sensorDataRef = firebase.ref(database, "/sensorData"); // Leer el nodo sensorData
-  firebase.onValue(sensorDataRef, (snapshot) => {
+  const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
+  onValue(sensorDataRef, (snapshot) => {
     const data = snapshot.val();
     console.log("Datos recibidos de Firebase:", data);
 
