@@ -26,21 +26,20 @@ const displayData = () => {
         console.log("Datos recibidos de Firebase:", data);
 
         if (data) {
-            // Procesar datos y mostrarlos
-            Object.values(data).forEach(sensor => {
-                const humidity = sensor.humidity_aht ? sensor.humidity_aht.toFixed(2) : "No disponible";
-                const temperatureAHT = sensor.temperature_aht ? sensor.temperature_aht.toFixed(2) : "No disponible";
-                const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
-                const temperatureBMP = sensor.temperature_bmp ? sensor.temperature_bmp.toFixed(2) : "No disponible";
+            // Tomar el último dato recibido
+            const latestDataKey = Object.keys(data).pop();
+            const latestData = data[latestDataKey];
 
-                document.getElementById("humidity").innerText = `Humedad: ${humidity}%`;
-                document.getElementById("tempAHT").innerText = `Temperatura AHT20: ${temperatureAHT}°C`;
-                document.getElementById("pressure").innerText = `Presión: ${pressure} hPa`;
-                document.getElementById("tempBMP").innerText = `Temperatura BMP280: ${temperatureBMP}°C`;
-            });
+            // Mostrar datos de sensores
+            document.getElementById("humidity").innerText = `Humedad: ${latestData.humidity_aht?.toFixed(2) ?? "No disponible"}%`;
+            document.getElementById("tempAHT").innerText = `Temperatura AHT20: ${latestData.temperature_aht?.toFixed(2) ?? "No disponible"}°C`;
+            document.getElementById("pressure").innerText = `Presión: ${latestData.pressure_bmp?.toFixed(2) ?? "No disponible"} hPa`;
+            document.getElementById("tempBMP").innerText = `Temperatura BMP280: ${latestData.temperature_bmp?.toFixed(2) ?? "No disponible"}°C`;
         } else {
             console.error("No hay datos disponibles en Firebase.");
         }
+    }, (error) => {
+        console.error("Error al leer datos de Firebase:", error);
     });
 };
 
