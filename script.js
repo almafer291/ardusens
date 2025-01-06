@@ -1,9 +1,4 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, onValue } from "firebase/database";  // Agregar importación para la base de datos
-import { getAnalytics } from "firebase/analytics";
-
-// Your web app's Firebase configuration
+// Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
   authDomain: "ardusens.firebaseapp.com",
@@ -15,15 +10,14 @@ const firebaseConfig = {
   measurementId: "G-JBXRDGDTY7"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);  // Inicializar la base de datos
-const analytics = getAnalytics(app);
+// Inicializar Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const database = firebase.getDatabase(app); // Obtener la base de datos de Firebase
 
 // Función para mostrar datos de los sensores
 const displayData = () => {
-  const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
-  onValue(sensorDataRef, (snapshot) => {
+  const sensorDataRef = firebase.ref(database, "/sensorData"); // Leer el nodo sensorData
+  firebase.onValue(sensorDataRef, (snapshot) => {
     const data = snapshot.val();
     console.log("Datos recibidos de Firebase:", data);
 
@@ -45,5 +39,58 @@ const displayData = () => {
   });
 };
 
-// Llamar la función displayData para mostrar los datos
-displayData();
+// Función para cambiar de sección al presionar los botones
+const showSection = (section) => {
+    // Ocultar todas las secciones
+    document.getElementById("sensores-display").style.display = "none";
+    document.getElementById("reles-control").style.display = "none";
+
+    // Mostrar la sección correspondiente
+    if (section === "sensores") {
+        document.getElementById("sensores-display").style.display = "block";
+        displayData(); // Llamar a la función que muestra los datos de los sensores
+    } else if (section === "reles") {
+        document.getElementById("reles-control").style.display = "block";
+    }
+};
+
+// Asignar evento a los botones
+document.getElementById("btn-sensores").addEventListener("click", () => showSection("sensores"));
+document.getElementById("btn-reles").addEventListener("click", () => showSection("reles"));
+
+// Función para encender/apagar los relés
+const toggleRelay = (relayNumber) => {
+    const statusCircle = document.getElementById(`rele-status-${relayNumber}`);
+    if (statusCircle.style.backgroundColor === "red") {
+        statusCircle.style.backgroundColor = "green"; // Encendido
+    } else {
+        statusCircle.style.backgroundColor = "red"; // Apagado
+    }
+};
+
+// Función para agregar los controles de relés
+const displayRelays = () => {
+  const relaysContainer = document.getElementById("reles-status");
+  relaysContainer.innerHTML = ""; // Limpiar contenido anterior
+
+  for (let i = 1; i <= 8; i++) {
+    const relayDiv = document.createElement("div");
+    relayDiv.classList.add("rele-control");
+
+    const statusCircle = document.createElement("div");
+    statusCircle.classList.add("rele-status");
+    statusCircle.id = `rele-status-${i}`;
+    relayDiv.appendChild(statusCircle);
+
+    const relayButton = document.createElement("button");
+    relayButton.classList.add("rele-btn");
+    relayButton.innerText = `Rele ${i} ON/OFF`;
+    relayButton.addEventListener("click", () => toggleRelay(i));
+
+    relayDiv.appendChild(relayButton);
+    relaysContainer.appendChild(relayDiv);
+  }
+};
+
+// Inicializar la sección de relés
+displayRelays();
