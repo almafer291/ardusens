@@ -31,8 +31,8 @@ const displaySensorData = () => {
     // Escuchar cambios en la base de datos
     onValue(sensorDataRef, (snapshot) => {
         const data = snapshot.val();
-
-        // Log de datos para verificar si llegan correctamente
+        
+        // Log para verificar si los datos están llegando
         console.log("Datos recibidos desde Firebase:", data);
 
         if (data) {
