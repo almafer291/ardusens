@@ -32,14 +32,21 @@ const displaySensorData = () => {
     onValue(sensorDataRef, (snapshot) => {
         const data = snapshot.val();
 
-        if (data) {
-            console.log("Datos recibidos desde Firebase:", data);
+        // Log de datos para verificar si llegan correctamente
+        console.log("Datos recibidos desde Firebase:", data);
 
-            // Actualizar el DOM con los valores recibidos
-            humidityEl.innerText = `Humedad: ${data.humidity_aht ? data.humidity_aht.toFixed(2) : "No disponible"}%`;
-            tempAHTEl.innerText = `Temperatura AHT20: ${data.temperature_aht ? data.temperature_aht.toFixed(2) : "No disponible"}°C`;
-            pressureEl.innerText = `Presión: ${data.pressure_bmp ? data.pressure_bmp.toFixed(2) : "No disponible"} hPa`;
-            tempBMPEl.innerText = `Temperatura BMP280: ${data.temperature_bmp ? data.temperature_bmp.toFixed(2) : "No disponible"}°C`;
+        if (data) {
+            // Verificar que los valores de los sensores estén disponibles
+            const humidity = data.humidity_aht ? data.humidity_aht.toFixed(2) : "No disponible";
+            const temperatureAHT = data.temperature_aht ? data.temperature_aht.toFixed(2) : "No disponible";
+            const pressure = data.pressure_bmp ? data.pressure_bmp.toFixed(2) : "No disponible";
+            const temperatureBMP = data.temperature_bmp ? data.temperature_bmp.toFixed(2) : "No disponible";
+
+            // Mostrar los datos en la página web
+            humidityEl.innerText = `Humedad: ${humidity}%`;
+            tempAHTEl.innerText = `Temperatura AHT20: ${temperatureAHT}°C`;
+            pressureEl.innerText = `Presión: ${pressure} hPa`;
+            tempBMPEl.innerText = `Temperatura BMP280: ${temperatureBMP}°C`;
         } else {
             console.warn("No se recibieron datos válidos desde Firebase.");
         }
