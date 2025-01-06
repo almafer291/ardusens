@@ -61,5 +61,8 @@ const displayData = () => {
     });
 };
 
-// Llamada inicial para mostrar los datos de los sensores
-displayData();
+// Asegurarse de que el DOM está cargado antes de ejecutar cualquier código
+document.addEventListener('DOMContentLoaded', (event) => {
+    // Llamada inicial para mostrar los datos de los sensores
+    displayData();
+});
