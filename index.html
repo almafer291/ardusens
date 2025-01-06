@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arduses</title>
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Cargar los scripts de Firebase desde la CDN como módulos -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics.js"></script>
 </head>
 <body>
     <!-- Barra lateral con botones -->
@@ -18,10 +23,10 @@
     <!-- Contenedor para mostrar los datos de los sensores -->
     <div id="sensores-display" class="content-display" style="display: none;">
         <h2>Datos de los Sensores</h2>
-        <p id="humidity">Humedad (AHT20): Cargando...</p>
-        <p id="tempAHT">Temperatura (AHT20): Cargando...</p>
-        <p id="pressure">Presión (BMP280): Cargando...</p>
-        <p id="tempBMP">Temperatura (BMP280): Cargando...</p>
+        <p id="humidity">Humedad: No disponible</p>
+        <p id="tempAHT">Temperatura AHT20: No disponible</p>
+        <p id="pressure">Presión: No disponible</p>
+        <p id="tempBMP">Temperatura BMP280: No disponible</p>
     </div>
 
     <!-- Contenedor de control de Relés -->
@@ -30,6 +35,6 @@
         <div id="reles-status"></div>
     </div>
 
-    <script type="module" src="script.js"></script>
+    <script type="module" src="script.js"></script>  <!-- Asegúrate de usar type="module" aquí también -->
 </body>
 </html>
