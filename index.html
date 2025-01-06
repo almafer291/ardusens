@@ -5,12 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arduses</title>
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Cargar los scripts de Firebase desde la CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics.js"></script>
 </head>
 <body>
     <!-- Barra lateral con botones -->
     <div class="side-menu">
         <button id="btn-sensores" class="side-btn">Sensores</button>
         <button id="btn-reles" class="side-btn">Relés</button>
+        <button id="btn-graficas" class="side-btn">Gráficas</button>
+        <button id="btn-tablas" class="side-btn">Tablas</button>
     </div>
 
     <!-- Contenedor para mostrar los datos de los sensores -->
@@ -28,6 +35,6 @@
         <div id="reles-status"></div>
     </div>
 
-    <script type="module" src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
