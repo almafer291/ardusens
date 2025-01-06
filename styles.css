@@ -41,12 +41,13 @@ body {
 /* Contenido principal */
 .content-display {
     background-color: #3b3b3b; /* Gris medio */
-    margin: auto; /* Centra los elementos en pantalla */
+    margin: auto;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     max-width: 500px;
     text-align: center;
+    display: none; /* Oculto por defecto */
 }
 
 h2 {
@@ -57,11 +58,6 @@ h2 {
 p {
     font-size: 18px;
     margin: 10px 0;
-}
-
-/* Gráficas */
-canvas {
-    margin-top: 20px;
 }
 
 /* Relés */
@@ -75,7 +71,7 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #444444; /* Fondo oscuro */
+    background-color: #444444;
     border: 1px solid #555;
     border-radius: 5px;
     margin: 5px;
@@ -85,7 +81,7 @@ canvas {
 }
 
 .rele-btn {
-    background-color: #007f7f; /* Aguamarina oscuro */
+    background-color: #007f7f;
     color: #ffffff;
     border: none;
     padding: 5px 10px;
@@ -95,13 +91,13 @@ canvas {
 }
 
 .rele-btn:hover {
-    background-color: #00a3a3; /* Aguamarina más claro */
+    background-color: #00a3a3;
 }
 
 .rele-status {
     width: 20px;
     height: 20px;
-    background-color: red; /* Estado inicial */
+    background-color: red;
     border-radius: 50%;
     margin-right: 10px;
 }
