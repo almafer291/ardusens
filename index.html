@@ -3,43 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoreo de Sensores</title>
-    <script type="module" src="script.js" defer></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #2b2b2b;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-        .container {
-            margin: auto;
-            padding: 20px;
-            background-color: #444444;
-            border-radius: 10px;
-            max-width: 600px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        h2 {
-            color: #00baba;
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 18px;
-            margin: 10px 0;
-        }
-    </style>
+    <title>Datos de Sensores</title>
+    <script type="module" src="script.js"></script> <!-- Asegúrate de que el script.js esté bien enlazado -->
 </head>
 <body>
-    <div class="container">
-        <h2>Datos de Sensores</h2>
-        <p id="humidity">Humedad (AHT20): Cargando...</p>
-        <p id="tempAHT">Temperatura (AHT20): Cargando...</p>
-        <p id="pressure">Presión (BMP280): Cargando...</p>
-        <p id="tempBMP">Temperatura (BMP280): Cargando...</p>
+    <div id="sensorData">
+        <h1>Datos de los Sensores</h1>
+        <p id="humidity">Cargando...</p> <!-- Aquí se mostrará la humedad -->
+        <p id="tempAHT">Cargando...</p> <!-- Aquí se mostrará la temperatura AHT -->
+        <p id="pressure">Cargando...</p> <!-- Aquí se mostrará la presión BMP -->
+        <p id="tempBMP">Cargando...</p> <!-- Aquí se mostrará la temperatura BMP -->
     </div>
 </body>
 </html>
