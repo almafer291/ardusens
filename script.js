@@ -37,7 +37,9 @@ const displaySensorData = () => {
         console.log("Datos recibidos desde Firebase:", data);
 
         if (data) {
-            // Asignar valores a los elementos de la UI
+            // Log para verificar si los datos tienen las claves correctas
+            console.log("Datos en formato correcto:", data.humidity_aht, data.temperature_aht, data.pressure_bmp, data.temperature_bmp);
+            
             const humidity = data.humidity_aht ? data.humidity_aht.toFixed(2) : "No disponible";
             const temperatureAHT = data.temperature_aht ? data.temperature_aht.toFixed(2) : "No disponible";
             const pressure = data.pressure_bmp ? data.pressure_bmp.toFixed(2) : "No disponible";
@@ -48,8 +50,9 @@ const displaySensorData = () => {
             tempAHTEl.innerText = `Temperatura AHT20: ${temperatureAHT}°C`;
             pressureEl.innerText = `Presión: ${pressure} hPa`;
             tempBMPEl.innerText = `Temperatura BMP280: ${temperatureBMP}°C`;
+
+            console.log("Datos mostrados en la UI.");
         } else {
-            // Si no hay datos disponibles, mostrar un mensaje
             console.warn("No se recibieron datos válidos desde Firebase.");
             humidityEl.innerText = "Humedad: No disponible";
             tempAHTEl.innerText = "Temperatura AHT20: No disponible";
@@ -57,7 +60,6 @@ const displaySensorData = () => {
             tempBMPEl.innerText = "Temperatura BMP280: No disponible";
         }
     }, (error) => {
-        // Manejo de errores
         console.error("Error al leer datos desde Firebase:", error);
     });
 };
