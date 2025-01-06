@@ -1,6 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
-import Chart from "https://cdn.jsdelivr.net/npm/chart.js";
+import { Chart, registerables } from "https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.esm.js";
+
+// Registrar componentes de Chart.js
+Chart.register(...registerables);
 
 // Firebase Configuración
 const firebaseConfig = {
