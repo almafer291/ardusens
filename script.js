@@ -27,3 +27,22 @@ const displayData = () => {
     }
   });
 };
+
+// Función para cambiar de sección al presionar los botones
+const showSection = (section) => {
+    // Ocultar todas las secciones
+    document.getElementById("sensores-display").style.display = "none";
+    document.getElementById("reles-control").style.display = "none";
+
+    // Mostrar la sección correspondiente
+    if (section === "sensores") {
+        document.getElementById("sensores-display").style.display = "block";
+        displayData(); // Llamar a la función que muestra los datos de los sensores
+    } else if (section === "reles") {
+        document.getElementById("reles-control").style.display = "block";
+    }
+};
+
+// Asignar evento a los botones
+document.getElementById("btn-sensores").addEventListener("click", () => showSection("sensores"));
+document.getElementById("btn-reles").addEventListener("click", () => showSection("reles"));
