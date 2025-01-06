@@ -48,7 +48,12 @@ const displaySensorData = () => {
             pressureEl.innerText = `Presión: ${pressure} hPa`;
             tempBMPEl.innerText = `Temperatura BMP280: ${temperatureBMP}°C`;
         } else {
+            // Mostrar un mensaje si los datos no están disponibles
             console.warn("No se recibieron datos válidos desde Firebase.");
+            humidityEl.innerText = "Humedad: No disponible";
+            tempAHTEl.innerText = "Temperatura AHT20: No disponible";
+            pressureEl.innerText = "Presión: No disponible";
+            tempBMPEl.innerText = "Temperatura BMP280: No disponible";
         }
     }, (error) => {
         console.error("Error al leer datos desde Firebase:", error);
