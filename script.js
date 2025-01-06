@@ -1,3 +1,9 @@
+// Importar las funciones necesarias de Firebase
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+
+// Inicializar Firebase
+const database = getDatabase();
+
 // Función para mostrar datos de los sensores
 const displayData = () => {
   const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
