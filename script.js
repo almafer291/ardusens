@@ -1,4 +1,4 @@
-// Importar los módulos de Firebase que necesitas
+// Importar las funciones necesarias de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
@@ -18,20 +18,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Función para mostrar datos de los sensores
+// Función para mostrar los datos de los sensores
 const displayData = () => {
   const sensorDataRef = ref(database, "/sensorData"); // Lee el nodo sensorData
   onValue(sensorDataRef, (snapshot) => {
     const data = snapshot.val();
-    console.log("Datos recibidos de Firebase:", data);
+    console.log("Datos recibidos de Firebase:", data);  // Verifica si los datos están actualizándose
 
     if (data) {
+      // Limpiar los datos antiguos antes de actualizar la vista
       Object.values(data).forEach(sensor => {
         const humidity = sensor.humidity_aht ? sensor.humidity_aht.toFixed(2) : "No disponible";
         const temperatureAHT = sensor.temperature_aht ? sensor.temperature_aht.toFixed(2) : "No disponible";
         const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
         const temperatureBMP = sensor.temperature_bmp ? sensor.temperature_bmp.toFixed(2) : "No disponible";
 
+        // Actualiza el DOM con los nuevos datos
         document.getElementById("humidity").innerText = `Humedad (AHT20): ${humidity}%`;
         document.getElementById("tempAHT").innerText = `Temperatura (AHT20): ${temperatureAHT}°C`;
         document.getElementById("pressure").innerText = `Presión (BMP280): ${pressure} hPa`;
