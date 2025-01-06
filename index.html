@@ -7,13 +7,16 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Barra lateral con botones -->
     <div class="side-menu">
         <button id="btn-sensores" class="side-btn">Sensores</button>
         <button id="btn-reles" class="side-btn">Relés</button>
         <button id="btn-graficas" class="side-btn">Gráficas</button>
+        <button id="btn-tablas" class="side-btn">Tablas</button>
     </div>
 
-    <div id="sensores-display" class="content-display">
+    <!-- Contenedor para mostrar los datos de los sensores -->
+    <div id="sensores-display" class="content-display" style="display: none;">
         <h2>Datos de los Sensores</h2>
         <p id="humidity">Humedad: No disponible</p>
         <p id="tempAHT">Temperatura AHT20: No disponible</p>
@@ -21,15 +24,10 @@
         <p id="tempBMP">Temperatura BMP280: No disponible</p>
     </div>
 
-    <div id="reles-control" class="content-display">
+    <!-- Contenedor de control de Relés -->
+    <div id="reles-control" class="content-display" style="display: none;">
         <h2>Control de Relés</h2>
         <div id="reles-status"></div>
-    </div>
-
-    <div id="graficas-display" class="content-display">
-        <h2>Gráficas</h2>
-        <canvas id="humidityChart"></canvas>
-        <canvas id="temperatureChart"></canvas>
     </div>
 
     <script type="module" src="script.js"></script>
