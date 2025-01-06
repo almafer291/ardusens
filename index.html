@@ -6,10 +6,10 @@
     <title>Arduses</title>
     <link rel="stylesheet" href="styles.css">
     
-    <!-- Cargar los scripts de Firebase desde la CDN -->
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics.js"></script>
+    <!-- Cargar los scripts de Firebase desde la CDN como módulos -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics.js"></script>
 </head>
 <body>
     <!-- Barra lateral con botones -->
@@ -35,6 +35,6 @@
         <div id="reles-status"></div>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>  <!-- Asegúrate de usar type="module" aquí también -->
 </body>
 </html>
