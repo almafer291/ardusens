@@ -3,38 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arduses</title>
-    <link rel="stylesheet" href="styles.css">
-    
-    <!-- Cargar los scripts de Firebase desde la CDN como módulos -->
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics.js"></script>
+    <title>Monitoreo de Sensores</title>
+    <script type="module" src="script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2b2b2b;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .container {
+            margin: auto;
+            padding: 20px;
+            background-color: #444444;
+            border-radius: 10px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        h2 {
+            color: #00baba;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
-    <!-- Barra lateral con botones -->
-    <div class="side-menu">
-        <button id="btn-sensores" class="side-btn">Sensores</button>
-        <button id="btn-reles" class="side-btn">Relés</button>
-        <button id="btn-graficas" class="side-btn">Gráficas</button>
-        <button id="btn-tablas" class="side-btn">Tablas</button>
+    <div class="container">
+        <h2>Datos de Sensores</h2>
+        <p id="humidity">Humedad (AHT20): Cargando...</p>
+        <p id="tempAHT">Temperatura (AHT20): Cargando...</p>
+        <p id="pressure">Presión (BMP280): Cargando...</p>
+        <p id="tempBMP">Temperatura (BMP280): Cargando...</p>
     </div>
-
-    <!-- Contenedor para mostrar los datos de los sensores -->
-    <div id="sensores-display" class="content-display" style="display: none;">
-        <h2>Datos de los Sensores</h2>
-        <p id="humidity">Humedad: No disponible</p>
-        <p id="tempAHT">Temperatura AHT20: No disponible</p>
-        <p id="pressure">Presión: No disponible</p>
-        <p id="tempBMP">Temperatura BMP280: No disponible</p>
-    </div>
-
-    <!-- Contenedor de control de Relés -->
-    <div id="reles-control" class="content-display" style="display: none;">
-        <h2>Control de Relés</h2>
-        <div id="reles-status"></div>
-    </div>
-
-    <script type="module" src="script.js"></script>  <!-- Asegúrate de usar type="module" aquí también -->
 </body>
 </html>
