@@ -41,13 +41,12 @@ body {
 /* Contenido principal */
 .content-display {
     background-color: #3b3b3b; /* Gris medio */
-    margin: auto;
+    margin: auto; /* Centra los elementos en pantalla */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     max-width: 500px;
     text-align: center;
-    display: none; /* Oculto por defecto */
 }
 
 h2 {
@@ -71,7 +70,7 @@ p {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #444444;
+    background-color: #444444; /* Fondo oscuro */
     border: 1px solid #555;
     border-radius: 5px;
     margin: 5px;
@@ -81,7 +80,7 @@ p {
 }
 
 .rele-btn {
-    background-color: #007f7f;
+    background-color: #007f7f; /* Aguamarina oscuro */
     color: #ffffff;
     border: none;
     padding: 5px 10px;
@@ -91,13 +90,13 @@ p {
 }
 
 .rele-btn:hover {
-    background-color: #00a3a3;
+    background-color: #00a3a3; /* Aguamarina más claro */
 }
 
 .rele-status {
     width: 20px;
     height: 20px;
-    background-color: red;
+    background-color: red; /* Estado inicial */
     border-radius: 50%;
     margin-right: 10px;
 }
