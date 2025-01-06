@@ -25,11 +25,10 @@ const displayData = () => {
         const data = snapshot.val();
         console.log("Datos recibidos de Firebase:", data);  // Verifica si los datos están llegando
 
+        // Asegurarse de que los datos no sean null o undefined
         if (data) {
-            // Recorrer los sensores y extraer los valores
             Object.values(data).forEach(sensor => {
-                console.log(sensor); // Asegúrate de que el objeto de cada sensor está bien estructurado
-
+                // Verificación de los valores de los sensores
                 const humidity = sensor.humidity_aht ? sensor.humidity_aht.toFixed(2) : "No disponible";
                 const temperatureAHT = sensor.temperature_aht ? sensor.temperature_aht.toFixed(2) : "No disponible";
                 const pressure = sensor.pressure_bmp ? sensor.pressure_bmp.toFixed(2) : "No disponible";
@@ -43,9 +42,17 @@ const displayData = () => {
             });
         } else {
             console.log("No se encontraron datos en Firebase.");
+            // Actualizar el DOM para mostrar un mensaje
+            document.getElementById("humidity").innerText = "Humedad (AHT20): No disponible";
+            document.getElementById("tempAHT").innerText = "Temperatura (AHT20): No disponible";
+            document.getElementById("pressure").innerText = "Presión (BMP280): No disponible";
+            document.getElementById("tempBMP").innerText = "Temperatura (BMP280): No disponible";
         }
+    }, (error) => {
+        console.log("Error al leer los datos de Firebase:", error);
+        alert("Hubo un error al intentar obtener los datos.");
     });
 };
 
-// Llamada a la función para mostrar los datos de los sensores
+// Llamada inicial para mostrar los datos de los sensores
 displayData();
