@@ -1,8 +1,22 @@
 // Importar las funciones necesarias de Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
+// Configuración de Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
+  authDomain: "ardusens.firebaseapp.com",
+  databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "ardusens",
+  storageBucket: "ardusens.appspot.com",
+  messagingSenderId: "932230234372",
+  appId: "1:932230234372:web:f68c12d2913155e30a9051",
+  measurementId: "G-JBXRDGDTY7"
+};
+
 // Inicializar Firebase
-const database = getDatabase();
+const app = initializeApp(firebaseConfig); // Inicialización con las configuraciones correctas
+const database = getDatabase(app); // Obtener la instancia de la base de datos
 
 // Función para mostrar datos de los sensores
 const displayData = () => {
