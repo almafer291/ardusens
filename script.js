@@ -1,6 +1,6 @@
 // Importar módulos de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-import { getDatabase, ref, onChildAdded } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -18,24 +18,37 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Función para mostrar datos de sensores
+// Elementos HTML
+const humidityEl = document.getElementById("humidity");
+const tempAHTEl = document.getElementById("tempAHT");
+const pressureEl = document.getElementById("pressure");
+const tempBMPEl = document.getElementById("tempBMP");
+
+// Función para obtener y mostrar datos de sensores
 const displaySensorData = () => {
     const sensorDataRef = ref(database, "/sensorData");
 
-    // Escuchar los cambios en tiempo real
-    onChildAdded(sensorDataRef, (snapshot) => {
+    // Escuchar cambios en la base de datos
+    onValue(sensorDataRef, (snapshot) => {
         const data = snapshot.val();
-        console.log("Dato recibido:", data);
 
-        // Actualizar elementos en la página
-        document.getElementById("humidity").innerText = `Humedad: ${data.humidity_aht?.toFixed(2) ?? "No disponible"}%`;
-        document.getElementById("tempAHT").innerText = `Temperatura AHT20: ${data.temperature_aht?.toFixed(2) ?? "No disponible"}°C`;
-        document.getElementById("pressure").innerText = `Presión: ${data.pressure_bmp?.toFixed(2) ?? "No disponible"} hPa`;
-        document.getElementById("tempBMP").innerText = `Temperatura BMP280: ${data.temperature_bmp?.toFixed(2) ?? "No disponible"}°C`;
+        if (data) {
+            console.log("Datos recibidos desde Firebase:", data);
+
+            // Actualizar el DOM con los valores recibidos
+            humidityEl.innerText = `Humedad: ${data.humidity_aht ? data.humidity_aht.toFixed(2) : "No disponible"}%`;
+            tempAHTEl.innerText = `Temperatura AHT20: ${data.temperature_aht ? data.temperature_aht.toFixed(2) : "No disponible"}°C`;
+            pressureEl.innerText = `Presión: ${data.pressure_bmp ? data.pressure_bmp.toFixed(2) : "No disponible"} hPa`;
+            tempBMPEl.innerText = `Temperatura BMP280: ${data.temperature_bmp ? data.temperature_bmp.toFixed(2) : "No disponible"}°C`;
+        } else {
+            console.warn("No se recibieron datos válidos desde Firebase.");
+        }
+    }, (error) => {
+        console.error("Error al leer datos desde Firebase:", error);
     });
 };
 
-// Función para mostrar u ocultar secciones
+// Mostrar la sección correspondiente
 const showSection = (section) => {
     document.getElementById("sensores-display").style.display = "none";
     document.getElementById("reles-control").style.display = "none";
@@ -51,5 +64,5 @@ const showSection = (section) => {
 document.getElementById("btn-sensores").addEventListener("click", () => showSection("sensores"));
 document.getElementById("btn-reles").addEventListener("click", () => showSection("reles"));
 
-// Llamar a la función para inicializar datos de sensores
+// Inicializar lectura de datos
 displaySensorData();
