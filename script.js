@@ -8,7 +8,7 @@ const firebaseConfig = {
   authDomain: "ardusens.firebaseapp.com",
   databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "ardusens",
-  storageBucket: "ardusens.appspot.com",
+  storageBucket: "ardusens.firebasestorage.app",
   messagingSenderId: "932230234372",
   appId: "1:932230234372:web:f68c12d2913155e30a9051",
   measurementId: "G-JBXRDGDTY7"
