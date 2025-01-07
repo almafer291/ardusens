@@ -4,7 +4,7 @@ import { getDatabase, ref, remove } from "https://www.gstatic.com/firebasejs/9.1
 
 // Configuración de Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
+  apiKey: "AIzaSyCYzmW5Ur4fUxCdVxOD2lTzlsVgOIjhZZ8",
   authDomain: "ardusens.firebaseapp.com",
   databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "ardusens",
