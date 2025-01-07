@@ -6,7 +6,7 @@ import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.
 const firebaseConfig = {
   apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
   authDomain: "ardusens.firebaseapp.com",
-  databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app",
+  databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app/",
   projectId: "ardusens",
   storageBucket: "ardusens.appspot.com",
   messagingSenderId: "932230234372",
