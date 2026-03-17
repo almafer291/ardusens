@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ardusens Pro | Almería Centro</title>
+    <title>Ardusens Pro | Almería</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,100 +17,34 @@
         <span>ARDUSENS<b>PRO</b></span>
     </div>
     <nav class="menu">
-        <button onclick="showSection('sensores')" id="btn-sensores" class="nav-item active">
-            <i class="fas fa-chart-pie"></i> Dashboard
-        </button>
-        <button onclick="showSection('reles')" id="btn-reles" class="nav-item">
-            <i class="fas fa-toggle-on"></i> Actuadores
-        </button>
-        <button onclick="showSection('clima')" id="btn-clima" class="nav-item">
-            <i class="fas fa-cloud-sun"></i> Meteorología
-        </button>
+        <button id="btn-sensores" class="nav-item active"><i class="fas fa-chart-pie"></i> Dashboard</button>
+        <button id="btn-reles" class="nav-item"><i class="fas fa-toggle-on"></i> Actuadores</button>
+        <button id="btn-clima" class="nav-item"><i class="fas fa-cloud-sun"></i> Meteorología</button>
     </nav>
-    <div class="sidebar-footer">
-        <p><i class="fas fa-location-dot"></i> Almería, ES</p>
-    </div>
 </aside>
 
 <main class="main-content">
     <header class="header">
-        <div class="welcome">
-            <h1>Panel de Control</h1>
-            <p id="current-date"></p>
-        </div>
-        <div class="status-indicator">
-            <span class="pulse"></span> Sistema Online
-        </div>
+        <h1>Panel de Control</h1>
+        <div class="status-indicator"><span class="pulse"></span> Almería Centro</div>
     </header>
 
     <section id="sensores-display" class="content-section">
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="card-icon blue"><i class="fas fa-droplet"></i></div>
-                <div class="card-data">
-                    <span class="label">Humedad</span>
-                    <h2 id="humidity">--%</h2>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="card-icon red"><i class="fas fa-temperature-half"></i></div>
-                <div class="card-data">
-                    <span class="label">Temperatura</span>
-                    <h2 id="tempAHT">--°C</h2>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="card-icon green"><i class="fas fa-gauge"></i></div>
-                <div class="card-data">
-                    <span class="label">Presión</span>
-                    <h2 id="pressure">-- hPa</h2>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="card-icon orange"><i class="fas fa-microchip"></i></div>
-                <div class="card-data">
-                    <span class="label">Temp. Interna</span>
-                    <h2 id="tempBMP">--°C</h2>
-                </div>
-            </div>
+            <div class="stat-card"><div class="card-icon blue"><i class="fas fa-droplet"></i></div><div class="card-data"><span class="label">Humedad</span><h2 id="humidity">--%</h2></div></div>
+            <div class="stat-card"><div class="card-icon red"><i class="fas fa-temperature-half"></i></div><div class="card-data"><span class="label">Temperatura</span><h2 id="tempAHT">--°C</h2></div></div>
+            <div class="stat-card"><div class="card-icon green"><i class="fas fa-gauge"></i></div><div class="card-data"><span class="label">Presión</span><h2 id="pressure">-- hPa</h2></div></div>
+            <div class="stat-card"><div class="card-icon orange"><i class="fas fa-microchip"></i></div><div class="card-data"><span class="label">PCB Temp</span><h2 id="tempBMP">--°C</h2></div></div>
         </div>
-
-        <div class="main-chart">
-            <div class="chart-header">
-                <h3>Histórico de Sensores</h3>
-                <div class="chart-legend">
-                    <span><i class="fas fa-circle" style="color:#38bdf8"></i> Humedad</span>
-                    <span><i class="fas fa-circle" style="color:#f87171"></i> Temp</span>
-                </div>
-            </div>
-            <div class="canvas-container">
-                <canvas id="sensorChart"></canvas>
-            </div>
-        </div>
+        <div class="main-chart"><canvas id="sensorChart"></canvas></div>
     </section>
 
     <section id="clima-display" class="content-section" style="display:none">
-        <div class="weather-container">
-            <div class="weather-hero">
-                <div class="hero-main">
-                    <img id="weather-icon" src="" alt="">
-                    <h1 id="weather-temp">--°C</h1>
-                    <h3 id="weather-description">--</h3>
-                </div>
-                <div class="weather-meta">
-                    <div class="meta-item">
-                        <i class="fas fa-wind"></i>
-                        <span id="weather-wind">--</span>
-                        <small>Viento</small>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fas fa-eye"></i>
-                        <span id="weather-visibility">--</span>
-                        <small>Visibilidad</small>
-                    </div>
-                </div>
-            </div>
-            <div class="forecast-row" id="forecast-container"></div>
+        <div class="weather-hero">
+            <img id="weather-icon" src="" alt="">
+            <h1 id="weather-temp">--°C</h1>
+            <p id="weather-description">Cargando...</p>
+            <div class="weather-meta" id="weather-details"></div>
         </div>
     </section>
 
