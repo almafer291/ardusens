@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ardusens Pro | Almería Dashboard</title>
+  <title>Ardusens Pro | Estación Almería Centro</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -21,45 +21,40 @@
       <button id="btn-reles" class="nav-btn"><i class="fas fa-toggle-on"></i><span>Relés</span></button>
       <button id="btn-clima" class="nav-btn"><i class="fas fa-cloud-sun"></i><span>Clima</span></button>
     </div>
-    <div class="sidebar-footer">Almería, Centro</div>
+    <div class="sidebar-footer">Almería Centro, ES</div>
   </nav>
 
   <main class="main-content">
     <header class="top-bar">
       <div class="title-group">
-        <h1 id="section-title">Panel de Sensores</h1>
-        <div id="connection-status" class="status-badge"><span class="dot"></span> Live Data</div>
+        <h1 id="section-title">Panel de Control</h1>
+        <div id="connection-status" class="status-badge"><span class="dot"></span> Tiempo Real</div>
       </div>
     </header>
-
-    <section id="sensores-display" class="content-section">
-      <div class="grid-container">
-        <div class="card"><i class="fas fa-tint icon-blue"></i><h3>Humedad</h3><p class="value" id="humidity">--%</p><small>Sensor AHT20</small></div>
-        <div class="card"><i class="fas fa-thermometer-half icon-red"></i><h3>Temperatura</h3><p class="value" id="tempAHT">--°C</p><small>Sensor AHT20</small></div>
-        <div class="card"><i class="fas fa-gauge-high icon-green"></i><h3>Presión</h3><p class="value" id="pressure">-- hPa</p><small>Sensor BMP280</small></div>
-        <div class="card"><i class="fas fa-microchip icon-orange"></i><h3>Temp. Interna</h3><p class="value" id="tempBMP">--°C</p><small>Sensor BMP280</small></div>
-      </div>
-      <div class="chart-wrapper">
-        <canvas id="sensorChart"></canvas>
-      </div>
-    </section>
-
-    <section id="reles-control" class="content-section" style="display: none;">
-      <div class="reles-grid" id="reles-grid">
-        </div>
-    </section>
 
     <section id="clima-display" class="content-section" style="display: none;">
       <div class="weather-hero-card">
         <div class="weather-main">
           <img id="weather-icon" src="" alt="Icon">
           <h2 id="weather-temp">--°C</h2>
-          <p id="weather-description">Actualizando...</p>
+          <p id="weather-description">Sincronizando con Almería...</p>
         </div>
+        
         <div class="weather-details-grid" id="weather-details"></div>
       </div>
-      <h3 class="forecast-title">Pronóstico Almería (Próximos Días)</h3>
+
+      <div class="astros-grid">
+        <div class="astro-card"><i class="fas fa-sun icon-orange"></i><p>Amanecer</p><span id="sunrise">--:--</span></div>
+        <div class="astro-card"><i class="fas fa-moon"></i><p>Atardecer</p><span id="sunset">--:--</span></div>
+      </div>
+      
+      <h3 class="forecast-title">Tendencia 5 Días</h3>
       <div class="forecast-grid" id="forecast-container"></div>
+    </section>
+
+    <section id="sensores-display" class="content-section">
+        <div class="grid-container" id="sensor-cards"></div>
+        <div class="chart-wrapper"><canvas id="sensorChart"></canvas></div>
     </section>
   </main>
 
