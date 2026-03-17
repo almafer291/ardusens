@@ -1,63 +1,124 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ardusens Pro | Estación Almería Centro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ardusens Pro | Almería Centro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <nav class="sidebar">
-    <div class="sidebar-header">
-      <i class="fas fa-microchip"></i>
-      <span>Ardusens</span>
+<aside class="sidebar">
+    <div class="brand">
+        <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+        <span>ARDUSENS<b>PRO</b></span>
     </div>
-    <div class="menu-items">
-      <button id="btn-sensores" class="nav-btn active"><i class="fas fa-chart-line"></i><span>Sensores</span></button>
-      <button id="btn-reles" class="nav-btn"><i class="fas fa-toggle-on"></i><span>Relés</span></button>
-      <button id="btn-clima" class="nav-btn"><i class="fas fa-cloud-sun"></i><span>Clima</span></button>
+    <nav class="menu">
+        <button onclick="showSection('sensores')" id="btn-sensores" class="nav-item active">
+            <i class="fas fa-chart-pie"></i> Dashboard
+        </button>
+        <button onclick="showSection('reles')" id="btn-reles" class="nav-item">
+            <i class="fas fa-toggle-on"></i> Actuadores
+        </button>
+        <button onclick="showSection('clima')" id="btn-clima" class="nav-item">
+            <i class="fas fa-cloud-sun"></i> Meteorología
+        </button>
+    </nav>
+    <div class="sidebar-footer">
+        <p><i class="fas fa-location-dot"></i> Almería, ES</p>
     </div>
-    <div class="sidebar-footer">Almería Centro, ES</div>
-  </nav>
+</aside>
 
-  <main class="main-content">
-    <header class="top-bar">
-      <div class="title-group">
-        <h1 id="section-title">Panel de Control</h1>
-        <div id="connection-status" class="status-badge"><span class="dot"></span> Tiempo Real</div>
-      </div>
+<main class="main-content">
+    <header class="header">
+        <div class="welcome">
+            <h1>Panel de Control</h1>
+            <p id="current-date"></p>
+        </div>
+        <div class="status-indicator">
+            <span class="pulse"></span> Sistema Online
+        </div>
     </header>
 
-    <section id="clima-display" class="content-section" style="display: none;">
-      <div class="weather-hero-card">
-        <div class="weather-main">
-          <img id="weather-icon" src="" alt="Icon">
-          <h2 id="weather-temp">--°C</h2>
-          <p id="weather-description">Sincronizando con Almería...</p>
-        </div>
-        
-        <div class="weather-details-grid" id="weather-details"></div>
-      </div>
-
-      <div class="astros-grid">
-        <div class="astro-card"><i class="fas fa-sun icon-orange"></i><p>Amanecer</p><span id="sunrise">--:--</span></div>
-        <div class="astro-card"><i class="fas fa-moon"></i><p>Atardecer</p><span id="sunset">--:--</span></div>
-      </div>
-      
-      <h3 class="forecast-title">Tendencia 5 Días</h3>
-      <div class="forecast-grid" id="forecast-container"></div>
-    </section>
-
     <section id="sensores-display" class="content-section">
-        <div class="grid-container" id="sensor-cards"></div>
-        <div class="chart-wrapper"><canvas id="sensorChart"></canvas></div>
-    </section>
-  </main>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="card-icon blue"><i class="fas fa-droplet"></i></div>
+                <div class="card-data">
+                    <span class="label">Humedad</span>
+                    <h2 id="humidity">--%</h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="card-icon red"><i class="fas fa-temperature-half"></i></div>
+                <div class="card-data">
+                    <span class="label">Temperatura</span>
+                    <h2 id="tempAHT">--°C</h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="card-icon green"><i class="fas fa-gauge"></i></div>
+                <div class="card-data">
+                    <span class="label">Presión</span>
+                    <h2 id="pressure">-- hPa</h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="card-icon orange"><i class="fas fa-microchip"></i></div>
+                <div class="card-data">
+                    <span class="label">Temp. Interna</span>
+                    <h2 id="tempBMP">--°C</h2>
+                </div>
+            </div>
+        </div>
 
-  <script type="module" src="script.js"></script>
+        <div class="main-chart">
+            <div class="chart-header">
+                <h3>Histórico de Sensores</h3>
+                <div class="chart-legend">
+                    <span><i class="fas fa-circle" style="color:#38bdf8"></i> Humedad</span>
+                    <span><i class="fas fa-circle" style="color:#f87171"></i> Temp</span>
+                </div>
+            </div>
+            <div class="canvas-container">
+                <canvas id="sensorChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section id="clima-display" class="content-section" style="display:none">
+        <div class="weather-container">
+            <div class="weather-hero">
+                <div class="hero-main">
+                    <img id="weather-icon" src="" alt="">
+                    <h1 id="weather-temp">--°C</h1>
+                    <h3 id="weather-description">--</h3>
+                </div>
+                <div class="weather-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-wind"></i>
+                        <span id="weather-wind">--</span>
+                        <small>Viento</small>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-eye"></i>
+                        <span id="weather-visibility">--</span>
+                        <small>Visibilidad</small>
+                    </div>
+                </div>
+            </div>
+            <div class="forecast-row" id="forecast-container"></div>
+        </div>
+    </section>
+
+    <section id="reles-control" class="content-section" style="display:none">
+        <div class="reles-grid" id="reles-grid"></div>
+    </section>
+</main>
+
+<script type="module" src="script.js"></script>
 </body>
 </html>
