@@ -2,81 +2,44 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Home Dashboard Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Ardusens Ultra Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<div class="dashboard-wrapper">
-    <aside class="sidebar">
-        <div class="logo">CONTROL<b>CENTER</b></div>
-        <nav>
-            <div class="nav-item active" onclick="showTab('home')"><i class="fas fa-th-large"></i><span>Resumen</span></div>
-            <div class="nav-item" onclick="showTab('devices')"><i class="fas fa-toggle-on"></i><span>Dispositivos</span></div>
-            <div class="nav-item" onclick="showTab('weather')"><i class="fas fa-cloud-sun"></i><span>Clima Pro</span></div>
-            <div class="nav-item" onclick="showTab('energy')"><i class="fas fa-bolt"></i><span>Energía</span></div>
-        </nav>
-    </aside>
+<div class="sidebar">
+    <h2 class="logo">ARDU<span>SENS</span></h2>
+    <div class="nav-btn active" onclick="switchTab('sensores')"><i class="fas fa-microchip"></i> Sensores</div>
+    <div class="nav-btn" onclick="switchTab('reles')"><i class="fas fa-toggle-on"></i> Actuadores</div>
+    <div class="nav-btn" onclick="switchTab('clima')"><i class="fas fa-cloud-sun"></i> Clima</div>
+    <div class="nav-btn" onclick="switchTab('energia')"><i class="fas fa-bolt"></i> Precio Luz</div>
+</div>
 
-    <main class="content">
-        <header class="top-bar">
-            <h1 id="tab-title">Panel de Control</h1>
-            <div class="system-status">
-                <span id="date-now">--/--/--</span>
-                <div class="badge green">SISTEMA ACTIVO</div>
-            </div>
-        </header>
+<div class="main">
+    <section id="tab-energia" class="tab-content" style="display:none">
+        <div class="stats-row">
+            <div class="card-mini"><span>AHORA</span><h2 id="p-now">-- €</h2><small>MW/h</small></div>
+            <div class="card-mini"><span>MÍNIMO</span><h2 id="p-min">-- €</h2></div>
+            <div class="card-mini"><span>MÁXIMO</span><h2 id="p-max">-- €</h2></div>
+        </div>
+        <div class="chart-box">
+            <canvas id="luzChart"></canvas>
+        </div>
+    </section>
 
-        <section id="home-tab" class="tab-content active">
-            <div class="grid-4">
-                <div class="card glass"><span>Humedad</span><h2 id="h-val">--%</h2><div class="bar h-bar"></div></div>
-                <div class="card glass"><span>Temp. Aire</span><h2 id="ta-val">--°C</h2><div class="bar ta-bar"></div></div>
-                <div class="card glass"><span>Presión</span><h2 id="p-val">-- hPa</h2><div class="bar p-bar"></div></div>
-                <div class="card glass"><span>Temp. PCB</span><h2 id="tp-val">--°C</h2><div class="bar tp-bar"></div></div>
-            </div>
-            <div class="chart-container glass">
-                <canvas id="sensorChart"></canvas>
-            </div>
-        </section>
+    <section id="tab-reles" class="tab-content" style="display:none">
+        <div id="reles-container" class="grid-reles"></div>
+    </section>
 
-        <section id="devices-tab" class="tab-content">
-            <div class="grid-4" id="relay-grid">
-                </div>
-        </section>
-
-        <section id="weather-tab" class="tab-content">
-            <div class="weather-dashboard">
-                <div class="weather-now-card glass">
-                    <img id="w-icon" src="" alt="Icon">
-                    <h1 id="w-temp">--°C</h1>
-                    <p id="w-desc">Cargando...</p>
-                    <div class="w-stats">
-                        <div><i class="fas fa-wind"></i> <span id="w-wind">--</span> km/h</div>
-                        <div><i class="fas fa-tint"></i> <span id="w-hum">--</span> %</div>
-                    </div>
-                </div>
-                <div class="forecast-container glass">
-                    <h3>Previsión Semanal</h3>
-                    <div id="forecast-list" class="forecast-list"></div>
-                </div>
-            </div>
-        </section>
-
-        <section id="energy-tab" class="tab-content">
-            <div class="grid-3">
-                <div class="card glass price-card"><span>Precio Actual</span><h2 id="e-now">-- €</h2><small>MW/h</small></div>
-                <div class="card glass"><span>Mínimo Hoy</span><h2 id="e-min">-- €</h2></div>
-                <div class="card glass"><span>Máximo Hoy</span><h2 id="e-max">-- €</h2></div>
-            </div>
-            <div class="chart-container glass">
-                <canvas id="energyChart"></canvas>
-            </div>
-        </section>
-    </main>
+    <section id="tab-sensores" class="tab-content">
+        <div class="stats-row">
+            <div class="card-mini"><span>Humedad</span><h2 id="h-val">--%</h2></div>
+            <div class="card-mini"><span>Temp</span><h2 id="t-val">--°C</h2></div>
+        </div>
+    </section>
 </div>
 
 <script type="module" src="script.js"></script>
