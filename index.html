@@ -1,75 +1,53 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ardusens Ultra Pro | Almería</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ardusens Pro Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <nav class="side-menu">
+    <div class="brand">ARDUSENS <b>PRO</b></div>
+    <button id="btn-sensores" class="side-btn active"><i class="fas fa-microchip"></i> Sensores</button>
+    <button id="btn-reles" class="side-btn"><i class="fas fa-toggle-on"></i> Actuadores</button>
+    <button id="btn-clima" class="side-btn"><i class="fas fa-cloud-sun"></i> Meteorología</button>
+  </nav>
 
-<aside class="sidebar">
-    <div class="brand">
-        <div class="logo-icon"><i class="fas fa-satellite-dish"></i></div>
-        <span>ARDUSENS<b>ULTRA</b></span>
+  <main class="main-content">
+    <div id="sensores-display" class="content-display">
+      <h2 class="section-title">Datos en Tiempo Real</h2>
+      <div class="stats-grid">
+        <div class="stat-card"><span>Humedad</span><h3 id="humidity">--%</h3></div>
+        <div class="stat-card"><span>Temp AHT20</span><h3 id="tempAHT">--°C</h3></div>
+        <div class="stat-card"><span>Presión</span><h3 id="pressure">-- hPa</h3></div>
+        <div class="stat-card"><span>Temp BMP280</span><h3 id="tempBMP">--°C</h3></div>
+      </div>
     </div>
-    <nav class="menu">
-        <button id="btn-sensores" class="nav-item active"><i class="fas fa-house-signal"></i><span>Dashboard</span></button>
-        <button id="btn-reles" class="nav-item"><i class="fas fa-microchip"></i><span>Actuadores</span></button>
-        <button id="btn-clima" class="nav-item"><i class="fas fa-temperature-arrow-up"></i><span>Meteorología</span></button>
-    </nav>
-</aside>
 
-<main class="main-content">
-    <header class="header">
-        <div class="header-title">
-            <h1 id="page-title">Estación Almería Centro</h1>
-            <p id="current-date"></p>
+    <div id="reles-control" class="content-display" style="display: none;">
+      <h2 class="section-title">Control de Actuadores</h2>
+      <div id="reles-status" class="reles-grid"></div>
+    </div>
+
+    <div id="clima-display" class="content-display" style="display: none;">
+      <div class="weather-header">
+        <div class="weather-main-info">
+          <img id="weather-icon" src="" alt="clima">
+          <h1 id="weather-temp">--°C</h1>
+          <p id="weather-description">Cargando...</p>
         </div>
-        <div class="status-indicator"><span class="pulse"></span> SISTEMA ACTIVO</div>
-    </header>
+        <div class="weather-extra-grid" id="weather-details-grid">
+          </div>
+      </div>
+      
+      <h3 class="sub-title">Previsión Próximos 3 Días</h3>
+      <div id="forecast-container" class="forecast-grid"></div>
+    </div>
+  </main>
 
-    <section id="sensores-display" class="content-section">
-        <div class="stats-grid">
-            <div class="stat-card blue"><i class="fas fa-droplet icon"></i><div class="data"><span>Humedad</span><h2 id="humidity">--%</h2></div></div>
-            <div class="stat-card red"><i class="fas fa-thermometer-half icon"></i><div class="data"><span>Temperatura</span><h2 id="tempAHT">--°C</h2></div></div>
-            <div class="stat-card green"><i class="fas fa-gauge icon"></i><div class="data"><span>Presión</span><h2 id="pressure">-- hPa</h2></div></div>
-        </div>
-        <div class="main-chart-card"><div class="canvas-container"><canvas id="sensorChart"></canvas></div></div>
-    </section>
-
-    <section id="clima-display" class="content-section" style="display:none">
-        <div class="clima-grid-top">
-            <div class="weather-hero-card">
-                <img id="weather-icon" src="" alt="">
-                <h1 id="weather-temp">--°C</h1>
-                <h2 id="weather-description">--</h2>
-                <div class="astro-info">
-                    <span><i class="fas fa-arrow-up icon-orange"></i> <small id="sunrise">--:--</small></span>
-                    <span><i class="fas fa-arrow-down icon-red"></i> <small id="sunset">--:--</small></span>
-                </div>
-            </div>
-
-            <div class="forecast-card-main">
-                <h3>Pronóstico Próximos 3 Días</h3>
-                <div id="forecast-3days" class="forecast-container">
-                    </div>
-            </div>
-        </div>
-
-        <h3 class="section-subtitle">Índices y Datos Atmosféricos</h3>
-        <div class="weather-details-grid" id="extended-weather-data">
-            </div>
-    </section>
-
-    <section id="reles-control" class="content-section" style="display:none">
-        <div class="reles-grid" id="reles-grid"></div>
-    </section>
-</main>
-
-<script type="module" src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
