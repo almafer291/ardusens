@@ -3,75 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ardusens Ultra Pro v2</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Smart Home Dashboard Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<aside class="sidebar">
-    <div class="brand"><i class="fas fa-bolt-lightning"></i> ARDUSENS <b>PRO</b></div>
-    <nav class="menu">
-        <button id="btn-sensores" class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard</button>
-        <button id="btn-reles" class="nav-item"><i class="fas fa-toggle-on"></i> Actuadores</button>
-        <button id="btn-clima" class="nav-item"><i class="fas fa-cloud-sun"></i> Meteorología</button>
-        <button id="btn-energia" class="nav-item"><i class="fas fa-coins"></i> Precio Luz</button>
-    </nav>
-</aside>
+<div class="dashboard-wrapper">
+    <aside class="sidebar">
+        <div class="logo">CONTROL<b>CENTER</b></div>
+        <nav>
+            <div class="nav-item active" onclick="showTab('home')"><i class="fas fa-th-large"></i><span>Resumen</span></div>
+            <div class="nav-item" onclick="showTab('devices')"><i class="fas fa-toggle-on"></i><span>Dispositivos</span></div>
+            <div class="nav-item" onclick="showTab('weather')"><i class="fas fa-cloud-sun"></i><span>Clima Pro</span></div>
+            <div class="nav-item" onclick="showTab('energy')"><i class="fas fa-bolt"></i><span>Energía</span></div>
+        </nav>
+    </aside>
 
-<main class="main-content">
-    <header class="header">
-        <div class="header-info">
-            <h1 id="page-title">Sistema Inteligente</h1>
-            <p id="current-date"></p>
-        </div>
-        <div class="status-badge"><span class="pulse"></span> LIVE DATA</div>
-    </header>
-
-    <section id="sensores-display" class="content-section">
-        <div class="stats-grid">
-            <div class="stat-card blue"><span>Humedad</span><h2 id="humidity">--%</h2></div>
-            <div class="stat-card red"><span>Temp. Aire</span><h2 id="tempAHT">--°C</h2></div>
-            <div class="stat-card green"><span>Presión</span><h2 id="pressure">-- hPa</h2></div>
-            <div class="stat-card orange"><span>Temp. PCB</span><h2 id="tempBMP">--°C</h2></div>
-        </div>
-        <div class="main-card">
-            <div class="canvas-container" style="height: 300px;"><canvas id="sensorChart"></canvas></div>
-        </div>
-    </section>
-
-    <section id="clima-display" class="content-section" style="display:none">
-        <div class="clima-container">
-            <div class="weather-main-card">
-                <img id="weather-icon" src="" alt="">
-                <h1 id="weather-temp">--°C</h1>
-                <p id="weather-desc">--</p>
-                <div id="weather-details-row" class="weather-details-row"></div>
+    <main class="content">
+        <header class="top-bar">
+            <h1 id="tab-title">Panel de Control</h1>
+            <div class="system-status">
+                <span id="date-now">--/--/--</span>
+                <div class="badge green">SISTEMA ACTIVO</div>
             </div>
-            <div class="forecast-card">
-                <h3>Previsión Próximos Días</h3>
-                <div id="forecast-container" class="forecast-grid"></div>
+        </header>
+
+        <section id="home-tab" class="tab-content active">
+            <div class="grid-4">
+                <div class="card glass"><span>Humedad</span><h2 id="h-val">--%</h2><div class="bar h-bar"></div></div>
+                <div class="card glass"><span>Temp. Aire</span><h2 id="ta-val">--°C</h2><div class="bar ta-bar"></div></div>
+                <div class="card glass"><span>Presión</span><h2 id="p-val">-- hPa</h2><div class="bar p-bar"></div></div>
+                <div class="card glass"><span>Temp. PCB</span><h2 id="tp-val">--°C</h2><div class="bar tp-bar"></div></div>
             </div>
-        </div>
-    </section>
+            <div class="chart-container glass">
+                <canvas id="sensorChart"></canvas>
+            </div>
+        </section>
 
-    <section id="energia-display" class="content-section" style="display:none">
-        <div class="stats-grid">
-            <div class="stat-card yellow"><span>Precio Actual</span><h2 id="price-now">-- €</h2><small>PVPC España</small></div>
-            <div class="stat-card green"><span>Mínimo Hoy</span><h2 id="price-min">-- €</h2></div>
-            <div class="stat-card red"><span>Máximo Hoy</span><h2 id="price-max">-- €</h2></div>
-        </div>
-        <div class="main-card">
-            <div class="canvas-container" style="height: 380px;"><canvas id="energyChart"></canvas></div>
-        </div>
-    </section>
+        <section id="devices-tab" class="tab-content">
+            <div class="grid-4" id="relay-grid">
+                </div>
+        </section>
 
-    <section id="reles-control" class="content-section" style="display:none">
-        <div class="reles-grid" id="reles-grid"></div>
-    </section>
-</main>
+        <section id="weather-tab" class="tab-content">
+            <div class="weather-dashboard">
+                <div class="weather-now-card glass">
+                    <img id="w-icon" src="" alt="Icon">
+                    <h1 id="w-temp">--°C</h1>
+                    <p id="w-desc">Cargando...</p>
+                    <div class="w-stats">
+                        <div><i class="fas fa-wind"></i> <span id="w-wind">--</span> km/h</div>
+                        <div><i class="fas fa-tint"></i> <span id="w-hum">--</span> %</div>
+                    </div>
+                </div>
+                <div class="forecast-container glass">
+                    <h3>Previsión Semanal</h3>
+                    <div id="forecast-list" class="forecast-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="energy-tab" class="tab-content">
+            <div class="grid-3">
+                <div class="card glass price-card"><span>Precio Actual</span><h2 id="e-now">-- €</h2><small>MW/h</small></div>
+                <div class="card glass"><span>Mínimo Hoy</span><h2 id="e-min">-- €</h2></div>
+                <div class="card glass"><span>Máximo Hoy</span><h2 id="e-max">-- €</h2></div>
+            </div>
+            <div class="chart-container glass">
+                <canvas id="energyChart"></canvas>
+            </div>
+        </section>
+    </main>
+</div>
 
 <script type="module" src="script.js"></script>
 </body>
