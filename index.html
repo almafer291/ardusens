@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ardusens Ultra Pro</title>
+    <title>Ardusens Ultra Pro v2</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,22 +12,22 @@
 <body>
 
 <aside class="sidebar">
-    <div class="brand"><i class="fas fa-microchip"></i> ARDUSENS <b>PRO</b></div>
+    <div class="brand"><i class="fas fa-bolt-lightning"></i> ARDUSENS <b>PRO</b></div>
     <nav class="menu">
-        <button id="btn-sensores" class="nav-item active"><i class="fas fa-house-signal"></i> Dashboard</button>
+        <button id="btn-sensores" class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard</button>
         <button id="btn-reles" class="nav-item"><i class="fas fa-toggle-on"></i> Actuadores</button>
         <button id="btn-clima" class="nav-item"><i class="fas fa-cloud-sun"></i> Meteorología</button>
-        <button id="btn-energia" class="nav-item"><i class="fas fa-bolt"></i> Precio Luz</button>
+        <button id="btn-energia" class="nav-item"><i class="fas fa-coins"></i> Precio Luz</button>
     </nav>
 </aside>
 
 <main class="main-content">
     <header class="header">
-        <div class="header-title">
-            <h1 id="page-title">Estación de Control</h1>
+        <div class="header-info">
+            <h1 id="page-title">Sistema Inteligente</h1>
             <p id="current-date"></p>
         </div>
-        <div class="status-badge"><span class="pulse"></span> SISTEMA ONLINE</div>
+        <div class="status-badge"><span class="pulse"></span> LIVE DATA</div>
     </header>
 
     <section id="sensores-display" class="content-section">
@@ -37,34 +37,34 @@
             <div class="stat-card green"><span>Presión</span><h2 id="pressure">-- hPa</h2></div>
             <div class="stat-card orange"><span>Temp. PCB</span><h2 id="tempBMP">--°C</h2></div>
         </div>
-        <div class="chart-card">
-            <div class="canvas-container"><canvas id="sensorChart"></canvas></div>
+        <div class="main-card">
+            <div class="canvas-container" style="height: 300px;"><canvas id="sensorChart"></canvas></div>
         </div>
     </section>
 
     <section id="clima-display" class="content-section" style="display:none">
-        <div class="clima-hero-grid">
-            <div class="weather-now">
+        <div class="clima-container">
+            <div class="weather-main-card">
                 <img id="weather-icon" src="" alt="">
                 <h1 id="weather-temp">--°C</h1>
-                <p id="weather-desc">Cargando clima...</p>
+                <p id="weather-desc">--</p>
+                <div id="weather-details-row" class="weather-details-row"></div>
             </div>
-            <div class="forecast-box">
-                <h3>Pronóstico 3 Días</h3>
+            <div class="forecast-card">
+                <h3>Previsión Próximos Días</h3>
                 <div id="forecast-container" class="forecast-grid"></div>
             </div>
         </div>
-        <div id="weather-details" class="weather-details-grid"></div>
     </section>
 
     <section id="energia-display" class="content-section" style="display:none">
         <div class="stats-grid">
-            <div class="stat-card yellow"><span>Precio Actual</span><h2 id="price-now">-- €</h2><small>MW/h</small></div>
+            <div class="stat-card yellow"><span>Precio Actual</span><h2 id="price-now">-- €</h2><small>PVPC España</small></div>
             <div class="stat-card green"><span>Mínimo Hoy</span><h2 id="price-min">-- €</h2></div>
             <div class="stat-card red"><span>Máximo Hoy</span><h2 id="price-max">-- €</h2></div>
         </div>
-        <div class="chart-card">
-            <div class="canvas-container" style="height: 350px;"><canvas id="energyChart"></canvas></div>
+        <div class="main-card">
+            <div class="canvas-container" style="height: 380px;"><canvas id="energyChart"></canvas></div>
         </div>
     </section>
 
