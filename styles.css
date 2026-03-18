@@ -9,32 +9,39 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); colo
 
 /* Sidebar */
 .sidebar { width: 260px; background: #0b1120; padding: 30px; border-right: 1px solid rgba(255,255,255,0.05); }
-.brand { font-size: 1.3rem; font-weight: 800; margin-bottom: 50px; }
-.nav-item { width: 100%; background: none; border: none; color: #94a3b8; padding: 15px; text-align: left; cursor: pointer; display: flex; gap: 15px; border-radius: 12px; font-weight: 600; margin-bottom: 5px; }
+.brand { font-size: 1.3rem; font-weight: 800; margin-bottom: 50px; display: flex; align-items: center; gap: 10px; }
+.logo-icon { color: var(--accent); font-size: 1.5rem; }
+.nav-item { width: 100%; background: none; border: none; color: #94a3b8; padding: 15px; text-align: left; cursor: pointer; display: flex; gap: 15px; border-radius: 12px; font-weight: 600; margin-bottom: 5px; transition: 0.3s; }
 .nav-item.active { background: rgba(14, 165, 233, 0.1); color: var(--accent); }
 
-/* Main Content */
-.main-content { flex: 1; padding: 40px; overflow-y: auto; }
+/* Main */
+.main-content { flex: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at top right, rgba(14,165,233,0.05), transparent 40%); }
 .header { display: flex; justify-content: space-between; margin-bottom: 30px; }
-.pulse { width: 10px; height: 10px; background: #4ade80; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+.status-indicator { font-size: 0.8rem; font-weight: 700; color: #4ade80; }
+.pulse { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; margin-right: 5px; }
 
 /* Grids */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px; }
 .stat-card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+.stat-card span { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; font-weight: 700; }
 .stat-card h2 { font-size: 2rem; margin: 10px 0; }
 .stat-card.blue h2 { color: #38bdf8; }
 .stat-card.red h2 { color: #f87171; }
 .stat-card.green h2 { color: #4ade80; }
 .stat-card.yellow h2 { color: #fbbf24; }
 
+/* Gráficas */
+.main-chart-card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); }
+.canvas-container { height: 300px; position: relative; width: 100%; }
+
 /* Clima */
 .clima-top-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; margin-bottom: 20px; }
-.weather-hero { background: linear-gradient(135deg, rgba(14,165,233,0.1), transparent); padding: 30px; border-radius: 24px; text-align: center; }
+.weather-hero { background: linear-gradient(135deg, rgba(14,165,233,0.1), transparent); padding: 30px; border-radius: 24px; text-align: center; border: 1px solid rgba(14,165,233,0.2); }
 .weather-hero h1 { font-size: 3.5rem; margin: 0; }
 .forecast-grid { display: flex; justify-content: space-around; margin-top: 20px; }
 .fore-item { display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; min-width: 80px; }
 .weather-details-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-.w-mini-card { background: var(--card); padding: 20px; border-radius: 20px; text-align: center; }
+.w-mini-card { background: var(--card); padding: 20px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
 
 /* Relés */
 .reles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
@@ -42,7 +49,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); colo
 .dot { width: 12px; height: 12px; background: #334155; border-radius: 50%; transition: 0.3s; }
 .dot.on { background: #4ade80; box-shadow: 0 0 10px #4ade80; }
 
-/* Switches */
+/* Toggle Switch */
 .switch { position: relative; width: 50px; height: 26px; }
 .switch input { opacity: 0; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #334155; border-radius: 34px; transition: .4s; }
@@ -50,4 +57,4 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); colo
 input:checked + .slider { background: #4ade80; }
 input:checked + .slider:before { transform: translateX(24px); }
 
-@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
