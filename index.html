@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ardusens Pro | Almería Centro</title>
+    <title>Ardusens Ultra Pro | Almería</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,79 +13,60 @@
 
 <aside class="sidebar">
     <div class="brand">
-        <div class="logo-icon"><i class="fas fa-bolt-lightning"></i></div>
-        <span>ARDUSENS<b>PRO</b></span>
+        <div class="logo-icon"><i class="fas fa-satellite-dish"></i></div>
+        <span>ARDUSENS<b>ULTRA</b></span>
     </div>
     <nav class="menu">
-        <button id="btn-sensores" class="nav-item active"><i class="fas fa-chart-line"></i><span>Dashboard</span></button>
-        <button id="btn-reles" class="nav-item"><i class="fas fa-toggle-on"></i><span>Actuadores</span></button>
-        <button id="btn-clima" class="nav-item"><i class="fas fa-cloud-sun"></i><span>Estación MET</span></button>
+        <button id="btn-sensores" class="nav-item active"><i class="fas fa-house-signal"></i><span>Dashboard</span></button>
+        <button id="btn-reles" class="nav-item"><i class="fas fa-microchip"></i><span>Actuadores</span></button>
+        <button id="btn-clima" class="nav-item"><i class="fas fa-temperature-arrow-up"></i><span>Meteorología</span></button>
     </nav>
-    <div class="sidebar-footer">
-        <i class="fas fa-location-dot"></i> Almería, ES
-    </div>
 </aside>
 
 <main class="main-content">
     <header class="header">
         <div class="header-title">
-            <h1>Centro de Control</h1>
-            <p id="current-date">Cargando fecha...</p>
+            <h1 id="page-title">Estación Almería Centro</h1>
+            <p id="current-date"></p>
         </div>
-        <div class="status-indicator">
-            <span class="pulse"></span> LIVE DATA
-        </div>
+        <div class="status-indicator"><span class="pulse"></span> SISTEMA ACTIVO</div>
     </header>
 
     <section id="sensores-display" class="content-section">
         <div class="stats-grid">
-            <div class="stat-card blue"><i class="fas fa-droplet icon"></i><div class="data"><span>Humedad</span><h2 id="humidity">--%</h2><small>AHT20</small></div></div>
-            <div class="stat-card red"><i class="fas fa-temperature-half icon"></i><div class="data"><span>Temperatura</span><h2 id="tempAHT">--°C</h2><small>AHT20</small></div></div>
-            <div class="stat-card green"><i class="fas fa-gauge-high icon"></i><div class="data"><span>Presión</span><h2 id="pressure">-- hPa</h2><small>BMP280</small></div></div>
-            <div class="stat-card orange"><i class="fas fa-microchip icon"></i><div class="data"><span>PCB Temp</span><h2 id="tempBMP">--°C</h2><small>BMP280</small></div></div>
+            <div class="stat-card blue"><i class="fas fa-droplet icon"></i><div class="data"><span>Humedad</span><h2 id="humidity">--%</h2></div></div>
+            <div class="stat-card red"><i class="fas fa-thermometer-half icon"></i><div class="data"><span>Temperatura</span><h2 id="tempAHT">--°C</h2></div></div>
+            <div class="stat-card green"><i class="fas fa-gauge icon"></i><div class="data"><span>Presión</span><h2 id="pressure">-- hPa</h2></div></div>
         </div>
-        <div class="main-chart-card">
-            <div class="chart-header"><h3>Histórico de Temperatura (24h)</h3></div>
-            <div class="canvas-container"><canvas id="sensorChart"></canvas></div>
-        </div>
+        <div class="main-chart-card"><div class="canvas-container"><canvas id="sensorChart"></canvas></div></div>
     </section>
 
     <section id="clima-display" class="content-section" style="display:none">
-        <div class="weather-layout">
-            
-            <div class="weather-main-col">
-                <div class="weather-hero-card">
-                    <img id="weather-icon" src="" alt="Estado del clima">
-                    <h1 id="weather-temp">--°C</h1>
-                    <h2 id="weather-description">CONECTANDO...</h2>
-                    <p class="feels-like">Sensación de <span id="weather-feels">--°C</span></p>
-                </div>
-                
-                <div class="astros-card">
-                    <div class="astro-item">
-                        <i class="fas fa-sunrise icon-orange"></i>
-                        <div class="astro-data"><span>Amanecer</span><h4 id="sunrise">--:--</h4></div>
-                    </div>
-                    <div class="astro-item">
-                        <i class="fas fa-sunset icon-red"></i>
-                        <div class="astro-data"><span>Atardecer</span><h4 id="sunset">--:--</h4></div>
-                    </div>
+        <div class="clima-grid-top">
+            <div class="weather-hero-card">
+                <img id="weather-icon" src="" alt="">
+                <h1 id="weather-temp">--°C</h1>
+                <h2 id="weather-description">--</h2>
+                <div class="astro-info">
+                    <span><i class="fas fa-arrow-up icon-orange"></i> <small id="sunrise">--:--</small></span>
+                    <span><i class="fas fa-arrow-down icon-red"></i> <small id="sunset">--:--</small></span>
                 </div>
             </div>
 
-            <div class="weather-details-col">
-                <h3>Detalles Atmosféricos Avanzados</h3>
-                <div class="weather-details-grid" id="weather-details-extended">
+            <div class="forecast-card-main">
+                <h3>Pronóstico Próximos 3 Días</h3>
+                <div id="forecast-3days" class="forecast-container">
                     </div>
             </div>
-
         </div>
+
+        <h3 class="section-subtitle">Índices y Datos Atmosféricos</h3>
+        <div class="weather-details-grid" id="extended-weather-data">
+            </div>
     </section>
 
     <section id="reles-control" class="content-section" style="display:none">
-        <div class="section-header"><h2>Control de Actuadores (8 Canales)</h2></div>
-        <div class="reles-grid" id="reles-grid">
-            </div>
+        <div class="reles-grid" id="reles-grid"></div>
     </section>
 </main>
 
