@@ -1,40 +1,24 @@
-:root {
-    --bg: #030712;
-    --card: rgba(255, 255, 255, 0.03);
-    --border: rgba(255, 255, 255, 0.08);
-    --accent: #38bdf8;
-    --text: #f8fafc;
-}
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: #121212; color: white; margin: 0; display: flex; }
+.side-menu { width: 220px; background: #1a1a1a; height: 100vh; padding: 20px; border-right: 1px solid #333; }
+.brand { font-size: 20px; font-weight: bold; margin-bottom: 30px; color: #00d1d1; }
+.side-btn { width: 100%; padding: 12px; margin: 5px 0; border: none; background: transparent; color: #888; text-align: left; cursor: pointer; border-radius: 8px; transition: 0.3s; }
+.side-btn.active, .side-btn:hover { background: #00d1d122; color: #00d1d1; }
 
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; margin: 0; }
+.main-content { flex: 1; padding: 40px; }
+.stats-grid, .reles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+.stat-card, .rele-card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; }
 
-.sidebar { width: 260px; border-right: 1px solid var(--border); padding: 30px; display: flex; flex-direction: column; }
-.nav-item { background: none; border: none; color: #64748b; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; cursor: pointer; border-radius: 12px; transition: 0.3s; width: 100%; text-align: left; font-weight: 600; }
-.nav-item.active { background: rgba(56, 189, 248, 0.1); color: var(--accent); }
+.weather-header { display: flex; align-items: center; gap: 50px; background: linear-gradient(135deg, #00d1d111, #1e1e1e); padding: 30px; border-radius: 20px; }
+.weather-extra-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.weather-item { text-align: center; }
+.weather-item i { color: #00d1d1; font-size: 20px; }
 
-.main-content { flex: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at top right, #0f172a, #030712); }
+.forecast-grid { display: flex; gap: 15px; margin-top: 20px; }
+.forecast-item { background: #1e1e1e; padding: 15px; border-radius: 12px; text-align: center; flex: 1; }
+.forecast-day { font-weight: bold; text-transform: uppercase; color: #00d1d1; }
 
-/* Clima Layout */
-.clima-grid-top { display: grid; grid-template-columns: 350px 1fr; gap: 25px; margin-bottom: 30px; }
-.weather-hero-card { background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), transparent); border: 1px solid var(--accent); border-radius: 30px; padding: 40px; text-align: center; }
-.weather-hero-card h1 { font-size: 4rem; margin: 10px 0; font-weight: 800; }
-
-.forecast-card-main { background: var(--card); border: 1px solid var(--border); border-radius: 30px; padding: 30px; backdrop-filter: blur(10px); }
-.forecast-container { display: flex; justify-content: space-around; margin-top: 25px; }
-.fore-item { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.02); min-width: 100px; }
-.fore-item .day { font-weight: 700; text-transform: uppercase; color: var(--accent); font-size: 0.8rem; }
-.fore-item .temp { font-size: 1.5rem; font-weight: 700; }
-
-.weather-details-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-.w-mini-card { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 22px; text-align: center; transition: 0.3s; }
-.w-mini-card:hover { transform: translateY(-5px); border-color: var(--accent); }
-.w-mini-card i { font-size: 1.5rem; margin-bottom: 10px; }
-.w-mini-card span { display: block; font-size: 1.2rem; font-weight: 700; }
-.w-mini-card small { color: #64748b; text-transform: uppercase; font-size: 0.65rem; letter-spacing: 1px; }
-
-/* Relés */
-.reles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-.rele-card { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 24px; display: flex; justify-content: space-between; align-items: center; }
-
-/* Icon Colors */
-.icon-blue { color: #38bdf8; } .icon-orange { color: #fb923c; } .icon-red { color: #f87171; } .icon-green { color: #4ade80; } .icon-purple { color: #a78bfa; }
+.dot { width: 12px; height: 12px; background: red; border-radius: 50%; margin-right: 10px; }
+.dot.on { background: #00ff00; box-shadow: 0 0 10px #00ff00; }
+.rele-card { display: flex; justify-content: space-between; align-items: center; }
+.rele-info { display: flex; align-items: center; }
+.rele-toggle { background: #00d1d1; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
