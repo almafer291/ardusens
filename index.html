@@ -1,53 +1,81 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ardusens Pro Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ardusens Ultra Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <nav class="side-menu">
-    <div class="brand">ARDUSENS <b>PRO</b></div>
-    <button id="btn-sensores" class="side-btn active"><i class="fas fa-microchip"></i> Sensores</button>
-    <button id="btn-reles" class="side-btn"><i class="fas fa-toggle-on"></i> Actuadores</button>
-    <button id="btn-clima" class="side-btn"><i class="fas fa-cloud-sun"></i> Meteorología</button>
-  </nav>
 
-  <main class="main-content">
-    <div id="sensores-display" class="content-display">
-      <h2 class="section-title">Datos en Tiempo Real</h2>
-      <div class="stats-grid">
-        <div class="stat-card"><span>Humedad</span><h3 id="humidity">--%</h3></div>
-        <div class="stat-card"><span>Temp AHT20</span><h3 id="tempAHT">--°C</h3></div>
-        <div class="stat-card"><span>Presión</span><h3 id="pressure">-- hPa</h3></div>
-        <div class="stat-card"><span>Temp BMP280</span><h3 id="tempBMP">--°C</h3></div>
-      </div>
+<aside class="sidebar">
+    <div class="brand">
+        <div class="logo-icon"><i class="fas fa-bolt-lightning"></i></div>
+        <span>ARDUSENS<b>ULTRA</b></span>
     </div>
+    <nav class="menu">
+        <button id="btn-sensores" class="nav-item active"><i class="fas fa-chart-line"></i><span>Dashboard</span></button>
+        <button id="btn-reles" class="nav-item"><i class="fas fa-toggle-on"></i><span>Actuadores</span></button>
+        <button id="btn-clima" class="nav-item"><i class="fas fa-cloud-sun"></i><span>Meteorología</span></button>
+        <button id="btn-energia" class="nav-item"><i class="fas fa-coins"></i><span>Precio Luz</span></button>
+    </nav>
+</aside>
 
-    <div id="reles-control" class="content-display" style="display: none;">
-      <h2 class="section-title">Control de Actuadores</h2>
-      <div id="reles-status" class="reles-grid"></div>
-    </div>
-
-    <div id="clima-display" class="content-display" style="display: none;">
-      <div class="weather-header">
-        <div class="weather-main-info">
-          <img id="weather-icon" src="" alt="clima">
-          <h1 id="weather-temp">--°C</h1>
-          <p id="weather-description">Cargando...</p>
+<main class="main-content">
+    <header class="header">
+        <div class="header-title">
+            <h1 id="page-title">Panel de Control</h1>
+            <p id="current-date"></p>
         </div>
-        <div class="weather-extra-grid" id="weather-details-grid">
-          </div>
-      </div>
-      
-      <h3 class="sub-title">Previsión Próximos 3 Días</h3>
-      <div id="forecast-container" class="forecast-grid"></div>
-    </div>
-  </main>
+        <div class="status-indicator"><span class="pulse"></span> SISTEMA ONLINE</div>
+    </header>
 
-  <script type="module" src="script.js"></script>
+    <section id="sensores-display" class="content-section">
+        <div class="stats-grid">
+            <div class="stat-card blue"><i class="fas fa-droplet icon"></i><div class="data"><span>Humedad</span><h2 id="humidity">--%</h2></div></div>
+            <div class="stat-card red"><i class="fas fa-temperature-half icon"></i><div class="data"><span>Temperatura</span><h2 id="tempAHT">--°C</h2></div></div>
+            <div class="stat-card green"><i class="fas fa-gauge icon"></i><div class="data"><span>Presión</span><h2 id="pressure">-- hPa</h2></div></div>
+            <div class="stat-card orange"><i class="fas fa-microchip icon"></i><div class="data"><span>PCB Temp</span><h2 id="tempBMP">--°C</h2></div></div>
+        </div>
+        <div class="main-chart-card">
+            <div class="canvas-container"><canvas id="sensorChart"></canvas></div>
+        </div>
+    </section>
+
+    <section id="clima-display" class="content-section" style="display:none">
+        <div class="clima-top-layout">
+            <div class="weather-hero">
+                <img id="weather-icon" src="" alt="">
+                <h1 id="weather-temp">--°C</h1>
+                <p id="weather-desc">Cargando...</p>
+            </div>
+            <div class="forecast-card">
+                <h3>Pronóstico 3 Días</h3>
+                <div id="forecast-container" class="forecast-grid"></div>
+            </div>
+        </div>
+        <div class="weather-details-grid" id="weather-details-extended"></div>
+    </section>
+
+    <section id="energia-display" class="content-section" style="display:none">
+        <div class="stats-grid">
+            <div class="stat-card yellow"><i class="fas fa-bolt icon"></i><div class="data"><span>Precio Actual</span><h2 id="price-now">-- €</h2></div></div>
+            <div class="stat-card green"><i class="fas fa-arrow-down icon"></i><div class="data"><span>Mínimo Hoy</span><h2 id="price-min">-- €</h2></div></div>
+            <div class="stat-card red"><i class="fas fa-arrow-up icon"></i><div class="data"><span>Máximo Hoy</span><h2 id="price-max">-- €</h2></div></div>
+        </div>
+        <div class="main-chart-card">
+            <div class="canvas-container"><canvas id="energyChart"></canvas></div>
+        </div>
+    </section>
+
+    <section id="reles-control" class="content-section" style="display:none">
+        <div class="reles-grid" id="reles-grid"></div>
+    </section>
+</main>
+
+<script type="module" src="script.js"></script>
 </body>
 </html>
