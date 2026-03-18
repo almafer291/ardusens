@@ -25,7 +25,7 @@
 
 <main class="main-content">
     <header class="header">
-        <h1>Panel de Control</h1>
+        <h1>Centro de Control</h1>
         <div class="status-indicator"><span class="pulse"></span> Almería Centro</div>
     </header>
 
@@ -41,15 +41,22 @@
 
     <section id="clima-display" class="content-section" style="display:none">
         <div class="weather-hero">
-            <img id="weather-icon" src="" alt="">
-            <h1 id="weather-temp">--°C</h1>
-            <p id="weather-description">Cargando...</p>
-            <div class="weather-meta" id="weather-details"></div>
+            <div class="hero-top">
+                <img id="weather-icon" src="" alt="clima">
+                <h1 id="weather-temp">--°C</h1>
+                <p id="weather-description">--</p>
+            </div>
+            <div class="weather-details-grid" id="weather-details-extended">
+                </div>
         </div>
+        <h3 style="margin-top:20px">Previsión 5 Días</h3>
+        <div class="forecast-grid" id="forecast-container"></div>
     </section>
 
     <section id="reles-control" class="content-section" style="display:none">
-        <div class="reles-grid" id="reles-grid"></div>
+        <h2 style="margin-bottom:20px">Control de Actuadores (8 Canales)</h2>
+        <div class="reles-grid" id="reles-grid">
+            </div>
     </section>
 </main>
 
