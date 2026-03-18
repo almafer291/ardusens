@@ -9,146 +9,108 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+const db = getDatabase(app);
 const W_KEY = "233740e194c45ee901ca539f6773ed0d";
 const LAT = "36.8340"; const LON = "-2.4637";
 
 let sensorChart, energyChart;
 
-// --- SISTEMA DE NAVEGACIÓN ---
-const showSection = (id) => {
-    document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+// --- GESTIÓN DE TABS ---
+window.showTab = (tab) => {
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(`${tab}-tab`).classList.add('active');
     
-    const target = document.getElementById(`${id}-display`);
-    if(target) target.style.display = 'block';
-    document.getElementById(`btn-${id}`).classList.add('active');
+    // Cambiar título y estilo del botón
+    const titles = {home:'Resumen de Sensores', devices:'Control de Actuadores', weather:'Meteorología Avanzada', energy:'Mercado Eléctrico'};
+    document.getElementById('tab-title').innerText = titles[tab];
 
-    if(id === 'energia') fetchEnergy();
-    if(id === 'clima') fetchWeather();
-    if(id === 'reles') initRelays();
-    if(id === 'sensores') initSensors();
+    if(tab === 'devices') renderRelays();
+    if(tab === 'weather') fetchWeather();
+    if(tab === 'energy') fetchEnergy();
 };
 
-// --- PRECIO LUZ (MÉTODO ROBUSTO) ---
+// --- PRECIO ENERGÍA (API ALTERNATIVA MÁS FIABLE) ---
 async function fetchEnergy() {
     try {
-        const today = new Date().toISOString().split('T')[0];
-        // Usamos AllOrigins para saltar el bloqueo CORS del navegador
-        const url = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://api.esios.ree.es/archives/70/download_json?locale=es&date=${today}`)}`;
-        
-        const res = await fetch(url);
+        // Usamos una API que no bloquea por CORS fácilmente
+        const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://api.preciodelaluz.org/v1/prices/all?zone=PCB'));
         const json = await res.json();
         const data = JSON.parse(json.contents);
+        
+        const prices = Object.values(data).map(h => ({ hour: h.hour, val: h.price }));
+        const nowHour = new Date().getHours();
+        
+        document.getElementById('e-now').innerText = prices[nowHour].val.toFixed(2) + " €";
+        document.getElementById('e-min').innerText = Math.min(...prices.map(p=>p.val)).toFixed(2) + " €";
+        document.getElementById('e-max').innerText = Math.max(...prices.map(p=>p.val)).toFixed(2) + " €";
 
-        if(data && data.PVPC) {
-            const prices = data.PVPC.map(item => ({
-                h: item.Dia.split('T')[1].substring(0, 2),
-                v: parseFloat(item.PCB.replace(',', '.'))
-            }));
-
-            const now = new Date().getHours();
-            document.getElementById("price-now").innerText = prices[now].v.toFixed(2) + " €/MWh";
-            document.getElementById("price-min").innerText = Math.min(...prices.map(p=>p.v)).toFixed(2) + " €";
-            document.getElementById("price-max").innerText = Math.max(...prices.map(p=>p.v)).toFixed(2) + " €";
-
-            const ctx = document.getElementById('energyChart').getContext('2d');
-            if(energyChart) energyChart.destroy();
-            energyChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: prices.map(p => p.h + ':00'),
-                    datasets: [{
-                        label: 'Precio (€/MWh)',
-                        data: prices.map(p=>p.v),
-                        backgroundColor: prices.map((_,i) => i === now ? '#0ea5e9' : 'rgba(255,255,255,0.1)'),
-                        borderRadius: 4
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false,
-                    scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } } }
-                }
-            });
-        }
-    } catch (e) {
-        console.error("Error Luz:", e);
-        document.getElementById("price-now").innerText = "Error API";
-    }
-}
-
-// --- CLIMA DETALLADO ---
-async function fetchWeather() {
-    try {
-        const resCurr = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=metric&appid=${W_KEY}&lang=es`);
-        const curr = await resCurr.json();
-        const resFore = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${LAT}&lon=${LON}&units=metric&appid=${W_KEY}&lang=es`);
-        const fore = await resFore.json();
-
-        document.getElementById("weather-icon").src = `https://openweathermap.org/img/wn/${curr.weather[0].icon}@4x.png`;
-        document.getElementById("weather-temp").innerText = `${curr.main.temp.toFixed(1)}°C`;
-        document.getElementById("weather-desc").innerText = curr.weather[0].description.toUpperCase();
-
-        // Detalles extra
-        document.getElementById("weather-details-row").innerHTML = `
-            <div class="w-item"><i class="fas fa-wind"></i> <span>${curr.wind.speed} m/s</span></div>
-            <div class="w-item"><i class="fas fa-droplet"></i> <span>${curr.main.humidity}%</span></div>
-            <div class="w-item"><i class="fas fa-sun"></i> <span>ST: ${curr.main.feels_like.toFixed(0)}°</span></div>
-        `;
-
-        // Previsión
-        const fCont = document.getElementById("forecast-container");
-        fCont.innerHTML = "";
-        fore.list.filter(f => f.dt_txt.includes("12:00:00")).slice(0,3).forEach(day => {
-            const date = new Date(day.dt * 1000).toLocaleDateString('es', {weekday: 'short'});
-            fCont.innerHTML += `
-                <div class="fore-day">
-                    <span>${date}</span>
-                    <img src="https://openweathermap.org/img/wn/${day.weather[0].icon}.png">
-                    <b>${day.main.temp.toFixed(0)}°</b>
-                </div>`;
+        const ctx = document.getElementById('energyChart');
+        if(energyChart) energyChart.destroy();
+        energyChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: prices.map(p => p.hour + 'h'),
+                datasets: [{ 
+                    label: '€/MWh', 
+                    data: prices.map(p=>p.val), 
+                    backgroundColor: prices.map((_,i) => i === nowHour ? '#38bdf8' : 'rgba(255,255,255,0.1)'),
+                    borderRadius: 5
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
         });
-    } catch (e) { console.error(e); }
+    } catch (e) { document.getElementById('e-now').innerText = "Error API"; }
 }
 
-// --- ACTUADORES ---
-function initRelays() {
-    const grid = document.getElementById("reles-grid");
-    grid.innerHTML = "";
-    for(let i=1; i<=8; i++) {
-        const card = document.createElement('div');
-        card.className = 'rele-card';
-        card.innerHTML = `
-            <div class="rele-header"><div class="dot" id="dot-${i}"></div><span>Canal ${i}</span></div>
-            <div class="rele-body">
-                <button class="action-btn" onclick="this.parentElement.previousElementSibling.firstElementChild.classList.toggle('on')">
-                    INTERRUPTOR
-                </button>
-            </div>`;
-        grid.appendChild(card);
-    }
-}
+// --- CLIMA ---
+async function fetchWeather() {
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${LAT}&lon=${LON}&units=metric&appid=${W_KEY}&lang=es`);
+    const data = await res.json();
+    
+    const cur = data.list[0];
+    document.getElementById('w-icon').src = `https://openweathermap.org/img/wn/${cur.weather[0].icon}@4x.png`;
+    document.getElementById('w-temp').innerText = cur.main.temp.toFixed(1) + "°C";
+    document.getElementById('w-desc').innerText = cur.weather[0].description.toUpperCase();
+    document.getElementById('w-wind').innerText = cur.wind.speed;
+    document.getElementById('w-hum').innerText = cur.main.humidity;
 
-// --- SENSORES ---
-function initSensors() {
-    onValue(ref(database, "/sensorData"), (snap) => {
-        const val = snap.val();
-        if(val) {
-            const last = Object.values(val).pop();
-            document.getElementById("humidity").innerText = `${last.humidity_aht?.toFixed(1)}%`;
-            document.getElementById("tempAHT").innerText = `${last.temperature_aht?.toFixed(1)}°C`;
-            document.getElementById("pressure").innerText = `${last.pressure_bmp?.toFixed(0)} hPa`;
-            document.getElementById("tempBMP").innerText = `${last.temperature_bmp?.toFixed(1)}°C`;
-        }
+    const list = document.getElementById('forecast-list');
+    list.innerHTML = "";
+    data.list.filter((_,i) => i % 8 === 0).forEach(d => {
+        const date = new Date(d.dt * 1000).toLocaleDateString('es', {weekday:'short'});
+        list.innerHTML += `<div class="f-item"><span>${date}</span><img src="https://openweathermap.org/img/wn/${d.weather[0].icon}.png"><b>${d.main.temp.toFixed(0)}°</b></div>`;
     });
 }
 
-// Listeners
-document.getElementById("btn-sensores").onclick = () => showSection('sensores');
-document.getElementById("btn-reles").onclick = () => showSection('reles');
-document.getElementById("btn-clima").onclick = () => showSection('clima');
-document.getElementById("btn-energia").onclick = () => showSection('energia');
+// --- ACTUADORES (BOTONES PRO) ---
+function renderRelays() {
+    const grid = document.getElementById('relay-grid');
+    grid.innerHTML = "";
+    for(let i=1; i<=8; i++) {
+        grid.innerHTML += `
+            <div class="relay-card glass">
+                <i class="fas fa-lightbulb"></i>
+                <p>Relé Canal ${i}</p>
+                <div class="switch-btn" onclick="toggleRelay(this, ${i})">OFF</div>
+            </div>`;
+    }
+}
 
-document.getElementById("current-date").innerText = new Date().toLocaleDateString('es', {weekday:'long', day:'numeric', month:'long'});
-showSection('sensores');
+window.toggleRelay = (btn, id) => {
+    btn.classList.toggle('on');
+    btn.innerText = btn.classList.contains('on') ? 'ON' : 'OFF';
+};
+
+// --- SENSORES FIREBASE ---
+onValue(ref(db, "/sensorData"), (snap) => {
+    const data = Object.values(snap.val() || {}).pop();
+    if(data) {
+        document.getElementById('h-val').innerText = data.humidity_aht.toFixed(1) + "%";
+        document.getElementById('ta-val').innerText = data.temperature_aht.toFixed(1) + "°C";
+        document.getElementById('p-val').innerText = data.pressure_bmp.toFixed(0) + " hPa";
+        document.getElementById('tp-val').innerText = data.temperature_bmp.toFixed(1) + "°C";
+    }
+});
+
+document.getElementById('date-now').innerText = new Date().toLocaleDateString();
