@@ -1,368 +1,53 @@
-/* =========================================
-   VARIABLES Y CONFIGURACIÓN GLOBAL
-   ========================================= */
 :root {
-    --bg-deep: #060912;
-    --sidebar-bg: #0b1120;
-    --card-bg: rgba(30, 41, 59, 0.5); /* Efecto Cristal */
-    --card-border: rgba(255, 255, 255, 0.08);
-    --accent: #0ea5e9; /* Azul Cielo Pro */
-    --text-main: #f1f5f9;
-    --text-muted: #94a3b8;
-    
-    /* Colores de Categoría */
-    --blue: #38bdf8;
-    --red: #f87171;
-    --green: #4ade80;
-    --orange: #fb923c;
-    --purple: #a78bfa;
-    
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --bg: #060912;
+    --card: rgba(30, 41, 59, 0.5);
+    --accent: #0ea5e9;
+    --text: #f1f5f9;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    outline: none;
-}
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; margin:0; overflow: hidden; }
 
-body {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: var(--bg-deep);
-    color: var(--text-main);
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-    letter-spacing: -0.01em;
-}
+/* Sidebar */
+.sidebar { width: 260px; background: #0b1120; padding: 30px; border-right: 1px solid rgba(255,255,255,0.05); }
+.brand { font-size: 1.3rem; font-weight: 800; margin-bottom: 50px; }
+.nav-item { width: 100%; background: none; border: none; color: #94a3b8; padding: 15px; text-align: left; cursor: pointer; display: flex; gap: 15px; border-radius: 12px; font-weight: 600; margin-bottom: 5px; }
+.nav-item.active { background: rgba(14, 165, 233, 0.1); color: var(--accent); }
 
-/* =========================================
-   BARRA LATERAL (SIDEBAR)
-   ========================================= */
-.side-menu {
-    width: 260px;
-    background: var(--sidebar-bg);
-    display: flex;
-    flex-direction: column;
-    padding: 30px;
-    border-right: 1px solid var(--card-border);
-    z-index: 100;
-}
+/* Main Content */
+.main-content { flex: 1; padding: 40px; overflow-y: auto; }
+.header { display: flex; justify-content: space-between; margin-bottom: 30px; }
+.pulse { width: 10px; height: 10px; background: #4ade80; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
 
-.brand {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--text-main);
-    margin-bottom: 50px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+/* Grids */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+.stat-card { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+.stat-card h2 { font-size: 2rem; margin: 10px 0; }
+.stat-card.blue h2 { color: #38bdf8; }
+.stat-card.red h2 { color: #f87171; }
+.stat-card.green h2 { color: #4ade80; }
+.stat-card.yellow h2 { color: #fbbf24; }
 
-.brand b {
-    color: var(--accent);
-    text-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
-}
+/* Clima */
+.clima-top-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; margin-bottom: 20px; }
+.weather-hero { background: linear-gradient(135deg, rgba(14,165,233,0.1), transparent); padding: 30px; border-radius: 24px; text-align: center; }
+.weather-hero h1 { font-size: 3.5rem; margin: 0; }
+.forecast-grid { display: flex; justify-content: space-around; margin-top: 20px; }
+.fore-item { display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; min-width: 80px; }
+.weather-details-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+.w-mini-card { background: var(--card); padding: 20px; border-radius: 20px; text-align: center; }
 
-.side-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    padding: 14px 18px;
-    margin-bottom: 10px;
-    text-align: left;
-    font-size: 0.95rem;
-    font-weight: 600;
-    border-radius: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: var(--transition);
-}
+/* Relés */
+.reles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+.rele-card { background: var(--card); padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
+.dot { width: 12px; height: 12px; background: #334155; border-radius: 50%; transition: 0.3s; }
+.dot.on { background: #4ade80; box-shadow: 0 0 10px #4ade80; }
 
-.side-btn i {
-    font-size: 1.1rem;
-}
+/* Switches */
+.switch { position: relative; width: 50px; height: 26px; }
+.switch input { opacity: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #334155; border-radius: 34px; transition: .4s; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: .4s; }
+input:checked + .slider { background: #4ade80; }
+input:checked + .slider:before { transform: translateX(24px); }
 
-.side-btn:hover {
-    color: var(--text-main);
-    background: rgba(255, 255, 255, 0.03);
-}
-
-.side-btn.active {
-    background: rgba(14, 165, 233, 0.1);
-    color: var(--accent);
-    box-shadow: inset 0 0 0 1px rgba(14, 165, 233, 0.2);
-}
-
-/* =========================================
-   CONTENIDO PRINCIPAL
-   ========================================= */
-.main-content {
-    flex: 1;
-    padding: 40px;
-    overflow-y: auto;
-    background: radial-gradient(circle at top right, rgba(14, 165, 233, 0.08), var(--bg-deep) 50%);
-}
-
-.section-title {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 30px;
-    background: linear-gradient(to right, #fff, var(--text-muted));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.content-display {
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* =========================================
-   TARJETAS DE SENSORES (DASHBOARD)
-   ========================================= */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.stat-card {
-    background: var(--card-bg);
-    padding: 25px;
-    border-radius: 24px;
-    border: 1px solid var(--card-border);
-    backdrop-filter: blur(12px);
-    transition: var(--transition);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-}
-
-.stat-card span {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.stat-card h3 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin-top: 10px;
-    color: var(--text-main);
-}
-
-/* Colores por sensor */
-.stat-card:nth-child(1) h3 { color: var(--blue); }
-.stat-card:nth-child(2) h3 { color: var(--red); }
-.stat-card:nth-child(3) h3 { color: var(--green); }
-.stat-card:nth-child(4) h3 { color: var(--orange); }
-
-/* =========================================
-   METEOROLOGÍA (CLIMA)
-   ========================================= */
-.weather-header {
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
-    border-radius: 30px;
-    padding: 40px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-    border: 1px solid var(--card-border);
-    margin-bottom: 30px;
-}
-
-.weather-main-info {
-    flex: 1;
-    min-width: 250px;
-    text-align: center;
-    border-right: 1px solid var(--card-border);
-    padding-right: 40px;
-}
-
-.weather-main-info img {
-    width: 120px;
-    filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
-}
-
-.weather-main-info h1 {
-    font-size: 4rem;
-    font-weight: 800;
-    margin: 10px 0;
-}
-
-.weather-extra-grid {
-    flex: 2;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 20px;
-}
-
-.weather-item {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 15px;
-    border-radius: 20px;
-    text-align: center;
-    border: 1px solid var(--card-border);
-}
-
-.weather-item i {
-    font-size: 1.2rem;
-    color: var(--accent);
-    margin-bottom: 8px;
-}
-
-.weather-item p {
-    font-size: 1.1rem;
-    font-weight: 700;
-}
-
-.weather-item span {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    font-weight: 700;
-}
-
-/* Previsión */
-.forecast-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.forecast-item {
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 20px;
-    text-align: center;
-    border: 1px solid var(--card-border);
-}
-
-.forecast-day {
-    color: var(--accent);
-    font-weight: 800;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-}
-
-.forecast-temp {
-    font-size: 1.4rem;
-    font-weight: 700;
-}
-
-/* =========================================
-   CONTROL DE ACTUADORES (RELÉS)
-   ========================================= */
-.reles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-.rele-card {
-    background: var(--card-bg);
-    padding: 25px;
-    border-radius: 24px;
-    border: 1px solid var(--card-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    backdrop-filter: blur(10px);
-}
-
-.rele-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.rele-info span {
-    font-weight: 700;
-    font-size: 1rem;
-}
-
-/* El punto de estado */
-.dot {
-    width: 12px;
-    height: 12px;
-    background: #475569; /* Gris apagado */
-    border-radius: 50%;
-    transition: all 0.4s ease;
-}
-
-.dot.on {
-    background: var(--green);
-    box-shadow: 0 0 15px var(--green);
-}
-
-/* Interruptor Switch */
-.rele-toggle {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 0.8rem;
-    transition: var(--transition);
-}
-
-.rele-toggle:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-}
-
-/* =========================================
-   INDICADOR DE ESTADO (HEADER)
-   ========================================= */
-.status-indicator {
-    background: rgba(74, 222, 128, 0.1);
-    color: var(--green);
-    padding: 8px 16px;
-    border-radius: 30px;
-    font-size: 0.75rem;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid rgba(74, 222, 128, 0.2);
-}
-
-.pulse {
-    width: 8px;
-    height: 8px;
-    background: var(--green);
-    border-radius: 50%;
-    animation: pulse-animation 2s infinite;
-}
-
-@keyframes pulse-animation {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
-}
-
-/* Scrollbar Personalizada */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-deep); }
-::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #334155; }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
