@@ -1,82 +1,21 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hestia | Home Essence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<div class="sidebar">
-    <div class="brand">
-        <i class="fas fa-fire-alt"></i>
-        <span>HESTIA</span>
+<div class="weather-dashboard">
+    <div class="weather-hero glass">
+        <div class="weather-main-info">
+            <img id="w-icon" src="" alt="icon">
+            <h1 id="w-temp">--°C</h1>
+            <p id="w-desc">Reading the sky...</p>
+        </div>
+        <div class="weather-details-grid">
+            <div class="w-detail"><span><i class="fas fa-thermometer-half"></i> Feels</span><b id="w-feels">--°</b></div>
+            <div class="w-detail"><span><i class="fas fa-eye"></i> Visibility</span><b id="w-vis">-- km</b></div>
+            <div class="w-detail"><span><i class="fas fa-cloud"></i> Clouds</span><b id="w-cloud">--%</b></div>
+            <div class="w-detail"><span><i class="fas fa-wind"></i> Wind</span><b id="w-wind">-- m/s</b></div>
+            <div class="w-detail"><span><i class="fas fa-droplet"></i> Humidity</span><b id="w-hum">--%</b></div>
+            <div class="w-detail"><span><i class="fas fa-sun"></i> Sunrise</span><b id="w-rise">--:--</b></div>
+            <div class="w-detail"><span><i class="fas fa-moon"></i> Sunset</span><b id="w-set">--:--</b></div>
+        </div>
     </div>
-    <nav>
-        <div class="nav-item active" onclick="showTab('essence')"><i class="fas fa-leaf"></i> Essence</div>
-        <div class="nav-item" onclick="showTab('core')"><i class="fas fa-adjust"></i> Core Control</div>
-        <div class="nav-item" onclick="showTab('atmosphere')"><i class="fas fa-wind"></i> Atmosphere</div>
-        <div class="nav-item" onclick="showTab('energy')"><i class="fas fa-bolt"></i> Energy Flow</div>
-    </nav>
-    <div class="sidebar-footer">Home Guardian System</div>
+    <div class="forecast-list glass" id="w-forecast"></div>
 </div>
-
-<main class="content">
-    <header class="top-header">
-        <div class="header-text">
-            <h1 id="tab-title">Home Essence</h1>
-            <p id="live-clock">--:--:--</p>
-        </div>
-        <div class="connection-status"><span class="pulse"></span> Connected to Core</div>
-    </header>
-
-    <section id="tab-essence" class="tab-content active">
-        <div class="metrics-grid">
-            <div class="metric-card gold"><span>Humidity</span><h2 id="val-hum">--%</h2></div>
-            <div class="metric-card"><span>Air Temp</span><h2 id="val-temp">--°C</h2></div>
-            <div class="metric-card"><span>Pressure</span><h2 id="val-pres">-- hPa</h2></div>
-            <div class="metric-card"><span>PCB Health</span><h2 id="val-pcb">--°C</h2></div>
-        </div>
-        <div class="main-visual glass">
-            <canvas id="essenceChart"></canvas>
-        </div>
-    </section>
-
-    <section id="tab-core" class="tab-content">
-        <div class="relay-grid" id="relay-container"></div>
-    </section>
-
-    <section id="tab-atmosphere" class="tab-content">
-        <div class="weather-dashboard">
-            <div class="weather-hero glass">
-                <img id="w-icon" src="" alt="">
-                <h1 id="w-temp">--°C</h1>
-                <p id="w-desc">Reading the sky...</p>
-                <div class="w-meta">
-                    <span><i class="fas fa-wind"></i> <b id="w-wind">--</b> m/s</span>
-                    <span><i class="fas fa-droplet"></i> <b id="w-hum">--</b> %</span>
-                </div>
-            </div>
-            <div class="forecast-list glass" id="w-forecast"></div>
-        </div>
-    </section>
-
-    <section id="tab-energy" class="tab-content">
-        <div class="metrics-grid">
-            <div class="metric-card bronze"><span>Current Price</span><h2 id="p-now">-- €</h2></div>
-            <div class="metric-card"><span>Daily Low</span><h2 id="p-min">-- €</h2></div>
-            <div class="metric-card"><span>Daily High</span><h2 id="p-max">-- €</h2></div>
-        </div>
-        <div class="main-visual glass" style="height: 400px;">
-            <canvas id="energyChart"></canvas>
-        </div>
-    </section>
-</main>
-
-<script type="module" src="script.js"></script>
-</body>
-</html>
