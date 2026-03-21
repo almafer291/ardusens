@@ -10,15 +10,16 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-let eChart, pChart;
+let pChart;
 
-// --- GESTOR DE TABS ---
+// --- NAVEGACIÓN ---
 window.showTab = (tab) => {
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById(`tab-${tab}`).classList.add('active');
-    event.currentTarget.classList.add('active');
     
+    // El evento se captura del click
+    if (event) event.currentTarget.classList.add('active');
     document.getElementById('tab-title').innerText = tab.charAt(0).toUpperCase() + tab.slice(1);
 
     if(tab === 'energy') loadEnergy();
@@ -26,16 +27,25 @@ window.showTab = (tab) => {
     if(tab === 'atmosphere') loadWeather();
 };
 
-// --- PRECIO LUZ (RESISTENTE A FALLOS) ---
+// --- PRECIO LUZ (SOLUCIÓN DEFINITIVA CON PROXY) ---
 async function loadEnergy() {
+    const elNow = document.getElementById('p-now');
+    elNow.innerText = "Connecting...";
+
     try {
-        const res = await fetch('https://api.preciodelaluz.org/v1/prices/all?zone=PCB');
-        const data = await res.json();
+        // Usamos AllOrigins para saltar el bloqueo del navegador
+        const targetUrl = 'https://api.preciodelaluz.org/v1/prices/all?zone=PCB';
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+        
+        const response = await fetch(proxyUrl);
+        const wrappedData = await response.json();
+        const data = JSON.parse(wrappedData.contents); // Extraemos el JSON real
+
         const now = new Date().getHours();
         const hours = Object.values(data);
         const prices = hours.map(h => h.price);
 
-        document.getElementById('p-now').innerText = hours[now].price.toFixed(2) + " €";
+        elNow.innerText = hours[now].price.toFixed(2) + " €";
         document.getElementById('p-min').innerText = Math.min(...prices).toFixed(2) + " €";
         document.getElementById('p-max').innerText = Math.max(...prices).toFixed(2) + " €";
 
@@ -51,54 +61,54 @@ async function loadEnergy() {
                     borderRadius: 4
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } },
+                    x: { grid: { display: false }, ticks: { color: '#666' } }
+                }
+            }
         });
-    } catch (e) { document.getElementById('p-now').innerText = "Offline"; }
+    } catch (e) { 
+        console.error("Hestia Energy Error:", e);
+        elNow.innerText = "Sync Error"; 
+    }
 }
 
-// --- CORE CONTROL (RELÉS) ---
+// --- RESTO DE FUNCIONES (CORREGIDAS) ---
 function loadRelays() {
     const container = document.getElementById('relay-container');
+    if(!container) return;
     container.innerHTML = "";
     for(let i=1; i<=8; i++) {
         container.innerHTML += `
             <div class="relay-card glass">
-                <div class="relay-info">
-                    <i class="fas fa-fingerprint"></i>
-                    <span>Channel ${i}</span>
-                </div>
-                <div class="hestia-switch" onclick="this.classList.toggle('active')">
-                    <div class="knob"></div>
-                </div>
+                <div class="relay-info"><i class="fas fa-fingerprint"></i><span>Channel ${i}</span></div>
+                <div class="hestia-switch" onclick="this.classList.toggle('active')"><div class="knob"></div></div>
             </div>`;
     }
 }
 
-// --- ATMOSPHERE (CLIMA) ---
 async function loadWeather() {
     const W_KEY = "233740e194c45ee901ca539f6773ed0d";
-    const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=36.8340&lon=-2.4637&units=metric&appid=${W_KEY}&lang=es`);
-    const data = await res.json();
-    
-    const cur = data.list[0];
-    document.getElementById('w-icon').src = `https://openweathermap.org/img/wn/${cur.weather[0].icon}@4x.png`;
-    document.getElementById('w-temp').innerText = cur.main.temp.toFixed(1) + "°";
-    document.getElementById('w-desc').innerText = cur.weather[0].description;
-    document.getElementById('w-wind').innerText = cur.wind.speed;
-    document.getElementById('w-hum').innerText = cur.main.humidity;
-
-    const fList = document.getElementById('w-forecast');
-    fList.innerHTML = "<h3>Forecast</h3>";
-    data.list.filter((_,i) => i % 8 === 0).forEach(d => {
-        const day = new Date(d.dt * 1000).toLocaleDateString('en', {weekday:'short'});
-        fList.innerHTML += `<div class="f-row"><span>${day}</span><img src="https://openweathermap.org/img/wn/${d.weather[0].icon}.png"><b>${d.main.temp.toFixed(0)}°</b></div>`;
-    });
+    try {
+        const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=36.8340&lon=-2.4637&units=metric&appid=${W_KEY}&lang=es`);
+        const data = await res.json();
+        const cur = data.list[0];
+        document.getElementById('w-icon').src = `https://openweathermap.org/img/wn/${cur.weather[0].icon}@4x.png`;
+        document.getElementById('w-temp').innerText = cur.main.temp.toFixed(1) + "°";
+        document.getElementById('w-desc').innerText = cur.weather[0].description;
+        document.getElementById('w-wind').innerText = cur.wind.speed;
+        document.getElementById('w-hum').innerText = cur.main.humidity;
+    } catch(e) { console.log("Weather error"); }
 }
 
-// --- FIREBASE SYNC ---
 onValue(ref(db, "/sensorData"), (snap) => {
-    const data = Object.values(snap.val() || {}).pop();
-    if(data) {
+    const val = snap.val();
+    if(val) {
+        const data = Object.values(val).pop();
         document.getElementById('val-hum').innerText = data.humidity_aht.toFixed(1) + "%";
         document.getElementById('val-temp').innerText = data.temperature_aht.toFixed(1) + "°";
         document.getElementById('val-pres').innerText = data.pressure_bmp.toFixed(0);
@@ -107,5 +117,6 @@ onValue(ref(db, "/sensorData"), (snap) => {
 });
 
 setInterval(() => {
-    document.getElementById('live-clock').innerText = new Date().toLocaleTimeString();
+    const clock = document.getElementById('live-clock');
+    if(clock) clock.innerText = new Date().toLocaleTimeString();
 }, 1000);
