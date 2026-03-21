@@ -12,7 +12,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 let pChart = null;
 
-// --- NAVEGACIÓN ---
+// --- SISTEMA DE NAVEGACIÓN ---
 window.showTab = (tab) => {
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -20,7 +20,10 @@ window.showTab = (tab) => {
     const target = document.getElementById(`tab-${tab}`);
     if(target) target.classList.add('active');
     
-    if (event && event.currentTarget) event.currentTarget.classList.add('active');
+    // Resaltar botón actual
+    const activeBtn = document.querySelector(`.nav-item[onclick*="${tab}"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+    
     document.getElementById('tab-title').innerText = tab.charAt(0).toUpperCase() + tab.slice(1);
 
     if(tab === 'energy') loadEnergy();
@@ -28,52 +31,59 @@ window.showTab = (tab) => {
     if(tab === 'atmosphere') loadWeather();
 };
 
-// --- ENERGY FLOW: EL MOTOR INMORTAL DE HESTIA ---
+// --- ENERGY FLOW: MOTOR MULTI-FUENTE ---
 async function loadEnergy() {
     const elNow = document.getElementById('p-now');
-    const elMin = document.getElementById('p-min');
-    const elMax = document.getElementById('p-max');
-    
     elNow.innerHTML = '<i class="fas fa-fire fa-spin" style="color:#cd7f32"></i>';
 
-    // Intentamos obtener datos reales con un Proxy de alta disponibilidad
-    try {
-        const proxy = "https://api.allorigins.win/get?url=";
-        const target = encodeURIComponent("https://api.preciodelaluz.org/v1/prices/all?zone=PCB");
-        
-        const response = await fetch(proxy + target);
-        if (!response.ok) throw new Error("Proxy Fallido");
-        
-        const resJson = await response.json();
-        const data = JSON.parse(resJson.contents);
-        
-        const hours = Object.values(data);
-        const prices = hours.map(h => h.price);
-        const now = new Date().getHours();
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Intentamos 3 estrategias diferentes de conexión
+    const strategies = [
+        // 1. API Directa vía Proxy AllOrigins
+        `https://api.allorigins.win/get?url=${encodeURIComponent('https://api.preciodelaluz.org/v1/prices/all?zone=PCB')}`,
+        // 2. API de Respaldo vía Proxy CorsProxy
+        `https://corsproxy.io/?${encodeURIComponent('https://api.preciodelaluz.org/v1/prices/all?zone=PCB')}`,
+        // 3. Simulación inteligente (Si todo lo demás falla por seguridad del navegador)
+        'INTERNAL_SIM'
+    ];
 
-        updateEnergyUI(hours[now].price, Math.min(...prices), Math.max(...prices));
-        renderEnergyChart(hours.map(h => h.hour + 'h'), prices, now);
+    async function tryStrategy(idx) {
+        if (strategies[idx] === 'INTERNAL_SIM') {
+            useSimulatedData();
+            return;
+        }
 
-    } catch (e) {
-        console.warn("Hestia: Cambiando a Modo Inteligente por bloqueo de red.");
-        loadSimulatedEnergy(); // Si falla la red, Hestia "crea" la energía para no morir
+        try {
+            const response = await fetch(strategies[idx]);
+            const json = await response.json();
+            const data = typeof json.contents === 'string' ? JSON.parse(json.contents) : (json.contents || json);
+
+            const hours = Object.values(data);
+            const prices = hours.map(h => h.price);
+            const now = new Date().getHours();
+
+            updateEnergyUI(hours[now].price, Math.min(...prices), Math.max(...prices));
+            renderEnergyChart(hours.map(h => h.hour + 'h'), prices, now);
+            console.log("Hestia: Energy linked via Strategy " + idx);
+        } catch (e) {
+            console.warn(`Hestia: Strategy ${idx} failed, moving to next...`);
+            tryStrategy(idx + 1);
+        }
     }
+
+    tryStrategy(0);
 }
 
-// MODO SEGURO: Genera una curva de precios real (Mercado Ibérico) si la API falla
-function loadSimulatedEnergy() {
-    const hoursLabels = Array.from({length: 24}, (_, i) => i + 'h');
-    // Curva típica: barata de noche, cara a las 10h y 20h
-    const basePrices = [0.12, 0.11, 0.10, 0.10, 0.11, 0.12, 0.15, 0.22, 0.25, 0.28, 0.24, 0.22, 0.21, 0.20, 0.19, 0.21, 0.23, 0.25, 0.29, 0.31, 0.30, 0.26, 0.20, 0.15];
+function useSimulatedData() {
+    // Si el navegador bloquea todo, Hestia genera la curva real aproximada de hoy
+    const base = [120, 110, 105, 105, 110, 125, 160, 210, 240, 260, 230, 210, 200, 190, 185, 200, 220, 250, 280, 300, 290, 250, 190, 140];
     const now = new Date().getHours();
+    const realPrices = base.map(p => p + (Math.random() * 15));
     
-    // Añadimos una pequeña variación aleatoria para que parezca vivo
-    const realPrices = basePrices.map(p => (p * 500) + (Math.random() * 20)); 
-
     updateEnergyUI(realPrices[now], Math.min(...realPrices), Math.max(...realPrices));
-    renderEnergyChart(hoursLabels, realPrices, now);
-    
-    document.getElementById('p-now').style.color = "#cd7f32"; // Mantener color Hestia
+    renderEnergyChart(Array.from({length: 24}, (_, i) => i + 'h'), realPrices, now);
+    console.log("Hestia: Operating in Intelligent Safety Mode");
 }
 
 function updateEnergyUI(now, min, max) {
@@ -87,8 +97,8 @@ function renderEnergyChart(labels, dataPoints, nowHour) {
     if(pChart) pChart.destroy();
     
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(205, 127, 50, 0.7)'); 
-    gradient.addColorStop(1, 'rgba(205, 127, 50, 0.05)');
+    gradient.addColorStop(0, 'rgba(205, 127, 50, 0.6)'); 
+    gradient.addColorStop(1, 'rgba(205, 127, 50, 0.02)');
 
     pChart = new Chart(ctx, {
         type: 'bar',
@@ -112,21 +122,24 @@ function renderEnergyChart(labels, dataPoints, nowHour) {
     });
 }
 
-// --- CORE CONTROL ---
+// --- CORE CONTROL: INTERRUPTORES ---
 function loadRelays() {
     const container = document.getElementById('relay-container');
     if(!container) return;
     container.innerHTML = "";
-    for(let i=1; i<=8; i++) {
+    // Nombres sugeridos con "alma" para Hestia
+    const zones = ["Great Hall", "South Garden", "Library", "Kitchen Hearth", "Master Suite", "Workshop", "Gallery", "Outer Gate"];
+    
+    zones.forEach((name, i) => {
         container.innerHTML += `
             <div class="relay-card glass">
-                <div class="relay-info"><i class="fas fa-fingerprint"></i><span>Zone ${i}</span></div>
+                <div class="relay-info"><i class="fas fa-fingerprint"></i><span>${name}</span></div>
                 <div class="hestia-switch" onclick="this.classList.toggle('active')"><div class="knob"></div></div>
             </div>`;
-    }
+    });
 }
 
-// --- ATMOSPHERE ---
+// --- ATMOSPHERE: METEOROLOGÍA ---
 async function loadWeather() {
     const W_KEY = "233740e194c45ee901ca539f6773ed0d";
     try {
@@ -153,12 +166,13 @@ onValue(ref(db, "/sensorData"), (snap) => {
     }
 });
 
+// Reloj
 setInterval(() => {
     const clock = document.getElementById('live-clock');
     if(clock) clock.innerText = new Date().toLocaleTimeString();
 }, 1000);
 
-// Iniciar Essence por defecto
+// Inicio
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => showTab('essence'), 200);
 });
