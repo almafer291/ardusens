@@ -1,186 +1,115 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+/* --- HESTIA DASHBOARD LOGIC --- */
 
-// --- CONFIGURACIÓN DE FIREBASE ---
-const firebaseConfig = {
-    apiKey: "AIzaSyBJT5ckT_Os1eTxPvVn9kjFi3pXXEUeIe8",
-    authDomain: "ardusens.firebaseapp.com",
-    databaseURL: "https://ardusens-default-rtdb.europe-west1.firebasedatabase.app/",
-    projectId: "ardusens"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-let pChart = null;
-
-// --- GESTIÓN DE NAVEGACIÓN (TABS) ---
-window.showTab = (tab) => {
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+document.addEventListener('DOMContentLoaded', () => {
     
-    const target = document.getElementById(`tab-${tab}`);
-    if (target) target.classList.add('active');
+    // Iniciar el Reloj
+    updateTime();
+    setInterval(updateTime, 1000);
     
-    // Resaltar botón en sidebar
-    const activeBtn = document.querySelector(`.nav-item[onclick*="${tab}"]`);
-    if (activeBtn) activeBtn.classList.add('active');
-
-    document.getElementById('tab-title').innerText = tab.charAt(0).toUpperCase() + tab.slice(1);
-
-    if(tab === 'energy') loadEnergy();
-    if(tab === 'core') loadRelays();
-    if(tab === 'atmosphere') loadWeather();
-};
-
-// --- MOTOR DE ENERGÍA (ESIOS + SEMÁFORO) ---
-async function loadEnergy() {
-    const elNow = document.getElementById('p-now');
-    const elMin = document.getElementById('p-min');
-    const elMax = document.getElementById('p-max');
+    // Simular Carga de Datos de Atmosphere
+    loadAtmosphereData();
     
-    elNow.innerHTML = '<i class="fas fa-fire-alt fa-spin" style="color:#cd7f32"></i>';
+});
 
-    const proxies = [
-        "https://api.allorigins.win/get?url=",
-        "https://corsproxy.io/?",
-        "https://thingproxy.freeboard.io/fetch/"
-    ];
-
-    async function tryFetch(index) {
-        if (index >= proxies.length) {
-            useSimulatedEnergy(); // Último recurso si todo falla
-            return;
-        }
-
-        try {
-            const target = "https://api.preciodelaluz.org/v1/prices/all?zone=PCB";
-            const response = await fetch(proxies[index] + encodeURIComponent(target));
-            
-            if (!response.ok) throw new Error();
-
-            const json = await response.json();
-            const data = typeof json.contents === 'string' ? JSON.parse(json.contents) : (json.contents || json);
-
-            const hours = Object.values(data);
-            const prices = hours.map(h => h.price);
-            const nowIdx = new Date().getHours();
-            const currentPrice = hours[nowIdx].price;
-
-            // --- Lógica de Ahorro (Semáforo) ---
-            const minP = Math.min(...prices);
-            const maxP = Math.max(...prices);
-            const range = maxP - minP;
-            
-            let statusColor = "#4ade80"; // Verde (Barato)
-            if (currentPrice > minP + (range * 0.35)) statusColor = "#fbbf24"; // Naranja (Medio)
-            if (currentPrice > minP + (range * 0.70)) statusColor = "#f87171"; // Rojo (Caro)
-
-            // Actualizar UI
-            elNow.innerText = (currentPrice / 1000).toFixed(4) + " €/kWh";
-            elNow.style.color = statusColor;
-            elMin.innerText = (minP / 1000).toFixed(4) + " €";
-            elMax.innerText = (maxP / 1000).toFixed(4) + " €";
-
-            renderEnergyChart(hours.map(h => h.hour + 'h'), prices.map(p => p/1000), nowIdx, statusColor);
-            console.log("Hestia: Energy linked via proxy " + index);
-
-        } catch (e) {
-            console.warn(`Hestia: Bridge ${index} offline. Trying next...`);
-            tryFetch(index + 1);
-        }
-    }
-    tryFetch(0);
-}
-
-function renderEnergyChart(labels, prices, nowHour, activeColor) {
-    const ctx = document.getElementById('energyChart').getContext('2d');
-    if(pChart) pChart.destroy();
+// --- FUNCIÓN DEL RELOJ ---
+function updateTime() {
+    const timeElement = document.getElementById('current-time');
+    const dateElement = document.getElementById('current-date');
     
-    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(205, 127, 50, 0.4)'); 
-    gradient.addColorStop(1, 'rgba(205, 127, 50, 0)');
-
-    pChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: prices,
-                backgroundColor: labels.map((_, i) => i === nowHour ? activeColor : gradient),
-                borderRadius: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#666' } },
-                x: { grid: { display: false }, ticks: { color: '#666' } }
-            }
-        }
+    const now = new Date();
+    
+    // Formato de Hora: "1:17:09 PM"
+    timeElement.innerText = now.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    });
+    
+    // Formato de Fecha: "Saturday, March 21, 2026"
+    dateElement.innerText = now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
     });
 }
 
-// Respaldo Inteligente (Modo Simulación)
-function useSimulatedEnergy() {
-    const now = new Date().getHours();
-    const mockPrices = [0.12, 0.11, 0.10, 0.10, 0.11, 0.14, 0.22, 0.28, 0.26, 0.23, 0.21, 0.20, 0.19, 0.18, 0.19, 0.22, 0.25, 0.29, 0.32, 0.30, 0.26, 0.21, 0.16, 0.13];
+// --- SIMULACIÓN DE DATOS DE CLIMA ---
+function loadAtmosphereData() {
     
-    document.getElementById('p-now').innerText = mockPrices[now].toFixed(4) + " €/kWh";
-    document.getElementById('p-now').style.color = "#cd7f32"; 
-    document.getElementById('p-min').innerText = "0.1000 €";
-    document.getElementById('p-max').innerText = "0.3200 €";
+    // Estos datos simulan la respuesta de una API (como OpenWeatherMap)
+    const weatherData = {
+        main: {
+            temp: 21,
+            feels_like: 20,
+            humidity: 58,
+            pressure: 1014,
+            dew_point: 12
+        },
+        description: "MAYORMENTE NUBLADO",
+        wind: { speed: 18 },
+        clouds: { all: 45 },
+        visibility: 16,
+        uv_index: 4,
+        sys: {
+            sunrise_ts: 1711011120, // Unix Timestamp
+            sunset_ts: 1711055280
+        },
+        hourly: [
+            { time: "2 PM", temp: 22, pop: 10, icon: "fa-cloud-sun", width: 85 },
+            { time: "3 PM", temp: 23, pop: 10, icon: "fa-cloud-sun", width: 90 },
+            { time: "4 PM", temp: 23, pop: 15, icon: "fa-cloud-sun", width: 90 },
+            { time: "5 PM", temp: 22, pop: 20, icon: "fa-cloud-sun", width: 85 },
+            { time: "6 PM", temp: 21, pop: 20, icon: "fa-cloud", width: 80 },
+            { time: "7 PM", temp: 19, pop: 30, icon: "fa-cloud", width: 70 }
+        ]
+    };
     
-    renderEnergyChart(Array.from({length: 24}, (_, i) => i + 'h'), mockPrices, now, "#ffffff");
+    // --- Actualizar el Panel Central ---
+    document.getElementById('temp-main-val').innerText = weatherData.main.temp;
+    document.getElementById('weather-desc-main').innerText = weatherData.description;
+    document.getElementById('feels-like-val').innerText = weatherData.main.feels_like;
+    document.getElementById('humidity-val').innerText = weatherData.main.humidity;
+    document.getElementById('wind-val').innerText = weatherData.wind.speed;
+    document.getElementById('clouds-val').innerText = weatherData.clouds.all;
+    document.getElementById('visibility-val').innerText = weatherData.visibility;
+    document.getElementById('uv-val').innerText = weatherData.uv_index;
+    document.getElementById('dew-point-val').innerText = weatherData.main.dew_point;
+    document.getElementById('pressure-val').innerText = weatherData.main.pressure;
+    
+    // Formatear Timestamp de sol
+    document.getElementById('sunrise-val').innerText = formatUnixTimestamp(weatherData.sys.sunrise_ts);
+    document.getElementById('sunset-val').innerText = formatUnixTimestamp(weatherData.sys.sunset_ts);
+    
+    // --- Actualizar Pronóstico por Horas ---
+    renderHourlyForecast(weatherData.hourly);
 }
 
-// --- CORE CONTROL (RELÉS POR ZONAS) ---
-function loadRelays() {
-    const container = document.getElementById('relay-container');
-    if(!container) return;
-    const zones = ["Great Hall", "South Garden", "Library", "Kitchen Hearth", "Master Suite", "Wine Cellar", "Gallery", "Outer Gate"];
-    container.innerHTML = zones.map((z, i) => `
-        <div class="relay-card glass">
-            <div class="relay-info"><i class="fas fa-fingerprint"></i><span>${z}</span></div>
-            <div class="hestia-switch" onclick="this.classList.toggle('active')"><div class="knob"></div></div>
-        </div>`).join('');
+// --- FUNCIÓN AUXILIAR: FORMATO DE TIMESTAMP ---
+function formatUnixTimestamp(timestamp) {
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); // Formato "07:12"
 }
 
-// --- ATMOSPHERE (TIEMPO) ---
-async function loadWeather() {
-    const W_KEY = "233740e194c45ee901ca539f6773ed0d";
-    try {
-        const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=36.8340&lon=-2.4637&units=metric&appid=${W_KEY}&lang=es`);
-        const data = await res.json();
-        const cur = data.list[0];
-        document.getElementById('w-icon').src = `https://openweathermap.org/img/wn/${cur.weather[0].icon}@4x.png`;
-        document.getElementById('w-temp').innerText = cur.main.temp.toFixed(1) + "°";
-        document.getElementById('w-desc').innerText = cur.weather[0].description.toUpperCase();
-        document.getElementById('w-wind').innerText = cur.wind.speed;
-        document.getElementById('w-hum').innerText = cur.main.humidity;
-    } catch(e) { console.log("Hestia Atmosphere error"); }
+// --- FUNCIÓN AUXILIAR: RENDERIZAR PRONÓSTICO ---
+function renderHourlyForecast(hourlyData) {
+    const listElement = document.getElementById('hourly-forecast-list');
+    listElement.innerHTML = ''; // Limpiar lista
+    
+    hourlyData.forEach(item => {
+        const hourItem = document.createElement('div');
+        hourItem.className = 'forecast-hour-item';
+        
+        hourItem.innerHTML = `
+            <span class="hour-time">${item.time}</span>
+            <i class="fas ${item.icon} hour-icon"></i>
+            <div class="hour-temp-bar-container">
+                <span class="hour-temp-val">${item.temp}°C</span>
+                <div class="hour-temp-bar" style="width: ${item.width}%;"></div>
+            </div>
+        `;
+        
+        listElement.appendChild(hourItem);
+    });
 }
-
-// --- FIREBASE SYNC (DATOS REALES) ---
-onValue(ref(db, "/sensorData"), (snap) => {
-    const val = snap.val();
-    if(val) {
-        const data = Object.values(val).pop();
-        document.getElementById('val-hum').innerText = (data.humidity_aht || 0).toFixed(1) + "%";
-        document.getElementById('val-temp').innerText = (data.temperature_aht || 0).toFixed(1) + "°";
-        document.getElementById('val-pres').innerText = Math.round(data.pressure_bmp || 0);
-        document.getElementById('val-pcb').innerText = (data.temperature_bmp || 0).toFixed(1) + "°";
-    }
-});
-
-// Reloj en vivo
-setInterval(() => {
-    const clock = document.getElementById('live-clock');
-    if(clock) clock.innerText = new Date().toLocaleTimeString();
-}, 1000);
-
-// Inicio Automático
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => showTab('essence'), 200);
-});
