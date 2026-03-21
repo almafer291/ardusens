@@ -1,85 +1,387 @@
+/* --- HESTIA PREMIUM DASHBOARD CSS --- */
+
 :root {
-    --bronze: #cd7f32;
-    --bronze-glow: rgba(205, 127, 50, 0.3);
-    --gold: #d4af37;
-    --bg: #0a0a0c;
-    --glass: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --text-main: #e0e0e0;
-    --text-dim: #666;
+    /* Paleta de Colores Exclusiva */
+    --bg-dark: #121212;             /* Fondo casi negro, profundo */
+    --bg-sidebar: #0a0a0a;          /* Sidebar aún más oscura */
+    --gold-main: #d4af37;           /* Oro vibrante, para elementos clave */
+    --gold-dim: #a68a2c;            /* Oro atenuado, para textos secundarios */
+    --bronze-main: #cd7f32;         /* Bronce cálido, para la llama */
+    --bronze-glow: rgba(205, 127, 50, 0.4); /* Resplandor del bronce */
+    
+    --slate-text-main: #e0e0e0;     /* Texto principal gris muy claro */
+    --slate-text-muted: #888888;    /* Texto atenuado gris medio */
+    
+    --glass-bg: rgba(255, 255, 255, 0.03); /* Efecto cristal muy sutil */
+    --glass-border: rgba(255, 255, 255, 0.08); /* Borde de cristal */
+    
+    /* Tipografía */
+    --font-heading: 'Playfair Display', serif;
+    --font-data: 'Lato', sans-serif;
+    
+    /* Transiciones */
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { 
-    background: var(--bg); 
-    color: var(--text-main); 
-    font-family: 'Plus Jakarta Sans', sans-serif; 
-    display: flex; 
-    height: 100vh; 
-    overflow: hidden; 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
 }
 
-/* Sidebar */
+body {
+    background-color: var(--bg-dark);
+    color: var(--slate-text-main);
+    font-family: var(--font-data);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.dashboard-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #121212 100%);
+}
+
+/* --- SIDEBAR IZQUIERDA --- */
 .sidebar {
-    width: 260px; background: #000; padding: 40px 20px;
-    border-right: 1px solid #1a1a1a; display: flex; flex-direction: column;
+    width: 280px;
+    background-color: var(--bg-sidebar);
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255,255,255,0.03);
+    z-index: 10;
 }
+
 .brand {
-    font-family: 'Cinzel', serif; font-size: 1.6rem; color: var(--bronze);
-    display: flex; align-items: center; gap: 12px; margin-bottom: 50px;
-    letter-spacing: 3px; text-shadow: 0 0 10px var(--bronze-glow);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 70px;
 }
-nav { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; }
+
+.fire-icon {
+    font-size: 2rem;
+    color: var(--bronze-main);
+    text-shadow: 0 0 15px var(--bronze-glow);
+}
+
+.brand h1 {
+    font-family: var(--font-heading);
+    color: var(--slate-text-main);
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+}
+
+.main-nav ul {
+    list-style: none;
+}
+
 .nav-item {
-    padding: 15px; cursor: pointer; border-radius: 12px; color: var(--text-dim);
-    transition: 0.3s; display: flex; align-items: center; gap: 12px; font-weight: 600;
-}
-.nav-item:hover, .nav-item.active { color: var(--bronze); background: rgba(205,127,50,0.08); }
-
-/* Content */
-.content { flex: 1; padding: 40px; overflow-y: auto; }
-.top-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
-.top-header h1 { font-family: 'Cinzel', serif; font-size: 2.2rem; }
-#live-clock { color: var(--bronze); letter-spacing: 2px; }
-
-/* Grid & Cards */
-.metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; }
-.metric-card { background: var(--glass); padding: 25px; border-radius: 20px; border: 1px solid var(--glass-border); }
-.metric-card span { font-size: 0.65rem; text-transform: uppercase; color: var(--text-dim); letter-spacing: 1px; }
-.metric-card h2 { font-size: 2rem; margin-top: 10px; font-weight: 300; }
-.metric-card.bronze h2 { color: var(--bronze); }
-.metric-card.gold h2 { color: var(--gold); }
-
-.glass { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 25px; padding: 25px; }
-.tab-content { display: none; animation: fadeIn 0.5s ease forwards; }
-.tab-content.active { display: block; }
-
-/* Atmosphere Detail */
-.weather-dashboard { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; }
-.weather-main-info { text-align: center; margin-bottom: 20px; }
-.weather-main-info h1 { font-size: 4rem; font-weight: 200; }
-.weather-details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 15px; border-top: 1px solid var(--glass-border); padding-top: 20px; }
-.w-detail { text-align: center; }
-.w-detail span { font-size: 0.6rem; color: var(--text-dim); display: block; }
-.w-detail b { font-size: 1rem; color: var(--bronze); }
-
-/* Relays */
-.relay-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
-.relay-card { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
-.hestia-switch { width: 50px; height: 26px; background: #222; border-radius: 20px; position: relative; cursor: pointer; transition: 0.3s; }
-.hestia-switch .knob { width: 18px; height: 18px; background: #555; border-radius: 50%; position: absolute; top: 4px; left: 4px; transition: 0.3s; }
-.hestia-switch.active { background: var(--bronze); }
-.hestia-switch.active .knob { left: 28px; background: #fff; }
-
-/* Responsive */
-@media (max-width: 850px) {
-    body { flex-direction: column; }
-    .sidebar { width: 100%; height: 70px; flex-direction: row; position: fixed; bottom: 0; left: 0; padding: 0 10px; border-top: 1px solid #1a1a1a; background: #000; }
-    .brand, .sidebar-footer { display: none; }
-    nav { flex-direction: row; justify-content: space-around; width: 100%; align-items: center; }
-    .nav-item { flex-direction: column; font-size: 0.6rem; gap: 4px; padding: 5px; }
-    .content { padding: 20px 20px 90px 20px; }
-    .weather-dashboard { grid-template-columns: 1fr; }
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 20px;
+    color: var(--slate-text-muted);
+    cursor: pointer;
+    border-radius: 12px;
+    transition: var(--transition-smooth);
+    margin-bottom: 10px;
+    font-weight: 400;
 }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.nav-item i {
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+}
+
+.nav-item:hover {
+    color: var(--slate-text-main);
+    background-color: rgba(255,255,255,0.02);
+}
+
+.nav-item.active {
+    color: var(--gold-main);
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0) 100%);
+    font-weight: 700;
+    box-shadow: inset 4px 0 0 0 var(--gold-main);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: var(--slate-text-muted);
+}
+
+.status-indicator, .location-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.status-indicator.online i {
+    color: #4caf50; /* Verde brillante para online */
+}
+
+.location-display i {
+    color: var(--gold-dim);
+}
+
+/* --- CONTENIDO PRINCIPAL --- */
+.main-content {
+    flex: 1;
+    padding: 30px 50px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* Cabecera Superior */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+    color: var(--slate-text-muted);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.menu-toggle {
+    cursor: pointer;
+    color: var(--slate-text-main);
+}
+
+.location-breadcrumb .active-tab {
+    color: var(--gold-main);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.header-right {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-link {
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.nav-link:hover {
+    color: var(--gold-dim);
+}
+
+/* Título de la Sección y Reloj */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 400;
+    color: var(--slate-text-main);
+}
+
+.time-date-display {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.date-text {
+    color: var(--slate-text-muted);
+    font-size: 1rem;
+}
+
+.time-text {
+    color: var(--slate-text-main);
+    font-size: 2rem;
+    font-weight: 300;
+    font-family: 'Playfair Display', serif;
+}
+
+/* Panel de Contenido de Atmosphere */
+.atmosphere-panel {
+    display: flex;
+    gap: 30px;
+    flex: 1;
+}
+
+/* Glassmorphism Efecto Base */
+.glass {
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Panel Central de Clima */
+.main-weather-card {
+    flex: 2;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.weather-hero {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.weather-icon-large {
+    font-size: 5rem;
+    color: var(--gold-main);
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.weather-temp-main {
+    font-family: var(--font-heading);
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--slate-text-main);
+    line-height: 1;
+}
+
+.unit-large {
+    font-size: 2.5rem;
+    vertical-align: top;
+    color: var(--slate-text-muted);
+}
+
+.weather-description {
+    color: var(--slate-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1rem;
+}
+
+/* Rejilla de Detalles de Clima */
+.weather-details-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+}
+
+.w-detail-item {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    border: 1px solid rgba(255,255,255,0.02);
+    transition: var(--transition-smooth);
+}
+
+.w-detail-item i {
+    font-size: 1.2rem;
+    color: var(--gold-dim);
+}
+
+.w-detail-item .label {
+    font-size: 0.75rem;
+    color: var(--slate-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.w-detail-item .value {
+    font-size: 1.1rem;
+    color: var(--slate-text-main);
+    font-weight: 700;
+}
+
+/* Wind Highlight (Como en la imagen) */
+.wind-highlight {
+    border-color: var(--gold-main);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+}
+
+.wind-highlight i, .wind-highlight .value {
+    color: var(--gold-main);
+}
+
+/* Panel de Pronóstico por Horas */
+.hourly-forecast-panel {
+    flex: 1;
+    padding: 30px;
+    overflow: hidden;
+}
+
+.forecast-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.forecast-hour-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.forecast-hour-item:last-child {
+    border-bottom: none;
+}
+
+.hour-time {
+    color: var(--slate-text-muted);
+    width: 50px;
+    font-size: 0.9rem;
+}
+
+.hour-icon {
+    font-size: 1.1rem;
+    color: var(--gold-dim);
+}
+
+.hour-temp-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.hour-temp-val {
+    color: var(--slate-text-main);
+    font-weight: 700;
+}
+
+.hour-temp-bar {
+    height: 6px;
+    background: linear-gradient(90deg, #d4af37 0%, #1a1a1a 100%);
+    border-radius: 3px;
+    max-width: 100px;
+}
