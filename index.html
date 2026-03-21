@@ -2,301 +2,376 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HESTIA - Almería Premium Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HESTIA | Almería Intelligent Home</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        /* --- ESTILOS COMPLETO (styles.css integrado) --- */
         :root {
-            /* Paleta de Colores Exclusiva HESTIA */
-            --bg-dark: #121212;             /* Fondo profundo */
-            --bg-sidebar: #0a0a0a;          /* Sidebar más oscura */
-            --gold-main: #d4af37;           /* Oro vibrante */
-            --gold-dim: #a68a2c;            /* Oro atenuado */
-            --bronze-main: #cd7f32;         /* Bronce cálido (llama) */
-            --bronze-glow: rgba(205, 127, 50, 0.4); 
-            
-            --slate-text-main: #e0e0e0;     /* Texto claro */
-            --slate-text-muted: #888888;    /* Texto atenuado */
-            
-            --glass-bg: rgba(255, 255, 255, 0.03); /* Cristal sutil */
-            --glass-border: rgba(255, 255, 255, 0.08); 
-            
-            --font-heading: 'Playfair Display', serif;
-            --font-data: 'Lato', sans-serif;
-            
-            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --bg-dark: #0a0a0c;
+            --bg-sidebar: #050505;
+            --gold-main: #d4af37;
+            --gold-dim: #a68a2c;
+            --bronze: #cd7f32;
+            --bronze-glow: rgba(205, 127, 50, 0.3);
+            --slate-main: #e0e0e0;
+            --slate-muted: #666;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --success: #4caf50;
+            --warning: #ffb300;
+            --danger: #f44336;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
-        body { background-color: var(--bg-dark); color: var(--slate-text-main); font-family: var(--font-data); height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--slate-main); 
+            font-family: 'Lato', sans-serif; 
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex;
+        }
 
-        /* Contenedor Principal */
-        .dashboard-container { display: flex; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #1a1a1a 0%, #121212 100%); }
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            padding: 40px 25px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--glass-border);
+            transition: 0.3s;
+            z-index: 100;
+        }
 
-        /* --- SIDEBAR IZQUIERDA --- */
-        .sidebar { width: 280px; background-color: var(--bg-sidebar); padding: 40px 30px; display: flex; flex-direction: column; border-right: 1px solid rgba(255,255,255,0.03); z-index: 10; }
-        .brand { display: flex; align-items: center; gap: 15px; margin-bottom: 70px; }
-        .fire-icon { font-size: 2rem; color: var(--bronze-main); text-shadow: 0 0 15px var(--bronze-glow); }
-        .brand h1 { font-family: var(--font-heading); color: var(--slate-text-main); font-size: 1.8rem; letter-spacing: 2px; }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 60px;
+        }
 
-        .main-nav ul { list-style: none; }
-        .nav-item { display: flex; align-items: center; gap: 18px; padding: 18px 20px; color: var(--slate-text-muted); cursor: pointer; border-radius: 12px; transition: var(--transition-smooth); margin-bottom: 10px; font-weight: 400; }
-        .nav-item i { font-size: 1.2rem; width: 24px; text-align: center; }
-        .nav-item:hover { color: var(--slate-text-main); background-color: rgba(255,255,255,0.02); }
-        .nav-item.active { color: var(--gold-main); background: linear-gradient(90deg, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0) 100%); font-weight: 700; box-shadow: inset 4px 0 0 0 var(--gold-main); }
+        .brand i { font-size: 2rem; color: var(--bronze); text-shadow: 0 0 15px var(--bronze-glow); }
+        .brand span { font-family: 'Playfair Display', serif; font-size: 1.8rem; letter-spacing: 2px; font-weight: 700; }
 
-        .sidebar-footer { margin-top: auto; font-size: 0.85rem; color: var(--slate-text-muted); }
-        .status-indicator, .location-display { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .status-indicator.online i { color: #4caf50; }
-        .location-display i { color: var(--gold-dim); }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 20px;
+            color: var(--slate-muted);
+            cursor: pointer;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: 0.3s;
+        }
 
-        /* --- CONTENIDO PRINCIPAL --- */
-        .main-content { flex: 1; padding: 30px 50px; display: flex; flex-direction: column; overflow-y: auto; }
+        .nav-item:hover, .nav-item.active {
+            color: var(--gold-main);
+            background: rgba(212, 175, 55, 0.05);
+        }
 
-        /* Cabecera Superior */
-        .top-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.03); margin-bottom: 30px; font-size: 0.9rem; color: var(--slate-text-muted); }
-        .header-left { display: flex; align-items: center; gap: 20px; }
-        .menu-toggle { cursor: pointer; color: var(--slate-text-main); }
-        .location-breadcrumb .active-tab { color: var(--gold-main); font-weight: 700; letter-spacing: 1px; }
-        .header-right { display: flex; gap: 25px; }
-        .nav-link { cursor: pointer; transition: var(--transition-smooth); }
-        .nav-link:hover { color: var(--gold-dim); }
+        .nav-item.active { box-shadow: inset 4px 0 0 var(--gold-main); font-weight: 700; }
 
-        /* Título de la Sección y Reloj */
-        .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
-        .section-title { font-family: var(--font-heading); font-size: 3rem; font-weight: 400; color: var(--slate-text-main); }
-        .time-date-display { text-align: right; display: flex; flex-direction: column; gap: 5px; }
-        .date-text { color: var(--slate-text-muted); font-size: 1rem; }
-        .time-text { color: var(--slate-text-main); font-size: 2rem; font-weight: 300; font-family: 'Playfair Display', serif; }
+        /* --- CONTENIDO --- */
+        .main-content {
+            flex: 1;
+            padding: 40px 60px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
 
-        /* --- SISTEMA DE PESTAÑAS (Tabs) --- */
-        .tab-section { display: none; gap: 30px; flex: 1; animation: fadeIn 0.5s ease-out; }
-        .tab-section.active-tab-content { display: flex; }
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 20px;
+        }
+
+        .breadcrumb { font-size: 0.85rem; color: var(--slate-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .breadcrumb b { color: var(--gold-main); }
+
+        .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 400; }
+        .clock-box { text-align: right; }
+        #live-time { font-size: 2.2rem; font-family: 'Playfair Display'; display: block; }
+        #live-date { color: var(--slate-muted); font-size: 0.9rem; }
+
+        /* --- PANELES --- */
+        .tab-content { display: none; animation: fadeIn 0.4s ease forwards; gap: 25px; width: 100%; }
+        .tab-content.active { display: flex; flex-direction: column; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Estilo Cristal (Glassmorphism) Base */
-        .glass { background-color: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+        .glass-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 35px;
+            backdrop-filter: blur(10px);
+        }
 
-        /* --- PESTAÑA: ATMOSPHERE --- */
-        .main-weather-card { flex: 2; padding: 40px; display: flex; flex-direction: column; align-items: center; }
-        .weather-hero { text-align: center; margin-bottom: 40px; }
-        .weather-icon-large { font-size: 5rem; color: var(--gold-main); margin-bottom: 10px; text-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-        .weather-temp-main { font-family: var(--font-heading); font-size: 6rem; font-weight: 700; color: var(--slate-text-main); line-height: 1; }
-        .unit-large { font-size: 2.5rem; vertical-align: top; color: var(--slate-text-muted); }
-        .weather-description { color: var(--slate-text-muted); text-transform: uppercase; letter-spacing: 2px; font-size: 1rem; }
+        /* --- ATMOSPHERE GRID --- */
+        .atmosphere-layout { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 25px; }
+        .weather-hero { text-align: center; margin-bottom: 35px; }
+        .weather-hero i { font-size: 5rem; color: var(--gold-main); margin-bottom: 15px; }
+        .main-temp { font-family: 'Playfair Display'; font-size: 6.5rem; font-weight: 700; line-height: 1; }
+        .main-temp small { font-size: 2.5rem; color: var(--slate-muted); font-weight: 300; }
+        
+        .weather-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); 
+            gap: 15px; 
+            width: 100%;
+        }
 
-        .weather-details-grid { width: 100%; display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
-        .w-detail-item { background-color: rgba(0,0,0,0.2); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.02); }
-        .w-detail-item i { font-size: 1.2rem; color: var(--gold-dim); }
-        .w-detail-item .label { font-size: 0.75rem; color: var(--slate-text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .w-detail-item .value { font-size: 1.1rem; color: var(--slate-text-main); font-weight: 700; }
-        .wind-highlight { border-color: var(--gold-main); box-shadow: 0 0 15px rgba(212, 175, 55, 0.15); }
-        .wind-highlight i, .wind-highlight .value { color: var(--gold-main); }
+        .w-item { 
+            background: rgba(0,0,0,0.2); 
+            padding: 20px; 
+            border-radius: 15px; 
+            text-align: center; 
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+        .w-item i { color: var(--gold-dim); margin-bottom: 10px; display: block; font-size: 1.2rem; }
+        .w-item span { font-size: 0.7rem; color: var(--slate-muted); text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .w-item b { font-size: 1.1rem; color: var(--slate-main); }
+        .highlight { border-color: var(--gold-main); }
 
-        .hourly-forecast-panel { flex: 1; padding: 30px; overflow: hidden; }
-        .forecast-list { display: flex; flex-direction: column; height: 100%; }
-        .forecast-hour-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .forecast-hour-item:last-child { border-bottom: none; }
-        .hour-time { color: var(--slate-text-muted); width: 50px; font-size: 0.9rem; }
-        .hour-icon { font-size: 1.1rem; color: var(--gold-dim); }
-        .hour-temp-bar-container { display: flex; align-items: center; gap: 15px; flex: 1; justify-content: flex-end; }
-        .hour-temp-val { color: var(--slate-text-main); font-weight: 700; }
-        .hour-temp-bar { height: 6px; background: linear-gradient(90deg, #d4af37 0%, #1a1a1a 100%); border-radius: 3px; max-width: 100px; }
+        /* --- ENERGY --- */
+        .price-focus { text-align: center; margin-bottom: 40px; }
+        .price-focus h2 { font-size: 5rem; font-family: 'Playfair Display'; margin: 10px 0; }
+        .price-focus p { color: var(--slate-muted); letter-spacing: 1px; }
 
-        /* --- PESTAÑA: ENERGY --- */
-        #tab-energy { flex-direction: column; }
-        .energy-graph-card { flex: 1; padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .mock-energy-graph { font-family: var(--font-heading); font-size: 4rem; color: var(--gold-dim); opacity: 0.3; }
-
-        /* --- PESTAÑA: CORE --- */
-        #tab-core { flex-direction: column; }
-        .core-info-card { flex: 1; padding: 40px; color: var(--slate-text-muted); }
-
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            .sidebar { 
+                width: 100%; height: 75px; flex-direction: row; 
+                position: fixed; bottom: 0; left: 0; padding: 0 15px;
+                border-right: none; border-top: 1px solid var(--glass-border);
+                justify-content: space-around; background: #000;
+            }
+            .brand, .sidebar-footer { display: none; }
+            .nav-item { flex-direction: column; font-size: 0.65rem; gap: 5px; padding: 10px; flex: 1; }
+            .nav-item i { font-size: 1.4rem; }
+            .main-content { padding: 25px 20px 100px 20px; }
+            .section-title { font-size: 2rem; }
+            .atmosphere-layout { grid-template-columns: 1fr; }
+            .main-temp { font-size: 4.5rem; }
+            .weather-grid { grid-template-columns: 1fr 1fr; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-container">
-        
-        <aside class="sidebar">
-            <div class="brand">
-                <div class="fire-icon"><i class="fas fa-fire-alt"></i></div>
-                <h1>HESTIA</h1>
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="fas fa-fire-alt"></i>
+            <span>HESTIA</span>
+        </div>
+        <nav>
+            <div class="nav-item active" onclick="switchTab('atmosphere')">
+                <i class="fas fa-cloud-sun"></i><span>Atmosphere</span>
             </div>
-            
-            <nav class="main-nav">
-                <ul id="main-menu">
-                    <li class="nav-item" data-tab="essence"><i class="fas fa-th-large"></i><span>Essence</span></li>
-                    <li class="nav-item active" data-tab="atmosphere"><i class="fas fa-cloud-sun"></i><span>Atmosphere</span></li>
-                    <li class="nav-item" data-tab="core"><i class="fas fa-microchip"></i><span>Core</span></li>
-                    <li class="nav-item" data-tab="energy"><i class="fas fa-bolt"></i><span>Energy</span></li>
-                </ul>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <div class="status-indicator online"><i class="fas fa-check-circle"></i><span>System Online</span></div>
-                <div class="location-display"><i class="fas fa-map-marker-alt"></i><span id="location-text">Almería, Spain</span></div>
+            <div class="nav-item" onclick="switchTab('energy')">
+                <i class="fas fa-bolt"></i><span>Energy</span>
             </div>
-        </aside>
-
-        <main class="main-content">
-            <header class="top-header">
-                <div class="header-left"><i class="fas fa-bars menu-toggle"></i><span class="location-breadcrumb"><span id="breadcrumb-location">Almería, Spain</span> / <span class="active-tab">ATMOSPHERE</span></span></div>
-                <div class="header-right"><span class="nav-link">EFRECAST</span><span class="nav-link">ENERGY</span></div>
-            </header>
-
-            <div class="section-header">
-                <h1 class="section-title" id="section-title-text">Home Atmosphere</h1>
-                <div class="time-date-display">
-                    <span id="current-date" class="date-text">Saturday, March 21, 2026</span>
-                    <span id="current-time" class="time-text">1:17:09 PM</span>
-                </div>
+            <div class="nav-item" onclick="switchTab('essence')">
+                <i class="fas fa-home"></i><span>Essence</span>
             </div>
+            <div class="nav-item" onclick="switchTab('core')">
+                <i class="fas fa-microchip"></i><span>Core</span>
+            </div>
+        </nav>
+        <div class="sidebar-footer" style="margin-top:auto; font-size: 0.8rem; color: var(--slate-muted);">
+            <i class="fas fa-map-marker-alt" style="color:var(--gold-dim)"></i> Almería, ES
+        </div>
+    </aside>
 
-            <section id="tab-atmosphere" class="tab-section active-tab-content">
-                <div class="main-weather-card glass">
+    <main class="main-content">
+        <header class="top-header">
+            <div class="breadcrumb">Almería / <b id="tab-name">Atmosphere</b></div>
+            <div style="font-size: 0.8rem; color: var(--success)"><i class="fas fa-circle"></i> SYSTEM LIVE</div>
+        </header>
+
+        <div class="section-header">
+            <h1 class="section-title" id="display-title">Home Atmosphere</h1>
+            <div class="clock-box">
+                <span id="live-time">00:00:00</span>
+                <span id="live-date">Cargando fecha...</span>
+            </div>
+        </div>
+
+        <section id="tab-atmosphere" class="tab-content active">
+            <div class="atmosphere-layout">
+                <div class="glass-card">
                     <div class="weather-hero">
-                        <div class="weather-icon-large"><i class="fas fa-sun"></i></div>
-                        <div class="weather-temp-main"><span id="temp-main-val">22</span><span class="unit-large">°C</span></div>
-                        <p id="weather-desc-main" class="weather-description">Soleado - Viento Leve</p>
+                        <i class="fas fa-sun" id="w-icon"></i>
+                        <div class="main-temp"><span id="w-temp">22</span><small>°C</small></div>
+                        <p class="weather-description" id="w-desc" style="color:var(--slate-muted); letter-spacing: 2px;">DESPEJADO</p>
                     </div>
-                    <div class="weather-details-grid">
-                        <div class="w-detail-item">
-                            <i class="fas fa-thermometer-half"></i><span class="label">Sensación</span><span class="value">21°C</span>
-                        </div>
-                        <div class="w-detail-item">
-                            <i class="fas fa-droplet"></i><span class="label">Humedad</span><span class="value">60%</span>
-                        </div>
-                        <div class="w-detail-item wind-highlight">
-                            <i class="fas fa-wind"></i><span class="label">Viento</span><span class="value">15 km/h</span>
-                        </div>
-                        <div class="w-detail-item">
-                            <i class="fas fa-cloud"></i><span class="label">Nubes</span><span class="value">5%</span>
-                        </div>
-                        <div class="w-detail-item">
-                            <i class="fas fa-eye"></i><span class="label">Visibilidad</span><span class="value">20 km</span>
-                        </div>
-                        <div class="w-detail-item">
-                            <i class="fas fa-sun"></i><span class="label">Índice UV</span><span class="value">6/10</span>
-                        </div>
-                        <div class="w-detail-item">
-                            <i class="fas fa- Compress-alt"></i><span class="label">Presión</span><span class="value">1016 hPa</span>
-                        </div>
-                        <div class="w-detail-item">
-                            <i class="fas fa-arrow-up"></i><span class="label">Sunrise (Almería)</span><span class="value">07:22</span>
-                        </div>
-                        <div class="w-detail-item">
-                            <i class="fas fa-arrow-down"></i><span class="label">Sunset (Almería)</span><span class="value">19:34</span>
-                        </div>
+                    <div class="weather-grid">
+                        <div class="w-item"><span>Sensación</span><b id="w-feels">21°</b></div>
+                        <div class="w-item"><span>Humedad</span><b id="w-hum">60%</b></div>
+                        <div class="w-item highlight"><span>Viento</span><b id="w-wind">18 km/h</b></div>
+                        <div class="w-item"><span>Visibilidad</span><b id="w-vis">20 km</b></div>
+                        <div class="w-item"><span>Nubes</span><b id="w-cloud">5%</b></div>
+                        <div class="w-item"><span>UV</span><b id="w-uv">4/10</b></div>
+                        <div class="w-item"><span>Presión</span><b id="w-pres">1016</b></div>
+                        <div class="w-item"><span>Amanecer</span><b id="w-rise">07:22</b></div>
+                        <div class="w-item"><span>Ocaso</span><b id="w-set">19:34</b></div>
                     </div>
                 </div>
-                <aside class="hourly-forecast-panel glass">
-                    <div class="forecast-list">
-                        <div class="forecast-hour-item"><span class="hour-time">2 PM</span><i class="fas fa-sun hour-icon"></i><div class="hour-temp-bar-container"><span class="hour-temp-val">23°C</span><div class="hour-temp-bar" style="width: 95%;"></div></div></div>
-                        <div class="forecast-hour-item"><span class="hour-time">4 PM</span><i class="fas fa-sun hour-icon"></i><div class="hour-temp-bar-container"><span class="hour-temp-val">22°C</span><div class="hour-temp-bar" style="width: 90%;"></div></div></div>
-                        <div class="forecast-hour-item"><span class="hour-time">6 PM</span><i class="fas fa-cloud-sun hour-icon"></i><div class="hour-temp-bar-container"><span class="hour-temp-val">19°C</span><div class="hour-temp-bar" style="width: 80%;"></div></div></div>
-                        <div class="forecast-hour-item"><span class="hour-time">8 PM</span><i class="fas fa-moon hour-icon"></i><div class="hour-temp-bar-container"><span class="hour-temp-val">16°C</span><div class="hour-temp-bar" style="width: 60%;"></div></div></div>
-                    </div>
-                </aside>
-            </section>
-
-            <section id="tab-energy" class="tab-section">
-                <div class="energy-graph-card glass">
-                    <h2 style="color:var(--slate-text-main); margin-bottom: 20px;">Precio de la Luz Hoy (€/MWh)</h2>
-                    <div class="mock-energy-graph">
-                        <i class="fas fa-chart-line"></i>
-                        <span>GRÁFICA</span>
-                    </div>
-                    <p style="color:var(--slate-text-muted); margin-top: 20px;">Mínimo: 105€ | Máximo: 210€ (20h)</p>
+                <div class="glass-card" style="padding: 20px;">
+                    <h3 style="margin-bottom: 20px; font-family: 'Playfair Display'; color: var(--gold-dim);">Hourly Forecast</h3>
+                    <div id="forecast-list"></div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section id="tab-core" class="tab-section">
-                <div class="core-info-card glass">
-                    <h3>Estado del Servidor Central</h3>
-                    <p style="margin-top: 15px;">CPU: 1.2% | RAM: 320MB / 1GB | Temperatura: 45°C</p>
-                    <button style="margin-top: 20px; padding: 10px 20px; background: var(--bronze-main); border: none; border-radius: 8px; color: white; cursor: pointer;">Reiniciar Núcleo</button>
+        <section id="tab-energy" class="tab-content">
+            <div class="glass-card">
+                <div class="price-focus">
+                    <p>PRECIO ACTUAL DE LA LUZ</p>
+                    <h2 id="energy-val">0.0000 <small style="font-size: 1.5rem;">€/kWh</small></h2>
+                    <p id="energy-status">Calculando eficiencia...</p>
                 </div>
-            </section>
-
-            <section id="tab-essence" class="tab-section">
-                <div class="core-info-card glass">
-                    <h3>Hogar Essence - Sensores Interiores</h3>
-                    <p style="margin-top: 15px;">Temperatura Salón: 21.5°C | Humedad: 55% | Calidad Aire: Excelente</p>
+                <div style="height: 350px;">
+                    <canvas id="energyChart"></canvas>
                 </div>
-            </section>
+            </div>
+        </section>
 
-        </main>
-    </div>
+        <section id="tab-essence" class="tab-content"><div class="glass-card"><h2>Essence Sensors</h2><p>Próximamente conexión Firebase.</p></div></section>
+        <section id="tab-core" class="tab-content"><div class="glass-card"><h2>System Core</h2><p>Estado del servidor: Estable.</p></div></section>
+
+    </main>
 
     <script>
+        let myChart = null;
+
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // 1. Iniciar Reloj y Fecha
-            updateTime();
-            setInterval(updateTime, 1000);
-            
-            // 2. Iniciar Sistema de Navegación
-            setupNavigation();
+            updateClock();
+            setInterval(updateClock, 1000);
+            loadWeatherAlmeria();
+            // Cargar energía por defecto si es la tab activa
+            if(document.getElementById('tab-energy').classList.contains('active')) loadEnergyData();
         });
 
-        // --- SISTEMA DE NAVEGACIÓN (Tabs) ---
-        function setupNavigation() {
-            const menu = document.getElementById('main-menu');
-            const navItems = menu.querySelectorAll('.nav-item');
-            const breadcrumbLocation = document.getElementById('breadcrumb-location');
-            const breadcrumbTab = document.querySelector('.active-tab');
-            const sectionTitle = document.getElementById('section-title-text');
+        // NAVEGACIÓN
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            document.getElementById('tab-name').innerText = tabId.charAt(0).toUpperCase() + tabId.slice(1);
+            document.getElementById('display-title').innerText = "Home " + tabId.charAt(0).toUpperCase() + tabId.slice(1);
 
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const selectedTab = this.getAttribute('data-tab');
-                    const tabName = this.querySelector('span').innerText;
-                    
-                    console.log("Cambiando a:", selectedTab);
-
-                    // 1. Actualizar Sidebar: Quitar clase activa de todos, poner a este
-                    navItems.forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // 2. Actualizar Breadcrumb y Título
-                    breadcrumbTab.innerText = tabName.toUpperCase();
-                    sectionTitle.innerText = "Home " + tabName;
-
-                    // 3. Cambiar Contenido: Ocultar todas las secciones, mostrar la correspondiente
-                    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active-tab-content'));
-                    document.getElementById('tab-' + selectedTab).classList.add('active-tab-content');
-                });
-            });
+            if(tabId === 'energy') loadEnergyData();
+            if(tabId === 'atmosphere') loadWeatherAlmeria();
         }
 
-        // --- FUNCIÓN DEL RELOJ ---
-        function updateTime() {
-            const timeElement = document.getElementById('current-time');
-            const dateElement = document.getElementById('current-date');
-            
+        // RELOJ
+        function updateClock() {
             const now = new Date();
-            
-            // Formato Hora: "1:17:09 PM"
-            timeElement.innerText = now.toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            });
-            
-            // Formato Fecha: "Saturday, March 21, 2026"
-            dateElement.innerText = now.toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric'
+            document.getElementById('live-time').innerText = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
+            document.getElementById('live-date').innerText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+        }
+
+        // CLIMA ALMERÍA
+        function loadWeatherAlmeria() {
+            // Datos fijos exactos para Almería hoy (Sustituir por API fetch si se desea real)
+            const data = {
+                temp: 21, feels: 20, hum: 58, wind: 15, vis: 20, cloud: 10, uv: 4, pres: 1016, rise: "07:22", set: "19:34"
+            };
+            document.getElementById('w-temp').innerText = data.temp;
+            document.getElementById('w-feels').innerText = data.feels + "°";
+            document.getElementById('w-hum').innerText = data.hum + "%";
+            document.getElementById('w-wind').innerText = data.wind + " km/h";
+            document.getElementById('w-vis').innerText = data.vis + " km";
+            document.getElementById('w-cloud').innerText = data.cloud + "%";
+            document.getElementById('w-uv').innerText = data.uv + "/10";
+            document.getElementById('w-pres').innerText = data.pres;
+            document.getElementById('w-rise').innerText = data.rise;
+            document.getElementById('w-set').innerText = data.set;
+
+            const forecast = [
+                {h: "4 PM", t: 23, i: "fa-sun"}, {h: "6 PM", t: 20, i: "fa-cloud-sun"}, {h: "8 PM", t: 17, i: "fa-moon"}, {h: "10 PM", t: 15, i: "fa-moon"}
+            ];
+            document.getElementById('forecast-list').innerHTML = forecast.map(f => `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding: 15px 0; border-bottom:1px solid var(--glass-border);">
+                    <span style="color:var(--slate-muted)">${f.h}</span>
+                    <i class="fas ${f.i}" style="color:var(--gold-dim)"></i>
+                    <b style="width:40px; text-align:right">${f.t}°</b>
+                </div>
+            `).join('');
+        }
+
+        // ENERGÍA (PVPC REAL ESPAÑA)
+        async function loadEnergyData() {
+            const priceEl = document.getElementById('energy-val');
+            const statusEl = document.getElementById('energy-status');
+            priceEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://api.preciodelaluz.org/v1/prices/all?zone=PCB'));
+                const json = await res.json();
+                const data = JSON.parse(json.contents);
+                
+                const hours = Object.values(data);
+                const prices = hours.map(h => h.price / 1000);
+                const labels = hours.map(h => h.hour + 'h');
+                const nowHour = new Date().getHours();
+                const currentP = prices[nowHour];
+
+                priceEl.innerText = currentP.toFixed(4);
+                
+                // Lógica de colores
+                if(currentP < 0.12) { priceEl.style.color = "var(--success)"; statusEl.innerText = "HORA EXCELENTE PARA EL CONSUMO"; }
+                else if(currentP < 0.18) { priceEl.style.color = "var(--warning)"; statusEl.innerText = "PRECIO MODERADO"; }
+                else { priceEl.style.color = "var(--danger)"; statusEl.innerText = "EVITAR CONSUMO ELEVADO"; }
+
+                renderEnergyChart(labels, prices, nowHour);
+            } catch (e) {
+                priceEl.innerText = "Error";
+                statusEl.innerText = "No se pudo conectar con Red Eléctrica.";
+            }
+        }
+
+        function renderEnergyChart(labels, data, now) {
+            const ctx = document.getElementById('energyChart').getContext('2d');
+            if(myChart) myChart.destroy();
+
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: labels.map((_, i) => i === now ? '#cd7f32' : 'rgba(212, 175, 55, 0.1)'),
+                        borderColor: labels.map((_, i) => i === now ? '#fff' : '#a68a2c'),
+                        borderWidth: 1,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } },
+                        x: { grid: { display: false }, ticks: { color: '#666' } }
+                    }
+                }
             });
         }
     </script>
