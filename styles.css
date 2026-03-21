@@ -1,45 +1,33 @@
-:root { --bronze: #cd7f32; --gold: #d4af37; --bg: #0a0a0c; --glass: rgba(255, 255, 255, 0.03); }
+/* --- RESPONSIVE CORE --- */
+@media (max-width: 850px) {
+    body { flex-direction: column; overflow-y: auto; }
+    
+    .sidebar { 
+        width: 100%; height: 70px; flex-direction: row; 
+        position: fixed; bottom: 0; left: 0; z-index: 1000;
+        padding: 0; border-top: 1px solid #1a1a1a; border-right: none;
+        justify-content: space-around; align-items: center;
+    }
+    
+    .brand { display: none; } /* Ocultamos logo en móvil para ganar espacio */
+    .sidebar-footer { display: none; }
+    
+    nav { flex-direction: row; width: 100%; justify-content: space-around; }
+    .nav-item { padding: 10px; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .nav-item i { font-size: 1.2rem; }
 
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: #e0e0e0; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+    .content { padding: 20px; padding-bottom: 100px; width: 100%; box-sizing: border-box; }
+    .metrics-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .top-header h1 { font-size: 1.8rem; }
 
-/* Sidebar Elegante */
-.sidebar { width: 280px; background: #000; padding: 40px 25px; border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; }
-.brand { font-family: 'Cinzel', serif; font-size: 1.8rem; letter-spacing: 4px; color: var(--bronze); display: flex; align-items: center; gap: 15px; margin-bottom: 60px; }
-.nav-item { padding: 18px; cursor: pointer; border-radius: 15px; color: #666; transition: 0.4s; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; }
-.nav-item:hover, .nav-item.active { color: var(--bronze); background: rgba(205, 127, 50, 0.05); }
+    /* Atmosphere en móvil */
+    .weather-dashboard { grid-template-columns: 1fr; }
+    .weather-details-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
+}
 
-/* Main Content */
-.content { flex: 1; padding: 50px; overflow-y: auto; }
-.top-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px; }
-.top-header h1 { font-family: 'Cinzel', serif; font-size: 2.5rem; margin: 0; }
-
-/* Dashboard Cards */
-.metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
-.metric-card { background: var(--glass); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); }
-.metric-card span { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: #666; }
-.metric-card h2 { font-size: 2.2rem; margin: 10px 0 0 0; font-weight: 300; }
-.metric-card.gold h2 { color: var(--gold); }
-.metric-card.bronze h2 { color: var(--bronze); }
-
-.glass { background: var(--glass); border: 1px solid rgba(255,255,255,0.05); border-radius: 30px; padding: 30px; }
-
-/* Hestia Switches */
-.relay-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-.relay-card { display: flex; justify-content: space-between; align-items: center; padding: 25px; }
-.hestia-switch { width: 60px; height: 30px; background: #1a1a1a; border-radius: 50px; position: relative; cursor: pointer; transition: 0.4s; }
-.hestia-switch .knob { width: 22px; height: 22px; background: #333; border-radius: 50%; position: absolute; top: 4px; left: 4px; transition: 0.4s; }
-.hestia-switch.active { background: var(--bronze); }
-.hestia-switch.active .knob { left: 34px; background: #fff; box-shadow: 0 0 15px #fff; }
-
-/* Atmosphere */
-.weather-dashboard { display: grid; grid-template-columns: 1fr 300px; gap: 30px; }
-.weather-hero { text-align: center; }
-.weather-hero h1 { font-size: 5rem; margin: 0; font-weight: 200; }
-.f-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-.pulse { width: 8px; height: 8px; background: var(--bronze); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; margin-right: 10px; }
-@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-.tab-content { display: none; animation: fadeIn 0.6s ease; }
-.tab-content.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* Nuevos Estilos Atmosphere */
+.weather-details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 20px; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; }
+.w-detail { display: flex; flex-direction: column; align-items: center; }
+.w-detail span { font-size: 0.65rem; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+.w-detail b { font-size: 1.1rem; color: var(--bronze); }
+.weather-main-info { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
